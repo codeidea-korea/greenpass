@@ -1,0 +1,796 @@
+swagger: "2.0"
+info:
+  description: "This is todock API docs. Copyrighted by code-idea."
+  version: "1.0.0"
+  title: "Swagger Todock (토닥) - 작성중..."
+host: "todak.codeidea.io"
+basePath: "/api"
+tags:
+- name: "공통"
+  description: "공통 기능"
+- name: "거래처 (병원)"
+  description: "거래처 (병원) 관련된 명령"
+- name: "거래처 (관리자)"
+  description: "거래처 (관리자) 관련된 명령"
+- name: "검사자 (환자)"
+  description: "검사자 (환자) 관련된 명령"
+- name: "검사 항목"
+  description: "검사와 관련된 명령"
+- name: "인증"
+  description: "인증과 관련된 명령"
+schemes:
+- "https"
+- "http"
+paths:
+  /users/:
+    get:
+      tags:
+      - "검사자 (환자)"
+      summary: "검사자 리스트를 조회한다."
+      operationId: "userindex"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - pageNo: "1"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      - pageSize: "10"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      - partner_name: ""
+        in: "query"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /users/one:
+    get:
+      tags:
+      - "검사자 (환자)"
+      summary: "검사자를 조회한다."
+      operationId: "user"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - id: "1"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /users:
+    post:
+      tags:
+      - "검사자 (환자)"
+      summary: "검사자를 추가한다."
+      operationId: "useradd"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /users/update:
+    post:
+      tags:
+      - "검사자 (환자)"
+      summary: "검사자를 수정한다."
+      operationId: "userupdate"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /users/remove:
+    post:
+      tags:
+      - "검사자 (환자)"
+      summary: "검사자를 삭제한다."
+      operationId: "userremove"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - id: "1"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /users/login:
+    get:
+      tags:
+      - "검사자 (환자)"
+      summary: "검사자 로그인"
+      operationId: "userlogin"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - user_name: ""
+        in: "query"
+        required: true
+        type: "string"
+      - phone: ""
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /users/duplicated:
+    get:
+      tags:
+      - "검사자 (환자)"
+      summary: "검사자 계정 중복 확인"
+      operationId: "userduplicated"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - user_name: ""
+        in: "query"
+        required: true
+        type: "string"
+      - user_birthday: ""
+        in: "query"
+        required: true
+        type: "string"
+      - user_phone: ""
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /users/exams:
+    get:
+      tags:
+      - "검사자 (환자)"
+      summary: "검사자 (환자) 전화번호로 검사 목록 조회"
+      operationId: "useruserExamList"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - phoneNo: ""
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /users/exams/recent:
+    get:
+      tags:
+      - "검사자 (환자)"
+      summary: "검사자 (환자)가 가장 최근에 풀었던 문제 정보"
+      operationId: "userrecentAnswer"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - userId: ""
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      - exam_seqno: "1"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /users/addressModify:
+    post:
+      tags:
+      - "검사자 (환자)"
+      summary: "검사자 (환자)가 문제 풀이를 마치고 배송지 입력"
+      operationId: "useraddressModify"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - id: ""
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      - user_address1: ""
+        in: "query"
+        required: true
+        type: "string"
+      - user_address2: ""
+        in: "query"
+        required: true
+        type: "string"
+      - user_address3: ""
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /auth/sms/send:
+    post:
+      tags:
+      - "공통"
+      summary: "인증 문자를 전송한다."
+      operationId: "authsmssend"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - phoneNo: ""
+        in: "query"
+        required: true
+        type: "string"
+      - user_name: ""
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /auth/sms/check:
+    get:
+      tags:
+      - "공통"
+      summary: "인증 문자를 확인한다."
+      operationId: "authsmscheck"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - id: ""
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      - phoneNo: ""
+        in: "query"
+        required: true
+        type: "string"
+      - auth_code: ""
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /sms/result:
+    get:
+      tags:
+      - "공통"
+      summary: "인증 전문 이력을 쌓는다"
+      operationId: "authsmssaveSmsHistory"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult" 
+  /adms/main:
+    get:
+      tags:
+      - "공통"
+      summary: "관리자 메인"
+      operationId: "adminmain"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - partner_name: ""
+        in: "query"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /adms/parterNames:
+    get:
+      tags:
+      - "공통"
+      summary: "관리자 > 등록된 거래처(병원) 목록 조회"
+      operationId: "adminmain"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /adms:
+    get:
+      tags:
+      - "거래처 (관리자)"
+      summary: "관리자 리스트를 조회한다."
+      operationId: "adminindex"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - pageNo: "1"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      - pageSize: "10"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      - partner_name: ""
+        in: "query"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /adms/one:
+    get:
+      tags:
+      - "거래처 (관리자)"
+      summary: "관리자를 조회한다."
+      operationId: "admin"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - id: "1"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /adms/login:
+    get:
+      tags:
+      - "거래처 (관리자)"
+      summary: "관리자 로그인"
+      operationId: "adminlogin"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - id: ""
+        in: "query"
+        required: true
+        type: "string"
+      - password: ""
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /adms/duplicated:
+    get:
+      tags:
+      - "거래처 (관리자)"
+      summary: "관리자 계정 중복 확인"
+      operationId: "adminduplicated"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - id: ""
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /adms/:
+    post:
+      tags:
+      - "거래처 (관리자)"
+      summary: "관리자 등록"
+      operationId: "adminadd"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Admin"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /adms/update:
+    post:
+      tags:
+      - "거래처 (관리자)"
+      summary: "관리자 수정"
+      operationId: "adminupdate"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Admin"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /adms/remove:
+    post:
+      tags:
+      - "거래처 (관리자)"
+      summary: "관리자 삭제"
+      operationId: "adminremove"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - id: "1"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /partners:
+    get:
+      tags:
+      - "거래처 (병원)"
+      summary: "거래처 리스트를 조회한다."
+      operationId: "partners"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - pageNo: "1"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      - pageSize: "10"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /partners/one:
+    get:
+      tags:
+      - "거래처 (병원)"
+      summary: "거래처를 조회한다."
+      operationId: "partner"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - id: "1"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /partners/:
+    post:
+      tags:
+      - "거래처 (병원)"
+      summary: "거래처 등록"
+      operationId: "parterAdd"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Partner"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /partners/parterUpdate:
+    post:
+      tags:
+      - "거래처 (병원)"
+      summary: "거래처 수정"
+      operationId: "parterUpdate"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Partner"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+  /partners/parterRemove:
+    post:
+      tags:
+      - "거래처 (병원)"
+      summary: "거래처 삭제"
+      operationId: "parterRemove"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - id: "1"
+        in: "query"
+        required: true
+        type: "integer"
+        maximum: 9999.0
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResult"
+definitions:
+  User:
+    type: "object"
+    properties:
+      user_seqno:
+        type: "integer"
+        format: "int64"
+      user_name:
+        type: "string"
+      user_round:
+        type: "integer"
+        format: "int64"
+      user_phone:
+        type: "string"
+      user_birthday:
+        type: "integer"
+        format: "int64"
+      user_address1:
+        type: "string"
+      user_address2:
+        type: "string"
+      user_address3:
+        type: "string"
+      reservation_dt:
+        type: "string"
+      partner_name:
+        type: "string"
+      create_dt:
+        type: "string"
+      update_dt:
+        type: "string"
+      send_yn:
+        type: "integer"
+        format: "int64"
+      exam_status:
+        type: "integer"
+        format: "int64"
+      exam_seqno:
+        type: "integer"
+        format: "int64"
+    xml:
+      name: "User"
+  Admin:
+    type: "object"
+    properties:
+      admin_user_seqno:
+        type: "integer"
+        format: "int64"
+      admin_type:
+        type: "string"
+      partner_name:
+        type: "string"
+      admin_user_id:
+        type: "string"
+      admin_user_email:
+        type: "string"
+      admin_user_name:
+        type: "string"
+      admin_user_phone:
+        type: "string"
+      password:
+        type: "string"
+      create_dt:
+        type: "string"
+      update_dt:
+        type: "string"
+    xml:
+      name: "Admin"
+  Partner:
+    type: "object"
+    properties:
+      partners_seqno:
+        type: "integer"
+        format: "int64"
+      partner_type:
+        type: "string"
+      partner_no:
+        type: "string"
+      partner_url:
+        type: "string"
+      admin_user_id:
+        type: "string"
+      admin_user_name:
+        type: "string"
+      email:
+        type: "string"
+      fax:
+        type: "string"
+      logo_url:
+        type: "string"
+      partner_name:
+        type: "string"
+      user_address1:
+        type: "string"
+      user_address2:
+        type: "string"
+      user_address3:
+        type: "string"
+      user_name:
+        type: "string"
+      user_phone:
+        type: "string"
+      create_dt:
+        type: "string"
+      update_dt:
+        type: "string"
+      used_yn:
+        type: "integer"
+        format: "int64"
+    xml:
+      name: "Partner"
+  ApiResult:
+    type: "object"
+    properties:
+      data:
+        type: "object"
+      ment:
+        type: "string"
+      result:
+        type: "boolean"
+externalDocs:
+  description: "Find out more about code-idea"

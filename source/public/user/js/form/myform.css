@@ -1,0 +1,82 @@
+@charset "utf-8";
+
+
+/*──────────────── Radio & Checkbox ────────────────*/
+input[type="checkbox"],input[type="radio"] {display:none;}
+
+*:not(.span) + .checkbox-wrap:not(.labelCheck), *:not(.span) + .radio-wrap{margin-left:20px;}
+
+.checkbox-wrap span{display:inline-block;vertical-align:middle;width:23px;height:23px;line-height:23px;/*margin-right:8px;*/ background:#cacaca;border-radius:4px;cursor:pointer;text-align:center;color:rgba(255,255,255,0);}
+.checkbox-wrap span:before{content:'\e306';font-family:'newfont';font-size:18px;font-weight:bold;}
+.checkbox-wrap:hover span{color:rgba(255,255,255,1);}
+.checkbox-wrap input[type="checkbox"]:checked + span{color:rgba(255,255,255,1);background:#1abc9c;}
+
+
+.radio-wrap span{position:relative;display:inline-block;vertical-align:middle;width:18px;height:18px;/*margin-right:6px;*/background:#cacaca;border-radius:50%;cursor:pointer;text-align:center;}
+.radio-wrap span:before{content:'';display:inline-block;position:absolute;top:50%;left:50%;margin-top:-3px;margin-left:-3px;width:6px;height:6px;background:rgba(255,255,255,0);border-radius:50%;}
+.radio-wrap:hover span{background:#c2c2c2;}
+.radio-wrap:hover span:before{background:rgba(255,255,255,0.75);}
+.radio-wrap input[type="radio"]:checked + span, .radio-wrap:hover input[type="radio"]:checked + span{background:var(--mainColor);}
+.radio-wrap input[type="radio"]:checked + span:before, .radio-wrap:hover input[type="radio"]:checked + span:before{background:rgba(255,255,255,0.9);}
+
+.radio-btn{position:relative;float:left;}
+.radio-btn input[type="radio"] + span{position:relative;margin-right:0 !important;display:inline-flex;align-items:center;justify-content:center;width:auto;min-width:76px;height:32px;line-height:1em;padding:0 15px;color:#fff;
+	font-size:13px;background:rgba(55,71,79,0.2);border-radius:0;transition:all .2s ease-in-out;}
+.radio-btn:first-child input[type="radio"] + span{border-top-left-radius:4px;border-bottom-left-radius:4px;}
+.radio-btn:last-child input[type="radio"] + span{border-top-right-radius:4px;border-bottom-right-radius:4px;}
+.radio-btn:hover input[type="radio"] + span{background:rgba(55,71,79,0.3);}
+.radio-btn input[type="radio"]:checked + span{background:#1abc9c;}
+.radio-btn:not(:last-child) input[type="radio"] + span:after{content:'';position:absolute;top:10px;right:0;display:inline-block;width:1px;height:12px;background:rgba(55,71,79,0.1);}
+.radio-btn:hover input[type="radio"] + span:after, label.radio-btn input[type="radio"]:checked + span:after{}
+.radio-btn.gray input[type="radio"]:checked + span{background:#79909c;}
+.radio-btn.blue input[type="radio"]:checked + span{background:#4075fb;}
+.radio-btn.red input[type="radio"]:checked + span{background:#ff5050;}
+
+
+
+
+/* input-label */
+.input-label{position:relative;display:inline-block;}
+.input-label:after{display:block;visibility:hidden;clear:both;content:""}
+.input-label:not(:first-child){margin-left:5px;}
+.input-label.span + .input-label.span{margin-left:0;margin-top:10px;}
+
+.input-label:not(.span) .label{position:relative;display:inline-block;float:left;vertical-align:top;height:48px;line-height:48px;padding:0 10px;color:rgba(53,57,69,0.8);font-size:13px;font-weight:400;border:1px solid rgba(0,0,0,0.35);background:rgba(53,57,69,0.02);z-index:2;}
+.input-label:not(.span).focus .label{color:#fff;background:rgba(71,78,103,0.85);}
+
+.input-label:not(.span) .label:first-child{border-right:0;border-top-left-radius:3px;border-bottom-left-radius:3px;border-top-right-radius:0;border-bottom-right-radius:0;}
+.input-label:not(.span) .label:last-child{border-left:0;float:right;border-top-right-radius:3px;border-bottom-right-radius:3px;border-top-left-radius:0;border-bottom-left-radius:0;}
+.input-label.left-label input, .input-label.left-label .bootstrap-select .btn{border-top-left-radius:0;border-bottom-left-radius:0;}
+.input-label.right-label input, .input-label.right-label .bootstrap-select .btn{border-top-right-radius:0;border-bottom-right-radius:0;}
+
+.input-label.focus span{background:rgba(53,57,69,0.4);color:#fff;}
+.input-label.mini span, .input-label .label.mini{height:25px;line-height:26px;padding:0 4px;}
+.input-label.small span, .input-label .label.small{height:28px;line-height:28px;padding:0 5px;}
+.input-label.large span, .input-label .label.large{height:42px;line-height:42px;padding:0 10px;font-size:14px;font-weight:600;}
+.input-label .label.yellow{color:#614531;background:#fff8a5;}
+.input-label .label.light{color:#50505d;background:#fff;}
+
+.input-label .label.dark{color:#fff;background:#a3a6b3;}
+.input-label.left-label .label.dark + .bootstrap-select .btn{border-left:0;}
+
+.input-label.span{position:relative;display:inline-block;display:inline-flex;align-items:center;border:1px solid rgba(0,0,0,0.35);background:#fff;border-radius:3px;}
+.input-label.span input{border:0 !important;box-shadow:none !important;padding-left:0 !important;}
+.input-label.span.focus{border-color:rgba(0,0,0,0.65);box-shadow:0 4px 4px rgba(0,0,0,0.05);}
+.input-label.span:after{display:block;visibility:hidden;clear:both;content:""}
+.input-label.span:not(:first-child){margin-left:5px;}
+
+.input-label.span .label{position:relative;display:inline-flex;align-items:center;height:20px;padding:0 5px;margin:0 10px;color:#fff;background:rgba(71,78,103,0.25);font-size:10px;font-weight:400;border-radius:3px;z-index:2;}
+.input-label.span .label:last-child{float:right;}
+
+.input-label.span{display:flex;}
+.input-label.span input{flex:1;}
+
+
+/*──────────────── mySelect ────────────────*/
+.mySelect:not(.default){text-decoration:none;display:flex;align-items:center;position:relative;border:1px solid rgba(0,0,0,0.4);background:#fff;border-radius:3px;height:48px;}
+.mySelect:not(.default):after{content:'\e051';font-family:'newfont';display:block;position:absolute;right:0;top:0;z-index:6;width:40px;height:100%;padding:0;margin:0;font-size:20px;color:#818283;
+text-align:center;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.mySelect:not(.default) select{padding-right:43px;flex:1;border:0 !important;background:transparent;box-shadow:none !important;}
+.mySelect:not(.default) .label + select{padding-left:0 !important;}
+.mySelect:not(.default) select::-ms-expand{display:none;}
+.mySelect:not(.default) .label{position:relative;display:inline-flex;align-items:center;height:20px;padding:0 5px;margin:0 10px;color:#fff;background:rgba(71,78,103,0.25);font-size:10px;font-weight:400;border-radius:3px;z-index:2;}

@@ -1,0 +1,53 @@
+@charset "UTF-8";
+
+html, body, p{margin:0;padding:0;border:0;font-family:'Nanum Gothic', sans-serif;font-weight:100;font-size:11px;}
+ol,ul,li {list-style:none;}
+.all-icons{padding:30px 20px;}
+.all-icons ul{font-size:0;}
+.all-icons ul h2{font-size:22px;padding-left:24px;font-weight:200;color:#ff4e4e;margin-top:60px;}
+.all-icons ul li{text-align:center;display:inline-block;font-size:11px;width:130px;text-align:center;margin-bottom:20px;}
+.all-icons ul li i{font-size:33px;display:inline-block;margin-bottom:10px;width:44px;height:44px;line-height:54px;padding:24px;border:1px solid rgba(0,0,0,0.06);border-radius:3px;}
+.all-icons ul li i:hover{background:rgba(0,0,0,0.02);}
+.all-icons ul li span{display:block;line-height:1.6em;}
+.all-icons ul li span:hover, .all-icons ul li span:visited{color:#ff3170;}
+ul.small li i{font-size:15px;line-height:50px;}
+ul li.mini i{font-size:22px;line-height:50px;}
+
+
+#font_options_bar{position:fixed;top:0;left:0;width:100%;height:50px;background:#f6f6f6;border-bottom:1px solid rgba(0,0,0,0.05);}
+#font_options_bar .container{width:1250px;margin:0 auto;position:relative;}
+
+ body{padding-top:50px;}
+
+/*********************
+*** Switch  ***
+**********************/
+.bg-switch{position:absolute;top:0;right:0;}
+.sw {display:none;}
+.switch {position:relative;display:inline-block;vertical-align:text-bottom;cursor:pointer;border-radius:24px;transition:background 250ms 100ms;background-color:#c7c7c7;width:50px;height:28px;line-height:50px;margin:10px 0px 0px 0px;}
+.switch:after {position:absolute;content:'';width:24px;height:24px;top:2px;left:2px;border-radius:50%;transition:150ms linear;background-color:white;}
+input:checked + .switch{background:#000000;}
+input:checked + .switch:after{left:24px;}
+.bg_circle:before, .bg_circle:after {position:absolute;content:'';width:10px;height:10px;top:50%;margin-top:-5px;border-radius:50%;}
+.bg_circle:before {box-shadow:inset 0 0 0 1px #a0a0a0;left:-22px;}
+.bg_circle:after {background:#9f9f9f;right:-22px;}
+input:checked + .switch .bg_circle:before{box-shadow:inset 0 0 0 1px #787878;}
+
+
+/********************
+*** Font options ***
+*********************/
+.size_select{position:relative;margin:0;width:135px;height:50px;padding:0px;border-left:1px solid #eaeaea; border-right:1px solid #eaeaea;}
+
+
+/********************
+*** Dark style ***
+*********************/
+body.dark {background:#1a1a1a;}
+.dark  #font_options_bar{background:rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.15);}
+.dark  #font_options_bar .size_select{border-color:rgba(255,255,255,0.15);}
+.dark .all-icons ul h2{color:#ff8686;} 
+.dark .all-icons ul li i{color:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,0.1);}
+.dark .all-icons ul li i:hover{background:rgba(255,255,255,0.02);}
+.dark .all-icons ul li span{color:rgba(255,255,255,0.5);}
+.dark .all-icons ul li span:hover, .all-icons ul li span:visited{color:#ffee61;}

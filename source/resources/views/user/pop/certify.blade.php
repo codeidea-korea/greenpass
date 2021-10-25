@@ -7,17 +7,15 @@
 			<h3 class="noto600 fs28 mb5">GREEN PASS ZONE</h3>
 			<div class="flex mb10" style="padding:0 10px">
 				<h3 class="fs23">인증되었습니다</h3>
-				<p class="right tright"><span class="fs20">2021.07.18</span><br>13시30분</p>
+				<p class="right tright _certify-date"><span class="fs20">2021.07.18</span><br>13시30분</p>
 			</div>
-			<img src="img/logo/logo08_209_209.png" class="certify-logo">
-			<p class="fs18">
-				<h3 class="mt15">스타벅스</h3>
-				(안양비산DT점)
+			<img src="img/logo/logo08_209_209.png" class="certify-logo _certify-logo">
+			<p class="fs18 _certify-partner-name">
 			</p>
 		</div>
 		<div class="btnSet mt30">
-			<a href="#" class="btn green span">인증취소</a>
-			<a href="#" class="btn blue span">재인증</a>
+			<a href="#" onclick="authCancel()" class="btn green span">인증취소</a>
+			<a href="#" onclick="reauth()" class="btn blue span">재인증</a>
 		</div>
     </section>
 

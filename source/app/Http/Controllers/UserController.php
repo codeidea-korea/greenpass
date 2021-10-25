@@ -67,6 +67,29 @@ class UserController extends Controller
 
         return $result;
     }
+    public function auth_remove(Request $request)
+    {
+        $user_key = $request->post('user_key', '');
+
+        $result = [];
+        $result['ment'] = '실패';
+        $result['result'] = false;
+
+        if (empty($user_key)) {
+            $result['ment'] = '로그인이 만료되었습니다. 다시 로그인하여 주세요.';
+            return $result;
+        }
+
+        $result['data'] = DB::table("user_auth_hst")->where('user_seqno', '=', $user_key)->orderBy('user_auth_hst_seqno', 'desc')->first();
+
+        if(!empty($result['data'])) {
+            DB::table("user_auth_hst")->where('user_auth_hst_seqno', '=', $result['data']->user_auth_hst_seqno)->delete();
+        }
+        $result['ment'] = '성공';
+        $result['result'] = true;
+
+        return $result;
+    }
     
     public function favorit_toggle(Request $request)
     {

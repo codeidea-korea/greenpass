@@ -196,9 +196,9 @@ function openGPS(){
 								+'<li>'
 								+'	<img onclick="addGpsAuth('+inx+')" src="'+response.data[inx].location_img+'">'
 								+'	<div class="textContent">'
-								+'		'+response.data[inx].location_name+'<br>'
-								+'		<span id="isfavorite-'+inx+'" class="bookmark-tag' +(!response.data[inx].isfavorite ? '' : ' active')+ '" onclick="toggleFavorite('+inx+')">즐겨찾기</span>'
+								+'		'+response.data[inx].location_name
 								+'	</div>'
+								+'	<span id="isfavorite-'+inx+'" class="bookmark-tag' +(!response.data[inx].isfavorite ? '' : ' active')+ '" onclick="toggleFavorite('+inx+')">즐겨찾기</span>'
 								+'</li>';
 				}
 				$('#certify-list').html(bodyData);
@@ -218,6 +218,7 @@ function openGPS(){
 }
 
 var prev_no;
+var prev_auth_type;
 // favorite
 function toggleFavorite(no) {
 	if((no !== 0 && !no) || !partners){
@@ -265,7 +266,11 @@ function addGpsAuth(no){
 		alert('존재하지 않는 지점입니다.');
 		return;
 	}
-	
+	var dateItem = partners[no].create_dt.split(' ');
+	$('._certify-date').html('<span class="fs20">'+dateItem[0].replaceAll('-','.')+'</span><br>'+dateItem[1]);
+	$('._certify-logo').attr('src', partners[no].location_img+'?v='+new Date().getTime());
+	$('._certify-partner-name').html('<h3 class="mt15">'+partners[no].location_name+'</h3>('+partners[no].location_sub_name+')');
+
 	var user_key = atob(localStorage.getItem('user-key'));
     var auth_type = 'G';
     var partner_auth_seqno = partners[no].partner_auth_seqno;
@@ -290,12 +295,12 @@ function addGpsAuth(no){
 			alert('서버 통신 에러');
 			return false;
 		}
-		alert('추가 되었습니다.');
+		prev_auth_type = 'G';
 		loadAuths();
 		
-		$.magnificPopup.close({
+		$.magnificPopup.open({
 			items: {
-				src: '#pop-gps'
+				src: '#pop-certify'
 			},
 			type: 'inline'
 		});
@@ -303,6 +308,50 @@ function addGpsAuth(no){
 		console.log(e);
 		alert('서버 통신 에러');
 	});
+}
+
+function authCancel(){
+	// 인증 취소 -> 직전 인증 취소
+	if(!confirm('인증 내역을 삭제합니다. 정말 인증을 취소하시겠습니까?')) {
+		return false;
+	}
+
+	var user_key = atob(localStorage.getItem('user-key'));
+
+	greenpass.methods.auth.remove({
+		user_key: user_key
+	}, function(request, response){
+		console.log('output : ' + response);
+
+		if(response.ment != '성공'){
+			alert('서버 통신 에러');
+			return false;
+		}
+		alert('인증이 취소 되었습니다.');
+		loadAuths();
+		
+		$.magnificPopup.close({
+			items: {
+				src: '#pop-certify'
+			},
+			type: 'inline'
+		});
+	}, function(e){
+		console.log(e);
+		alert('서버 통신 에러');
+	});	
+}
+function reauth() {
+	// 재인증 절차 -> GPS 다시 목록 열기
+	if(!prev_auth_type){
+		alert('인증 내용이 없습니다.');
+		return;
+	}
+	switch(prev_auth_type){
+		case 'G':
+			openGPS();
+			break;
+	}
 }
 </script>
 

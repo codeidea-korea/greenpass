@@ -65,6 +65,7 @@ var bfCall = (function(){
         });
     }
     function gpsError(e){
+        
         switch (e.code)
         {
             case e.PERMISSION_DENIED:
@@ -79,7 +80,11 @@ var bfCall = (function(){
             case e.UNKNOWN_ERROR:
                 alert("알 수 없는 오류입니다.");
                 break;
+            default:
+                alert(e.message);
+                break;
         }
+        
         alert(e.message);
     }
     function initCodeIdea()
@@ -99,6 +104,10 @@ var bfCall = (function(){
             }, auth:{
                 list: function (params, successThenFn, errorThenFn){ ajaxCall('user/auths', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
                 add: function (params, successThenFn, errorThenFn){ ajaxCall('user/auth-add', 'POST', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
+                favorite: function (params, successThenFn, errorThenFn){ ajaxCall('user/favorite', 'POST', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
+                
+            }, partners:{
+                list: function (params, successThenFn, errorThenFn){ ajaxCall('gps/list', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
                 
             }
             ,toCurrency: function(x){

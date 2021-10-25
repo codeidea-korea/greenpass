@@ -2,7 +2,7 @@
 
 <section id="main">
 	<div class="top-banner">
-		<a href="#" target="_blank"><img src="{{ asset('user/img/top-banner01.png') }}"></a>
+		<a href="/user/register_certify2"><img src="{{ asset('user/img/top-banner01.png') }}"></a>
 	</div>
 	<div class="main-top">
 		<a href="#pop-npc" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
@@ -98,8 +98,9 @@ $(document).ready(function(){
 });
 
 function loadAuths(type){
+	// 최신 50개만
 	greenpass.methods.auth.list({
-		user_key: btoa(localStorage.getItem('user-key')),
+		user_key: atob(localStorage.getItem('user-key')),
 		auth_type: type,
 		pageNo: 1,
 		pageSize: 50
@@ -125,7 +126,7 @@ function loadAuths(type){
 		for(var inx=0; inx<response.data.length; inx++){
 			bodyData = bodyData 
 						+'<li>'
-						+'	<img src="{{ asset('user/img/logo/logo07_90_90.png') }}">'
+						+'	<img src="'+response.data[inx].location_img+'">'
 						+'	<div class="textContent">'
 						+'		'+response.data[inx].location_name+'<br>'
 						+'		<span class="date">'+response.data[inx].create_dt+'</span>'
@@ -139,19 +140,169 @@ function loadAuths(type){
 		alert('서버 통신 에러');
 	});
 }
+const listener = event => {
+	const { data, type } = JSON.parse(event.data);
+		alert(event);
 
-function openGPS(){
+	if (type === "RES_GPS_INFO") {
+		alert(data);
+	}
+};
+document.addEventListener("message", listener);
+
+var partners;
+
+function openGPS(){	
 	if(!greenpass.methods.hybridapp.gpscheck()) {
 		alert('GPS 연결을 할 수 없습니다. 권한을 허가하여 주세요.');
 		return false;
 	}
-	
-	greenpass.methods.hybridapp.getGpsData(function (position){
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-        alert(position);
+	greenpass.methods.hybridapp.getGpsData(function (location){
+//		alert(location);
+		var latitude = !location || !location.coords || location.coords.latitude;
+		var longitude = !location || !location.coords || location.coords.longitude;
+		if(latitude === true || longitude === true) {
+			alert('현재 GPS 주소를 불러올 수 없습니다. 잠시 후 시도해주세요.');
+			return;
+		}
+		localStorage.setItem('latitude', latitude);
+		localStorage.setItem('longitude', longitude);
+
+		// TODO: 현재 위치로 부터 가장 가까운 순으로 20m 이내 리스트 불러오기
+		greenpass.methods.partners.list({
+			latitude: latitude,
+			longitude: longitude,
+			user_key: atob(localStorage.getItem('user-key'))
+		}, function(request, response){
+			console.log('output : ' + response);
+
+			if(response.ment != '성공'){
+				alert('서버 통신 에러');
+				return false;
+			}
+	//		$('#totCnt').text(response.totCnt);
+
+			if(response.totCnt == 0){
+				$('#certify-list').html('<li>'
+										+'	<div class="textContent">'
+										+'		근처에 등록된 지점이 없습니다.<br>'
+										+'	</div>'
+										+'</li>');
+			} else {
+				var bodyData = '';
+				partners = response.data;
+				for(var inx=0; inx<response.data.length; inx++){
+					bodyData = bodyData 
+								+'<li>'
+								+'	<img onclick="addGpsAuth('+inx+')" src="'+response.data[inx].location_img+'">'
+								+'	<div class="textContent">'
+								+'		'+response.data[inx].location_name+'<br>'
+								+'		<span id="isfavorite-'+inx+'" class="bookmark-tag' +(!response.data[inx].isfavorite ? '' : ' active')+ '" onclick="toggleFavorite('+inx+')">즐겨찾기</span>'
+								+'	</div>'
+								+'</li>';
+				}
+				$('#certify-list').html(bodyData);
+			}
+
+			$.magnificPopup.open({
+				items: {
+					src: '#pop-gps'
+				},
+				type: 'inline'
+			});
+		}, function(e){
+			console.log(e);
+			alert('서버 통신 에러');
+		});
 	});
-	$('#pop-gps').fadeIn(500);
+}
+
+var prev_no;
+// favorite
+function toggleFavorite(no) {
+	if((no !== 0 && !no) || !partners){
+		alert('존재하지 않는 지점입니다.');
+		return;
+	}
+	if(partners.length <= no){
+		alert('존재하지 않는 지점입니다.');
+		return;
+	}
+	prev_no = no;
+	var user_key = atob(localStorage.getItem('user-key'));
+	var partner_auth_seqno = partners[no].partner_auth_seqno;
+	
+	greenpass.methods.auth.favorite({
+		user_key: user_key,
+		partner_auth_seqno: partner_auth_seqno
+	}, function(request, response){
+		console.log('output : ' + response);
+
+		if(response.ment != '성공'){
+			alert('서버 통신 에러');
+			return false;
+		}
+		if(response.data === 'I')
+		{
+			alert('즐겨찾기에 추가 되었습니다.');
+			$('#isfavorite-'+ prev_no).addClass('active');
+		} else {
+			alert('즐겨찾기에서 삭제 되었습니다.');
+			$('#isfavorite-'+ prev_no).removeClass('active');
+		}
+	}, function(e){
+		console.log(e);
+		alert('서버 통신 에러');
+	});
+}
+
+function addGpsAuth(no){
+	if((no !== 0 && !no) || !partners){
+		alert('존재하지 않는 지점입니다.');
+		return;
+	}
+	if(partners.length <= no){
+		alert('존재하지 않는 지점입니다.');
+		return;
+	}
+	
+	var user_key = atob(localStorage.getItem('user-key'));
+    var auth_type = 'G';
+    var partner_auth_seqno = partners[no].partner_auth_seqno;
+        
+    var location_x = localStorage.getItem('latitude');
+    var location_y = localStorage.getItem('longitude');
+    var location_name = partners[no].location_name;
+	var location_sub_name = partners[no].location_sub_name;
+		
+	greenpass.methods.auth.add({
+		user_key: user_key,
+		auth_type: auth_type,
+		partner_auth_seqno: partner_auth_seqno,
+		location_x: location_x,
+		location_y: location_y,
+		location_name: location_name,
+		location_sub_name: location_sub_name
+	}, function(request, response){
+		console.log('output : ' + response);
+
+		if(response.ment != '성공'){
+			alert('서버 통신 에러');
+			return false;
+		}
+		alert('추가 되었습니다.');
+		loadAuths();
+		
+		$.magnificPopup.close({
+			items: {
+				src: '#pop-gps'
+			},
+			type: 'inline'
+		});
+	}, function(e){
+		console.log(e);
+		alert('서버 통신 에러');
+	});
 }
 </script>
 

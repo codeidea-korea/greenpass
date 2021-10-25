@@ -10,7 +10,7 @@
 			<p>주변목록중에서 선택하세요</p>
 		</div>
 
-		<ul class="certify-list line mt15">
+		<ul class="certify-list line mt15" id="certify-list">
 			<li>
 				<img src="./img/logo/logo01_90_90.png">
 				<div class="textContent">

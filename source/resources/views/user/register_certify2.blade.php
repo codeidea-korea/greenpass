@@ -2,7 +2,7 @@
 
 <section>
 	<div class="top-banner">
-		<a href="#" target="_blank"><img src="{{ asset('user/img/top-banner01.png') }}"></a>
+		<a href="/user/register_certify2"><img src="{{ asset('user/img/top-banner01.png') }}"></a>
 	</div>
 	
 	<div class="container" style="padding:30px;">
@@ -27,10 +27,16 @@
 		</div>
 		
 		<div class="mt30">
-			<a href="#" class="btn blue span">백신인증 등록</a>
-			<a href="#" class="btn green span mt15">인증서 추가등록</a>
+			<a href="#" onclick="waitFor()" class="btn blue span">백신인증 등록</a>
+			<a href="#" onclick="waitFor()" class="btn green span mt15">인증서 추가등록</a>
 		</div>
 	</div>
 </section>
+<script>
+
+function waitFor(){
+	alert('준비중입니다.');
+}
+</script>
 
 @include('user.footer')

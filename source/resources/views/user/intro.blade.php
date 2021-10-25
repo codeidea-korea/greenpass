@@ -16,11 +16,10 @@ setTimeout(function () {
 		id: atob(user_key)
 	}, function(request, response){
 		console.log('output : ' + response);
-		if(!response.user_key){
+		if(!response.user_birthday){
 			$('._ment').show();
 			return false;
 		}
-		localStorage.setItem('user-key', btoa(response.user_key));
 
 		window.location.href = '/user/index';
 	}, function(e){

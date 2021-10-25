@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthSmsController;
+use App\Http\Controllers\GreenPassController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +32,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     
     Route::get('user/info', [UserController::class, 'user']);
     Route::post('user/auth-add', [UserController::class, 'auth_add']);
+    Route::post('user/auth-remove', [UserController::class, 'auth_remove']);
+
     Route::get('user/auths', [UserController::class, 'auth_list']);
+    Route::post('user/favorite', [UserController::class, 'favorit_toggle']);
     
+    
+    Route::get('gps/list', [GreenPassController::class, 'gpslist']);
 //});
 

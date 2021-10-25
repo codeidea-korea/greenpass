@@ -31,7 +31,7 @@ Route::get('/', [UserController::class, 'intro']) ->name('user.intro');
 Route::get('/user/index', [UserController::class, 'index'])->name('user.index');
 Route::get('/user/login', [UserController::class, 'login'])->name('user.login');
 Route::get('/user/register_certify', [UserController::class, 'register_certify'])->name('user.register_certify');
-Route::get('/user/register_certify2', [UserController::class, 'register_certify'])->name('user.register_certify2');
+Route::get('/user/register_certify2', [UserController::class, 'register_certify2'])->name('user.register_certify2');
 Route::get('/user/link', [UserController::class, 'register_certify'])->name('user.link');
 
 Route::fallback(function () {

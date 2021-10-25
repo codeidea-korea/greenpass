@@ -59,6 +59,8 @@ class UserController extends Controller
                 , 'location_y' => $location_y
                 , 'location_name' => $location_name
                 , 'location_sub_name' => $location_sub_name
+                , 'create_dt' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s', time()) . ' +9 hours')) 
+                , 'update_dt' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s', time()) . ' +9 hours')) 
             ]
         );
         $result['ment'] = '성공';
@@ -181,6 +183,8 @@ class UserController extends Controller
                 ]
             )->count();
             $result['data'][$inx]->isfavorite = $cntFavorite;
+            
+//            $result['data'][$inx]->create_dt = date('Y-m-d H:i:s', strtotime($result['data'][$inx]->create_dt . ' +9 hours'));
         }
         $result['totCnt'] = DB::table("user_auth_hst")->where($where)->count();
 

@@ -266,8 +266,13 @@ function addGpsAuth(no){
 		alert('존재하지 않는 지점입니다.');
 		return;
 	}
-	var dateItem = partners[no].create_dt.split(' ');
-	$('._certify-date').html('<span class="fs20">'+dateItem[0].replaceAll('-','.')+'</span><br>'+dateItem[1]);
+	var thisDate = new Date();
+
+	$('._certify-date').html('<span class="fs20">'
+		+thisDate.getFullYear()+'.'+(thisDate.getMonth()+1 < 10 ? '0' : '') + (thisDate.getMonth()+1)+'.'
+		+(thisDate.getDate()< 10 ? '0' : '') + thisDate.getDate() +'</span><br>'
+		+(thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours() +'시'
+		+(thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes() +'분');
 	$('._certify-logo').attr('src', partners[no].location_img+'?v='+new Date().getTime());
 	$('._certify-partner-name').html('<h3 class="mt15">'+partners[no].location_name+'</h3>('+partners[no].location_sub_name+')');
 

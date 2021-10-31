@@ -26,10 +26,10 @@
 		</div>
 		
 		<div class="btnSet column mt30">
-			<a href="#" onclick="waitFor()" class="btn_login span icon_kakao">카카오로 로그인</a>
-			<a href="#" onclick="waitFor()" class="btn_login icon_naver">네이버로 로그인</a>
-			<a href="#" onclick="waitFor()" class="btn_login icon_apple">Apple로 로그인</a>
-			<a href="#" onclick="waitFor()" class="btn_login icon_google">Google로 로그인</a>
+			<a href="#" id="loginKakao" class="btn_login span icon_kakao">카카오로 로그인</a>
+			<a href="#" id="naver_id_login" class="btn_login icon_naver">네이버로 로그인</a>
+			<a href="#" id="appleid-signin" class="btn_login icon_apple">Apple로 로그인</a>
+			<a href="#" id="loginGoogle" class="btn_login icon_google">Google로 로그인</a>
 		</div>
 	</form>
 	</div>
@@ -44,6 +44,11 @@
 function waitFor(){
 	alert('준비중입니다.');
 }
+$(document).ready(function (){
+	setTimeout(() => {
+		initSNS();
+	}, 100);
+});
 
 $('._timer').hide();
 $('._ment').hide();

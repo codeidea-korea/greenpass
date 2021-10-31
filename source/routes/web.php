@@ -34,6 +34,11 @@ Route::get('/user/register_certify', [UserController::class, 'register_certify']
 Route::get('/user/register_certify2', [UserController::class, 'register_certify2'])->name('user.register_certify2');
 Route::get('/user/link', [UserController::class, 'register_certify'])->name('user.link');
 
+Route::get('/login/oauth/google', [UserController::class, 'sns_google'])->name('user.google');
+Route::get('/login/oauth/apple', [UserController::class, 'sns_apple'])->name('user.apple');
+Route::get('/login/oauth/kakao', [UserController::class, 'sns_kakao'])->name('user.kakao');
+Route::get('/login/oauth/naver', [UserController::class, 'sns_naver'])->name('user.naver');
+
 Route::fallback(function () {
     return view('user.notfound');
 });

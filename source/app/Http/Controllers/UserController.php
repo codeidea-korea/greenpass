@@ -190,4 +190,80 @@ class UserController extends Controller
 
         return $result;
     }
+
+    public function sns_login(Request $request)
+    {
+        $type = $request->post('type');
+        $id = $request->post('id');
+
+        $result = [];
+        $result['ment'] = '실패';
+        $result['result'] = false;
+
+        if (empty($type)) {
+            $result['ment'] = '정보가 없습니다. 다시 로그인하여 주세요.';
+            return $result;
+        }
+        if (empty($id)) {
+            $result['ment'] = '정보가 없습니다. 다시 로그인하여 주세요.';
+            return $result;
+        }
+
+        $where = [];
+        switch ($type) {
+            case 'G':
+                $where = ['sns_google', '=', $id];
+            break;
+            case 'A':
+                $where = ['sns_apple', '=', $id];
+            break;
+            case 'N':
+                $where = ['sns_naver', '=', $id];
+            break;
+            case 'K':
+                $where = ['sns_kakao', '=', $id];
+            break;
+            default:
+                $result['ment'] = '정보가 없습니다. 다시 로그인하여 주세요.';
+                return $result;
+        }
+
+        $userInfo = DB::table("user_info")->where([$where])->first();
+        if(empty($userInfo)){
+            $insert = [];
+
+            switch ($type) {
+                case 'G':
+                    $insert = ['sns_google' => $id];
+                break;
+                case 'A':
+                    $insert = ['sns_apple' => $id];
+                break;
+                case 'N':
+                    $insert = ['sns_naver' => $id];
+                break;
+                case 'K':
+                    $insert = ['sns_kakao' => $id];
+                break;
+                default:
+                    $result['ment'] = '정보가 없습니다. 다시 로그인하여 주세요.';
+                    return $result;
+            }
+
+            $key = DB::table('user_info')->insertGetId(
+                $insert
+            );
+            $userInfo = DB::table('user_info')->where([
+                $where
+            ])->first();
+            $result['user_key'] = $userInfo->user_seqno;
+        } else {
+            $result['user_key'] = $userInfo->user_seqno;
+        }
+        $result['result'] = true;
+        $result['ment'] = '성공';
+        $result['data'] = $userInfo;
+
+        return $result;
+    }
 }

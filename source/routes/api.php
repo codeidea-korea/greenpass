@@ -39,5 +39,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     
     
     Route::get('gps/list', [GreenPassController::class, 'gpslist']);
+    Route::post('login/sns', [UserController::class, 'sns_login']);
 //});
 

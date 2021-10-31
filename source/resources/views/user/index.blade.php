@@ -85,7 +85,7 @@ $(document).ready(function(){
 		id: atob(user_key)
 	}, function(request, response){
 		console.log('output : ' + response);
-		if(!response.user_birthday){
+		if(!response.user_seqno){
 			alert('로그인이 만료되었습니다.');
 			window.location.href = '/user/login';
 			return false;

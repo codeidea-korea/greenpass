@@ -23,6 +23,15 @@
 	<script type="text/javascript" src="{{ asset('user/js/form/myform.js') }}"></script>	
 	<script type="text/javascript" src="{{ asset('user/js/myScript.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('user/js/greenpass-apis.js') }}"></script>
+
+	<!-- google 로그인 추가 -->
+	<script src="https://apis.google.com/js/api:client.js" async defer></script>
+	<!-- apple 로그인 추가 -->
+	<script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+	<!-- 네이버 로그인 추가 -->
+  	<script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+	<!-- 카카오 로그인 추가 -->
+  	<script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 </head>
 <body>
 

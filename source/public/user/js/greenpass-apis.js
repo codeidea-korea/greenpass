@@ -101,6 +101,8 @@ var bfCall = (function(){
 
                 smsAuthCheck: function (params, successThenFn, errorThenFn){ ajaxCall('auth/sms/check', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
                 smsAuthSend: function (params, successThenFn, errorThenFn){ ajaxCall('auth/sms/send', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
+                snsLogin: function (params, successThenFn, errorThenFn){ ajaxCall('login/sns', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
+                
             }, auth:{
                 list: function (params, successThenFn, errorThenFn){ ajaxCall('user/auths', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
                 add: function (params, successThenFn, errorThenFn){ ajaxCall('user/auth-add', 'POST', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
@@ -118,6 +120,71 @@ var bfCall = (function(){
                     return navigator.geolocation;
                 }, getGpsData: function(fn){
                     navigator.geolocation.getCurrentPosition(fn, gpsError);
+                }, snsLogin: function(type){
+    
+                    if(window.ReactNativeWebView) {
+                        switch(type){
+                            case 'kakao':
+                                window.ReactNativeWebView.postMessage(
+                                    JSON.stringify({ type: "SNS_SIGN_IN", dept: 'K' })
+                                );
+                                break;
+                            case 'naver':
+                                window.ReactNativeWebView.postMessage(
+                                    JSON.stringify({ type: "SNS_SIGN_IN", dept: 'N' })
+                                );
+                                break;
+                            case 'google':
+                                window.ReactNativeWebView.postMessage(
+                                    JSON.stringify({ type: "SNS_SIGN_IN", dept: 'G' })
+                                );
+                                break;
+                            case 'apple':
+                                window.ReactNativeWebView.postMessage(
+                                    JSON.stringify({ type: "SNS_SIGN_IN", dept: 'A' })
+                                );
+                                break;
+                            default :
+                                alert('알 수 없는 sns 입니다.');
+                                break;
+                        }
+                    }
+                }, scanNFC: async (magnificPopId) => {
+                    
+                    try {
+                        const ndef = new NDEFReader();
+                        await ndef.scan();
+                        $.magnificPopup.open({
+                            items: {
+                                src: '#'+magnificPopId
+                            },
+                            type: 'inline'
+                        });
+                        
+                        console.log("> Scan started");
+
+                        ndef.addEventListener("readingerror", () => {
+                            alert('NFC 데이터 읽기에 실패하였습니다. 다시 시도해주세요.');
+                        });
+
+                        ndef.addEventListener("reading", ({ message, serialNumber }) => {
+                            console.log(`> Serial Number: ${serialNumber}`);
+                            console.log(`> message: (${message})`);
+
+                            // 기반으로 인증 통신 진행
+                            alert(message);
+                        });
+                    } catch (er) {
+                        alert('NFC 를 우선 켜신 뒤 앱을 재실행 하여주세요.');
+                        alert(er);
+                    }
+                    
+                    $.magnificPopup.close({
+                        items: {
+                            src: '#'+magnificPopId
+                        },
+                        type: 'inline'
+                    });
                 }
             }
         };
@@ -137,6 +204,67 @@ var bfCall = (function(){
         };
         return this;
     }
+
+    function receiveMsgFromParent( e ) {
+        var response = JSON.parse(e.data);
+        console.log('받은 메시지 ', response );
+
+        var type = response.type;
+        if(!type) {
+            console.log('송수신 : null');
+            return false;
+        }
+        switch (type) {
+            case 'SNS_SIGN_IN':
+                // 로그인 결과
+        alert(response);
+                var type = '';
+                var authId = '';
+                    if(response.dept == 'K') {
+                        // 카카오
+                        type = 'K';
+                        authId = data.profile.email;
+                    } else if(response.dept == 'N') {
+                        // 네이버
+                        type = 'N';
+                        authId = data.email;
+                    } else if(response.dept == 'G') {
+                        // 구글
+                        type = 'G';
+                        authId = data.id;
+                    } else if(response.dept == 'A') {
+                        // 애플
+                        type = 'A';
+                        authId = data.email;
+                    }
+                    
+                    greenpass.methods.user.snsLogin({
+                        type: type
+                        , id: authId
+                    }, function(request, response){
+                        console.log('output : ' + response);
+                        if(!response.data){
+                            alert('디비 등록 오류');
+                            return false;
+                        }
+                        localStorage.setItem('user-key', btoa(response.user_key));
+                        window.location.href = '/user/index';
+                    }, function(e){
+                        console.log(e);
+                        alert('서버 통신 에러');
+                    });
+                break;
+            case 'NFC_ACTION':
+                // NFC 통신 결과
+        alert(response);
+                break;
+            default:
+                return false;
+        }
+    }
+
+//    window.addEventListener( 'message', receiveMsgFromParent );
+    document.addEventListener( 'message', receiveMsgFromParent );
+    
     window.greenpass = initCodeIdea() || [];
 }());
-

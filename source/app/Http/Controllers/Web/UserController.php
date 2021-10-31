@@ -35,4 +35,21 @@ class UserController extends Controller
     {
         return view('user.link');
     }
+    
+    public function sns_google(Request $request)
+    {
+        return view('user.google');
+    }
+    public function sns_apple(Request $request)
+    {
+        return view('user.apple');
+    }
+    public function sns_kakao(Request $request)
+    {
+        return view('user.kakao');
+    }
+    public function sns_naver(Request $request)
+    {
+        return view('user.naver');
+    }
 }

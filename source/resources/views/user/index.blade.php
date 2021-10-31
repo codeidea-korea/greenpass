@@ -5,7 +5,7 @@
 		<a href="/user/register_certify2"><img src="{{ asset('user/img/top-banner01.png') }}"></a>
 	</div>
 	<div class="main-top">
-		<a href="#pop-npc" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
+		<a href="#" onclick="openNFS()" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
 		<a href="#" onclick="openGPS()" class="popup-inline"><span class="icon-btn-gps"></span>GPS 인증</a>
 	</div>
 	
@@ -85,7 +85,7 @@ $(document).ready(function(){
 		id: atob(user_key)
 	}, function(request, response){
 		console.log('output : ' + response);
-		if(!response.user_birthday){
+		if(!response.user_seqno){
 			alert('로그인이 만료되었습니다.');
 			window.location.href = '/user/login';
 			return false;
@@ -140,15 +140,6 @@ function loadAuths(type){
 		alert('서버 통신 에러');
 	});
 }
-const listener = event => {
-	const { data, type } = JSON.parse(event.data);
-		alert(event);
-
-	if (type === "RES_GPS_INFO") {
-		alert(data);
-	}
-};
-document.addEventListener("message", listener);
 
 var partners;
 
@@ -215,6 +206,19 @@ function openGPS(){
 			alert('서버 통신 에러');
 		});
 	});
+}
+
+function openNFS(){
+	greenpass.methods.hybridapp.scanNFC('pop-npc'); 
+	/*
+	if(window.ReactNativeWebView) {
+		window.ReactNativeWebView.postMessage(
+			JSON.stringify({ type: "NFC_ACTION", dept: 'read' })
+		);
+	} else {
+		greenpass.methods.hybridapp.scanNFC('pop-npc'); 
+	}
+	*/
 }
 
 var prev_no;

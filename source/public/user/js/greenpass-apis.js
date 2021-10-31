@@ -149,6 +149,42 @@ var bfCall = (function(){
                                 break;
                         }
                     }
+                }, scanNFC: async (magnificPopId) => {
+                    
+                    try {
+                        const ndef = new NDEFReader();
+                        await ndef.scan();
+                        $.magnificPopup.open({
+                            items: {
+                                src: '#'+magnificPopId
+                            },
+                            type: 'inline'
+                        });
+                        
+                        console.log("> Scan started");
+
+                        ndef.addEventListener("readingerror", () => {
+                            alert('NFC 데이터 읽기에 실패하였습니다. 다시 시도해주세요.');
+                        });
+
+                        ndef.addEventListener("reading", ({ message, serialNumber }) => {
+                            console.log(`> Serial Number: ${serialNumber}`);
+                            console.log(`> message: (${message})`);
+
+                            // 기반으로 인증 통신 진행
+                            alert(message);
+                        });
+                    } catch (er) {
+                        alert('NFC 를 우선 켜신 뒤 앱을 재실행 하여주세요.');
+                        alert(er);
+                    }
+                    
+                    $.magnificPopup.close({
+                        items: {
+                            src: '#'+magnificPopId
+                        },
+                        type: 'inline'
+                    });
                 }
             }
         };
@@ -169,13 +205,11 @@ var bfCall = (function(){
         return this;
     }
 
-    window.addEventListener( 'message', receiveMsgFromParent );
-    document.addEventListener( 'message', receiveMsgFromParent );
-
     function receiveMsgFromParent( e ) {
-        console.log('받은 메시지 ', e.data );
+        var response = JSON.parse(e.data);
+        console.log('받은 메시지 ', response );
 
-        var type = e.data.type;
+        var type = response.type;
         if(!type) {
             console.log('송수신 : null');
             return false;
@@ -183,130 +217,54 @@ var bfCall = (function(){
         switch (type) {
             case 'SNS_SIGN_IN':
                 // 로그인 결과
+        alert(response);
+                var type = '';
+                var authId = '';
+                    if(response.dept == 'K') {
+                        // 카카오
+                        type = 'K';
+                        authId = data.profile.email;
+                    } else if(response.dept == 'N') {
+                        // 네이버
+                        type = 'N';
+                        authId = data.email;
+                    } else if(response.dept == 'G') {
+                        // 구글
+                        type = 'G';
+                        authId = data.id;
+                    } else if(response.dept == 'A') {
+                        // 애플
+                        type = 'A';
+                        authId = data.email;
+                    }
+                    
+                    greenpass.methods.user.snsLogin({
+                        type: type
+                        , id: authId
+                    }, function(request, response){
+                        console.log('output : ' + response);
+                        if(!response.data){
+                            alert('디비 등록 오류');
+                            return false;
+                        }
+                        localStorage.setItem('user-key', btoa(response.user_key));
+                        window.location.href = '/user/index';
+                    }, function(e){
+                        console.log(e);
+                        alert('서버 통신 에러');
+                    });
                 break;
-            case 'CALL_NFC':
+            case 'NFC_ACTION':
                 // NFC 통신 결과
+        alert(response);
                 break;
             default:
                 return false;
         }
     }
+
+//    window.addEventListener( 'message', receiveMsgFromParent );
+    document.addEventListener( 'message', receiveMsgFromParent );
     
     window.greenpass = initCodeIdea() || [];
 }());
-
-var naver_id_login;
-
-function initSNS() {
-
-    if(window.ReactNativeWebView) {
-        // NOTICE: 리액트 웹뷰가 감지 되는 경우 -> 기본 웹뷰 버전에 따라 혹은 보안 정책에 따라 삭제 되는 경우 웹 로그인으로 동작하도록 구성
-        $('#loginKakao').off().on('click', function(){
-            greenpass.methods.hybridapp.snsLogin('kakao');
-        });
-        $('#naver_id_login').off().on('click', function(){
-            greenpass.methods.hybridapp.snsLogin('naver');
-        });
-        $('#appleid-signin').off().on('click', function(){
-            greenpass.methods.hybridapp.snsLogin('apple');
-        });
-        $('#loginGoogle').off().on('click', function(){
-            greenpass.methods.hybridapp.snsLogin('google');
-        });
-    } else {
-        // 네이버 로그인
-        naver_id_login = new naver_id_login("gubQnwLjz_KP_JLWm_QT", "https://greenpass.codeidea.io/login/oauth/naver");
-        var state = naver_id_login.getUniqState();
-        naver_id_login.setButton("white", 2,40);
-        naver_id_login.setDomain("greenpass.codeidea.io");
-        naver_id_login.setState(state);
-        //  	naver_id_login.setPopup();
-        naver_id_login.init_naver_id_login();
-        $('#naver_id_login > a').html('네이버 아이디로 로그인');
-    
-        // 카카오 로그인
-        Kakao.init('adb8b97705c5a5b8b5e85521904bdd5a');
-        // loginKakao
-        $('#loginKakao').off().on('click', function(){
-            /*
-            Kakao.Auth.authorize({
-                redirectUri: 'https://greenpass.codeidea.io/login/oauth/kakao'
-                , scope: 'account_email'
-            });
-            */
-           location.href = 'https://kauth.kakao.com/oauth/authorize?client_id=c5471e6c4033e7f336db378aaa6aa3ff&redirect_uri=https://greenpass.codeidea.io/login/oauth/kakao&response_type=code&prompt=account_email'
-        });
-        // 구글 로그인
-        gapi.load('auth2', function() {
-            gapi.auth2.init({
-                client_id: '1047701342625-lttc3hcvtabujqrdlhovlbso1b3f383c.apps.googleusercontent.com'
-                , cookiepolicy: 'single_host_origin'
-            });
-            attachSignin(document.getElementById('loginGoogle'));
-        });
-
-        // 구글 로그인 핸들러
-        function attachSignin(element){
-            var auth2 = gapi.auth2.getAuthInstance();
-        
-            auth2.attachClickHandler(element, {}, function(userInfo){
-                console.log(userInfo.getBasicProfile());
-        
-                var authId = userInfo.getBasicProfile().getId();
-                // sns_google <-- 존재 확인, 없으면 가입. SNS 연동은 별도 등록 과정 필요.
-                greenpass.methods.user.snsLogin({
-                    type: 'G'
-                    , id: authId
-                }, function(request, response){
-                    console.log('output : ' + response);
-                    if(!response.data){
-                        alert('디비 등록 오류');
-                        return false;
-                    }
-                    localStorage.setItem('user-key', btoa(response.user_key));
-                    window.location.href = '/user/index';
-                }, function(e){
-                    console.log(e);
-                    alert('서버 통신 에러');
-                });
-            }, function(e) {
-                alert(JSON.stringify(e, undefined, 2));
-            });
-        }
-        // 애플 로그인 -> 계정 승인은 되었으나 식별자에 대한 승인 아직 안됨
-        /*
-        AppleID.auth.init({
-            clientId : '[CLIENT_ID]',
-            scope : '[SCOPES]',
-            redirectURI: '[REDIRECT_URI]',
-            state : '[STATE]'
-        });
-        */
-    }
-}
-
-// 애플 로그인 핸들러
-document.addEventListener('AppleIDSignInOnSuccess', (userInfo) => {
-    console.log(userInfo);
-    var authId = userInfo.user.email;
-    // sns_google <-- 존재 확인, 없으면 가입. SNS 연동은 별도 등록 과정 필요.
-    greenpass.methods.user.snsLogin({
-        type: 'A'
-        , id: authId
-    }, function(request, response){
-        console.log('output : ' + response);
-        if(!response.data){
-            alert('디비 등록 오류');
-            return false;
-        }
-        localStorage.setItem('user-key', btoa(response.user_key));
-        window.location.href = '/user/index';
-    }, function(e){
-        console.log(e);
-        alert('서버 통신 에러');
-    });
-});
-document.addEventListener('AppleIDSignInOnFailure', (error) => {
-    console.log(error);
-    alert('오류가 발생했습니다.');
-});

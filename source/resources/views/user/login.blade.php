@@ -26,10 +26,10 @@
 		</div>
 		
 		<div class="btnSet column mt30">
-			<a href="#" id="loginKakao" class="btn_login span icon_kakao">카카오로 로그인</a>
-			<a href="#" id="naver_id_login" class="btn_login icon_naver">네이버로 로그인</a>
-			<a href="#" id="appleid-signin" class="btn_login icon_apple">Apple로 로그인</a>
-			<a href="#" id="loginGoogle" class="btn_login icon_google">Google로 로그인</a>
+			<a href="#" id="loginKakao" onclick="snsLgn('kakao')" class="btn_login span icon_kakao">카카오로 로그인</a>
+			<a href="#" id="naver_id_login" onclick="snsLgn('naver')" class="btn_login icon_naver">네이버로 로그인</a>
+			<a href="#" id="appleid-signin" onclick="snsLgn('apple')" class="btn_login icon_apple">Apple로 로그인</a>
+			<a href="#" id="loginGoogle" onclick="snsLgn('google')" class="btn_login icon_google">Google로 로그인</a>
 		</div>
 	</form>
 	</div>
@@ -44,10 +44,122 @@
 function waitFor(){
 	alert('준비중입니다.');
 }
+
+var naver_id_login;
+
+function snsLgn(type) {
+	greenpass.methods.hybridapp.snsLogin(type);
+	return false;
+}
+
+function initSNS() {
+    if(window.ReactNativeWebView) {
+        // NOTICE: 리액트 웹뷰가 감지 되는 경우 -> 기본 웹뷰 버전에 따라 혹은 보안 정책에 따라 삭제 되는 경우 웹 로그인으로 동작하도록 구성
+    } else {
+		$('#loginKakao').off();
+		$('#naver_id_login').off();
+		$('#appleid-signin').off();
+		$('#loginGoogle').off();
+
+        // 네이버 로그인
+        naver_id_login = new naver_id_login("gubQnwLjz_KP_JLWm_QT", "https://greenpass.codeidea.io/login/oauth/naver");
+        var state = naver_id_login.getUniqState();
+        naver_id_login.setButton("white", 2,40);
+        naver_id_login.setDomain("greenpass.codeidea.io");
+        naver_id_login.setState(state);
+        //  	naver_id_login.setPopup();
+        naver_id_login.init_naver_id_login();
+        $('#naver_id_login > a').html('네이버 아이디로 로그인');
+    
+        // 카카오 로그인
+        Kakao.init('adb8b97705c5a5b8b5e85521904bdd5a');
+        // loginKakao
+        $('#loginKakao').off().on('click', function(){
+            /*
+            Kakao.Auth.authorize({
+                redirectUri: 'https://greenpass.codeidea.io/login/oauth/kakao'
+                , scope: 'account_email'
+            });
+            */
+           location.href = 'https://kauth.kakao.com/oauth/authorize?client_id=c5471e6c4033e7f336db378aaa6aa3ff&redirect_uri=https://greenpass.codeidea.io/login/oauth/kakao&response_type=code&prompt=account_email';
+        });
+        // 구글 로그인
+        gapi.load('auth2', function() {
+            gapi.auth2.init({
+                client_id: '1047701342625-lttc3hcvtabujqrdlhovlbso1b3f383c.apps.googleusercontent.com'
+                , cookiepolicy: 'single_host_origin'
+            });
+            attachSignin(document.getElementById('loginGoogle'));
+        });
+
+        // 구글 로그인 핸들러
+        function attachSignin(element){
+            var auth2 = gapi.auth2.getAuthInstance();
+        
+            auth2.attachClickHandler(element, {}, function(userInfo){
+                console.log(userInfo.getBasicProfile());
+        
+                var authId = userInfo.getBasicProfile().getId();
+                // sns_google <-- 존재 확인, 없으면 가입. SNS 연동은 별도 등록 과정 필요.
+                greenpass.methods.user.snsLogin({
+                    type: 'G'
+                    , id: authId
+                }, function(request, response){
+                    console.log('output : ' + response);
+                    if(!response.data){
+                        alert('디비 등록 오류');
+                        return false;
+                    }
+                    localStorage.setItem('user-key', btoa(response.user_key));
+                    window.location.href = '/user/index';
+                }, function(e){
+                    console.log(e);
+                    alert('서버 통신 에러');
+                });
+            }, function(e) {
+                alert(JSON.stringify(e, undefined, 2));
+            });
+        }
+        // 애플 로그인 -> 계정 승인은 되었으나 식별자에 대한 승인 아직 안됨
+        /*
+        AppleID.auth.init({
+            clientId : '[CLIENT_ID]',
+            scope : '[SCOPES]',
+            redirectURI: '[REDIRECT_URI]',
+            state : '[STATE]'
+        });
+        */
+    }
+}
+
+// 애플 로그인 핸들러
+document.addEventListener('AppleIDSignInOnSuccess', (userInfo) => {
+    console.log(userInfo);
+    var authId = userInfo.user.email;
+    // sns_google <-- 존재 확인, 없으면 가입. SNS 연동은 별도 등록 과정 필요.
+    greenpass.methods.user.snsLogin({
+        type: 'A'
+        , id: authId
+    }, function(request, response){
+        console.log('output : ' + response);
+        if(!response.data){
+            alert('디비 등록 오류');
+            return false;
+        }
+        localStorage.setItem('user-key', btoa(response.user_key));
+        window.location.href = '/user/index';
+    }, function(e){
+        console.log(e);
+        alert('서버 통신 에러');
+    });
+});
+document.addEventListener('AppleIDSignInOnFailure', (error) => {
+    console.log(error);
+    alert('오류가 발생했습니다.');
+});
+
 $(document).ready(function (){
-	setTimeout(() => {
-		initSNS();
-	}, 100);
+	initSNS();
 });
 
 $('._timer').hide();

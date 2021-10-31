@@ -16,7 +16,7 @@ setTimeout(function () {
 		id: atob(user_key)
 	}, function(request, response){
 		console.log('output : ' + response);
-		if(!response.user_birthday){
+		if(!response.user_seqno){
 			$('._ment').show();
 			return false;
 		}

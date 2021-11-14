@@ -25,12 +25,14 @@
 			<a href="#" class="btn blue span mt15" onclick="confirmAuthCode()">로그인</a>
 		</div>
 		
+<!-- 2021.11.14. 안드로이드 승인을 위해 잠시 주석 -->
 		<div class="btnSet column mt30">
 			<a href="#" id="loginKakao" onclick="snsLgn('kakao')" class="btn_login span icon_kakao">카카오로 로그인</a>
 			<a href="#" id="naver_id_login" onclick="snsLgn('naver')" class="btn_login icon_naver">네이버로 로그인</a>
 			<a href="#" id="appleid-signin" onclick="snsLgn('apple')" class="btn_login icon_apple">Apple로 로그인</a>
 			<a href="#" id="loginGoogle" onclick="snsLgn('google')" class="btn_login icon_google">Google로 로그인</a>
 		</div>
+	
 	</form>
 	</div>
 
@@ -48,18 +50,22 @@ function waitFor(){
 var naver_id_login;
 
 function snsLgn(type) {
-	greenpass.methods.hybridapp.snsLogin(type);
+//	greenpass.methods.hybridapp.snsLogin(type);
 	return false;
 }
 
 function initSNS() {
-    if(window.ReactNativeWebView) {
+
+//    if(window.ReactNativeWebView) {
         // NOTICE: 리액트 웹뷰가 감지 되는 경우 -> 기본 웹뷰 버전에 따라 혹은 보안 정책에 따라 삭제 되는 경우 웹 로그인으로 동작하도록 구성
-    } else {
+//    } else 
+{
 		$('#loginKakao').off();
 		$('#naver_id_login').off();
 		$('#appleid-signin').off();
+
 		$('#loginGoogle').off();
+		https://accounts.google.com/o/oauth2/v2/auth?scope=email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=https://greenpass.codeidea.io/login/oauth/google&response_type=code&client_id=212708314746-p8sopoc8o3u8utf0sam77nscdf0krqch.apps.googleusercontent.com
 
         // 네이버 로그인
         naver_id_login = new naver_id_login("gubQnwLjz_KP_JLWm_QT", "https://greenpass.codeidea.io/login/oauth/naver");
@@ -84,13 +90,19 @@ function initSNS() {
            location.href = 'https://kauth.kakao.com/oauth/authorize?client_id=c5471e6c4033e7f336db378aaa6aa3ff&redirect_uri=https://greenpass.codeidea.io/login/oauth/kakao&response_type=code&prompt=account_email';
         });
         // 구글 로그인
-        gapi.load('auth2', function() {
-            gapi.auth2.init({
-                client_id: '1047701342625-lttc3hcvtabujqrdlhovlbso1b3f383c.apps.googleusercontent.com'
-                , cookiepolicy: 'single_host_origin'
-            });
-            attachSignin(document.getElementById('loginGoogle'));
-        });
+		setTimeout(() => {
+			gapi.load('auth2', function() {
+				gapi.auth2.init({
+					client_id: '212708314746-p8sopoc8o3u8utf0sam77nscdf0krqch.apps.googleusercontent.com'
+					, cookiepolicy: 'single_host_origin'
+					, scope: "profile email"
+					, ux_mode: 'redirect'
+					, redirect_uri: 'https://greenpass.codeidea.io/login/oauth/google'
+				});
+				attachSignin(document.getElementById('loginGoogle'));
+			});
+        	$('#appleid-signin').html('애플 아이디로 로그인');
+		}, 300);
 
         // 구글 로그인 핸들러
         function attachSignin(element){
@@ -119,16 +131,18 @@ function initSNS() {
             }, function(e) {
                 alert(JSON.stringify(e, undefined, 2));
             });
-        }
+		}
+		/*
+		*/
         // 애플 로그인 -> 계정 승인은 되었으나 식별자에 대한 승인 아직 안됨
-        /*
+        
         AppleID.auth.init({
-            clientId : '[CLIENT_ID]',
-            scope : '[SCOPES]',
-            redirectURI: '[REDIRECT_URI]',
-            state : '[STATE]'
+            clientId : 'www.greenpass.codeidea.io',
+            scope : 'email',
+            redirectURI: 'https://greenpass.codeidea.io/login/oauth/apple',
+            state : 'k'
         });
-        */
+        	$('#appleid-signin').html('애플 아이디로 로그인');
     }
 }
 

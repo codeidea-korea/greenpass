@@ -19,6 +19,8 @@
 		</div>
     </section>
 
+<!-- 2021.11.14. 안드로이드 승인을 위해 잠시 주석 -->
+<!--
 	<section class="popcon-wrapper bg-gradient-blue badge-certify bg-certify" style="padding:20px;">
 		<h3 class="fs22 mb5">코로나19<br>예방접종 증명서</h3>
 		<div class="info flex mt5">
@@ -34,5 +36,5 @@
 			</div>
 		</div>
     </section>
-
+	-->
 </div>

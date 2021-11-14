@@ -1,11 +1,14 @@
 @include('user.header')
 
 <section id="main">
+<!-- 2021.11.14. 안드로이드 승인을 위해 잠시 주석 -->
+<!--
 	<div class="top-banner">
 		<a href="/user/register_certify2"><img src="{{ asset('user/img/top-banner01.png') }}"></a>
 	</div>
+	-->
 	<div class="main-top">
-		<a href="#" onclick="openNFS()" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
+		<a href="void(0)" onclick="openNFS()" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
 		<a href="#" onclick="openGPS()" class="popup-inline"><span class="icon-btn-gps"></span>GPS 인증</a>
 	</div>
 	
@@ -209,9 +212,16 @@ function openGPS(){
 }
 
 function openNFS(){
-	greenpass.methods.hybridapp.scanNFC('pop-npc'); 
-	/*
+		greenpass.methods.hybridapp.scanNFC('pop-npc'); 
+
+		/*
 	if(window.ReactNativeWebView) {
+		$.magnificPopup.open({
+			items: {
+				src: '#pop-npc'
+			},
+			type: 'inline'
+		});
 		window.ReactNativeWebView.postMessage(
 			JSON.stringify({ type: "NFC_ACTION", dept: 'read' })
 		);

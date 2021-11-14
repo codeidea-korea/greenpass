@@ -1,39 +1,34 @@
 @include('user.header')
 
-<script>
-var user_key = localStorage.getItem('user-key');
-if(!user_key) window.location.href = '/user/login';
+@php
+$state = $_POST['state'];
+$code = $_POST['code'];
+$id_token = $_POST['id_token'];
+@endphp
 
-$(document).ready(function(){
-	greenpass.methods.user.info({
-		id: atob(user_key)
+<script>
+var authId;
+@php
+echo 'authId = "' . $id_token . '";';
+@endphp
+
+$(document).ready(function(){	
+	greenpass.methods.user.snsLogin({
+		type: 'A'
+		, id: authId
 	}, function(request, response){
 		console.log('output : ' + response);
-		if(!response.user_birthday){
-			alert('로그인이 만료되었습니다.');
-			window.location.href = '/user/login';
+		if(!response.data){
+			alert('디비 등록 오류');
 			return false;
 		}
-		loadAuths();
+		localStorage.setItem('user-key', btoa(response.user_key));
+		window.location.href = '/user/index';
 	}, function(e){
 		console.log(e);
 		alert('서버 통신 에러');
 	});
 });
-
-function attachSignin(element){
-    var auth2 = gapi.auth2.getAuthInstance();
-
-    auth2.attachClickHandler(element, {}, function(userInfo){
-        alert(userInfo);
-        console.log(userInfo.getBasicProfile());
-
-        userInfo.getBasicProfile().getName();
-    }, function(e) {
-        alert(JSON.stringify(e, undefined, 2));
-    });
-}
-
 </script>
 
 @include('user.footer')

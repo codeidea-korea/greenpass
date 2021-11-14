@@ -165,26 +165,88 @@ var bfCall = (function(){
 
                         ndef.addEventListener("readingerror", () => {
                             alert('NFC 데이터 읽기에 실패하였습니다. 다시 시도해주세요.');
+                            
+                    
+                            $.magnificPopup.close({
+                                items: {
+                                    src: '#'+magnificPopId
+                                },
+                                type: 'inline'
+                            });
                         });
 
                         ndef.addEventListener("reading", ({ message, serialNumber }) => {
-                            console.log(`> Serial Number: ${serialNumber}`);
-                            console.log(`> message: (${message})`);
+//                            console.log(`> Serial Number: ${serialNumber}`);
+//                            console.log(`> message: (${message})`);
 
                             // 기반으로 인증 통신 진행
                             alert(message);
                         });
+
                     } catch (er) {
-                        alert('NFC 를 우선 켜신 뒤 앱을 재실행 하여주세요.');
-                        alert(er);
-                    }
+                        console.log('NFC 를 우선 켜신 뒤 앱을 재실행 하여주세요.');
+//                        alert(er);
+                        
                     
-                    $.magnificPopup.close({
-                        items: {
-                            src: '#'+magnificPopId
-                        },
-                        type: 'inline'
-                    });
+                        $.magnificPopup.close({
+                            items: {
+                                src: '#'+magnificPopId
+                            },
+                            type: 'inline'
+                        });
+                    }
+
+                    // 태깅 정보가 없으므로 가상 인증
+                    setTimeout(function(){
+                    
+                        var thisDate = new Date();
+
+                        $('._certify-date').html('<span class="fs20">'
+                            +thisDate.getFullYear()+'.'+(thisDate.getMonth()+1 < 10 ? '0' : '') + (thisDate.getMonth()+1)+'.'
+                            +(thisDate.getDate()< 10 ? '0' : '') + thisDate.getDate() +'</span><br>'
+                            +(thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours() +'시'
+                            +(thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes() +'분');
+                        $('._certify-logo').attr('src', '/user/img/logo/logo07_90_90.png?v='+new Date().getTime());
+                        $('._certify-partner-name').html('<h3 class="mt15">테스트</h3>(테스트)');
+
+                        var user_key = atob(localStorage.getItem('user-key'));
+                        var auth_type = 'N';
+                        var partner_auth_seqno = 1; // NFC 태그 데이터 등록이 되면 그걸 매칭해서 가져오도록 수정해야함
+                            
+                        var location_x = 1;
+                        var location_y = 1;
+                        var location_name = '테스트';
+                        var location_sub_name = '테스트';
+                            
+                        greenpass.methods.auth.add({
+                            user_key: user_key,
+                            auth_type: auth_type,
+                            partner_auth_seqno: partner_auth_seqno,
+                            location_x: location_x,
+                            location_y: location_y,
+                            location_name: location_name,
+                            location_sub_name: location_sub_name
+                        }, function(request, response){
+                            console.log('output : ' + response);
+
+                            if(response.ment != '성공'){
+//                                alert('서버 통신 에러');
+                                return false;
+                            }
+                            prev_auth_type = 'N';
+                            loadAuths();
+                            
+                            $.magnificPopup.open({
+                                items: {
+                                    src: '#pop-certify'
+                                },
+                                type: 'inline'
+                            });
+                        }, function(e){
+                            console.log(e);
+                            alert('서버 통신 에러');
+                        });
+                    }, 500);
                 }
             }
         };
@@ -207,7 +269,7 @@ var bfCall = (function(){
 
     function receiveMsgFromParent( e ) {
         var response = JSON.parse(e.data);
-        console.log('받은 메시지 ', response );
+        alert('받은 메시지 ' + response );
 
         var type = response.type;
         if(!type) {
@@ -249,14 +311,21 @@ var bfCall = (function(){
                         }
                         localStorage.setItem('user-key', btoa(response.user_key));
                         window.location.href = '/user/index';
-                    }, function(e){
-                        console.log(e);
+                    }, function(e1){
+                        console.log(e1);
                         alert('서버 통신 에러');
                     });
                 break;
             case 'NFC_ACTION':
                 // NFC 통신 결과
         alert(response);
+        
+                $.magnificPopup.close({
+                    items: {
+                        src: '#pop-npc'
+                    },
+                    type: 'inline'
+                });
                 break;
             default:
                 return false;

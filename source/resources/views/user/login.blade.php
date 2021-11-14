@@ -63,7 +63,9 @@ function initSNS() {
 		$('#loginKakao').off();
 		$('#naver_id_login').off();
 		$('#appleid-signin').off();
+
 		$('#loginGoogle').off();
+		https://accounts.google.com/o/oauth2/v2/auth?scope=email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=https://greenpass.codeidea.io/login/oauth/google&response_type=code&client_id=212708314746-p8sopoc8o3u8utf0sam77nscdf0krqch.apps.googleusercontent.com
 
         // 네이버 로그인
         naver_id_login = new naver_id_login("gubQnwLjz_KP_JLWm_QT", "https://greenpass.codeidea.io/login/oauth/naver");
@@ -88,15 +90,14 @@ function initSNS() {
            location.href = 'https://kauth.kakao.com/oauth/authorize?client_id=c5471e6c4033e7f336db378aaa6aa3ff&redirect_uri=https://greenpass.codeidea.io/login/oauth/kakao&response_type=code&prompt=account_email';
         });
         // 구글 로그인
-		
 		setTimeout(() => {
 			gapi.load('auth2', function() {
 				gapi.auth2.init({
 					client_id: '212708314746-p8sopoc8o3u8utf0sam77nscdf0krqch.apps.googleusercontent.com'
 					, cookiepolicy: 'single_host_origin'
-					, scope: "email"
-//					, ux_mode: 'redirect'
-//					, redirect_uri: 'https://greenpass.codeidea.io/login/oauth/google'
+					, scope: "profile email"
+					, ux_mode: 'redirect'
+					, redirect_uri: 'https://greenpass.codeidea.io/login/oauth/google'
 				});
 				attachSignin(document.getElementById('loginGoogle'));
 			});
@@ -130,7 +131,9 @@ function initSNS() {
             }, function(e) {
                 alert(JSON.stringify(e, undefined, 2));
             });
-        }
+		}
+		/*
+		*/
         // 애플 로그인 -> 계정 승인은 되었으나 식별자에 대한 승인 아직 안됨
         
         AppleID.auth.init({

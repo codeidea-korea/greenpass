@@ -60,6 +60,8 @@ create table partner_auth
     location_sub_name   varchar(200)      null,
     location_img   varchar(300)      null,
     
+    order   int      default 0 not null, -- Y: 1, N: 0
+    
     create_dt        datetime         default CURRENT_TIMESTAMP null,
     update_dt        datetime         default CURRENT_TIMESTAMP null
 )
@@ -74,6 +76,7 @@ insert into partner_auth (admin_seqno, gps_used, beacon_used, nfc_used, location
 insert into partner_auth (admin_seqno, gps_used, beacon_used, nfc_used, location_x, location_y, location_name, location_sub_name, location_img) values (1, 1,1,1, '37.4898891','127.4994115', '메가미트','양평점', 'http://dev-codeidea.codeidea.io/img/10.png');
 
 -- alter table user_auth_hst add column partner_auth_seqno    bigint      not null;
+-- alter table partner_auth add column order   int      default 0 not null;
 
 -- 유저 즐겨찾기 지점 리스트
 create table user_favorite

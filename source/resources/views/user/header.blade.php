@@ -10,6 +10,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="HandheldFriendly" content="true">
     <meta name="format-detection" content="telephone=no">
+
 	<link rel="apple-touch-icon" href="{{ asset('user/img/favorite/favorite_mobile.png') }}" />
 	<link href="{{ asset('user/js/magnific-popup/magnific-popup.css') }}" rel="stylesheet">
 	<link rel="stylesheet" href="{{ asset('user/css/root.css') }}">
@@ -28,6 +29,13 @@
 	<script src="https://apis.google.com/js/api:client.js" async defer></script>
 	<!-- apple 로그인 추가 -->
 	<script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+
+	<meta name="appleid-signin-client-id" content="www.greenpass.codeidea.io">
+	<meta name="appleid-signin-scope" content="email">
+	<meta name="appleid-signin-redirect-uri" content="https://greenpass.codeidea.io/login/oauth/apple">
+	<meta name="appleid-signin-state" content="k">
+	<meta name="appleid-signin-use-popup" content="false">
+
 	<!-- 네이버 로그인 추가 -->
   	<script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
 	<!-- 카카오 로그인 추가 -->

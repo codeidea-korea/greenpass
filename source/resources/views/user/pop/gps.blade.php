@@ -1,4 +1,12 @@
 
+<style>
+.layerPopup {
+    color: #1b1b1b;
+    margin: 60px auto;
+    width: auto;
+    min-width: 300px;
+}
+</style>
 
 <div id="pop-gps" class="layerPopup zoom-anim-dialog mfp-hide">
 

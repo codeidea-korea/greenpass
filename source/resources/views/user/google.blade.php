@@ -1,14 +1,18 @@
 @include('user.header')
 
 <script>
-function attachSignin(element){
-    var auth2 = gapi.auth2.getAuthInstance();
+var authId;
+		
+setTimeout(() => {
+    gapi.load('auth2', function() {
+        gapi.auth2.init({
+            client_id: '212708314746-p8sopoc8o3u8utf0sam77nscdf0krqch.apps.googleusercontent.com',
+            fetch_basic_profile: false,
+            scope: "email",
+        });
 
-    auth2.attachClickHandler(element, {}, function(userInfo){
-        console.log(userInfo.getBasicProfile());
-
-        var authId = userInfo.getBasicProfile().getId();
-        // sns_google <-- 존재 확인, 없으면 가입. SNS 연동은 별도 등록 과정 필요.
+        authId = GoogleUser.getBasicProfile();
+/*
         greenpass.methods.user.snsLogin({
             type: 'G'
             , id: authId
@@ -24,10 +28,10 @@ function attachSignin(element){
             console.log(e);
             alert('서버 통신 에러');
         });
-    }, function(e) {
-        alert(JSON.stringify(e, undefined, 2));
+        */
     });
-}
+}, 300);
+
 </script>
 
 @include('user.footer')

@@ -26,8 +26,8 @@ class GreenPassController extends Controller
             return $result;
         }
 
-        // 우선은 데이터가 부족하므로 모든 리스트 리턴
-        $gpslist = DB::table("partner_auth")->get();
+        // 우선은 order 를 기준으로 정렬해서 노출
+        $gpslist = DB::table("partner_auth")->offset(0)->limit(20)->orderBy('order', 'asc')->orderBy('partner_auth_seqno', 'desc')->orderBy('location_name', 'asc')->get();
         $result['data'] = $gpslist;
         
         for($inx = 0; $inx < count($result['data']); $inx++){            

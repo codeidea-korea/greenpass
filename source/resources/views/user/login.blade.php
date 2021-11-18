@@ -1,5 +1,21 @@
 @include('user.header')
 
+@php
+header("Content-type: application/javascript");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+if(isset($_GET["set"])){ //first run here
+    setcookie("cookie_test","cookies",time()+3600);
+    header('Location: login?callback='.@$_GET["callback"]);
+    die();
+}
+
+$allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
+
+@endphp
+
 <section id="login">
 	<img src="{{ asset('user/img/intro-logo.png') }}" class="logo">
 
@@ -54,12 +70,23 @@ function snsLgn(type) {
 	return false;
 }
 
+var allowedCookies = true;
+@php
+echo 'allowedCookies = ' . $allowedThirdPartCokies . ';';
+@endphp
+
 function initSNS() {
 
 //    if(window.ReactNativeWebView) {
         // NOTICE: 리액트 웹뷰가 감지 되는 경우 -> 기본 웹뷰 버전에 따라 혹은 보안 정책에 따라 삭제 되는 경우 웹 로그인으로 동작하도록 구성
 //    } else 
 {
+	// 2021.11.19. 추가 : Apple Safari third party cookie 관련 미허용시 구글 로그인 제한 알럿
+	if(!allowedCookies) {
+		alert('구글 및 카카오 로그인을 위해 쿠키 허용을 해주시고 앱을 다시 실행하여 주세요. (애플사의 최신 사파리 브라우저에서는 보안을 위해 쿠키 사용을 제한하고 있습니다.)');
+	}
+	
+
 		$('#loginKakao').off();
 		$('#naver_id_login').off();
 		$('#appleid-signin').off();
@@ -78,29 +105,41 @@ function initSNS() {
         $('#naver_id_login > a').html('네이버 아이디로 로그인');
     
         // 카카오 로그인
-        Kakao.init('adb8b97705c5a5b8b5e85521904bdd5a');
-        // loginKakao
-        $('#loginKakao').off().on('click', function(){
-            /*
-            Kakao.Auth.authorize({
-                redirectUri: 'https://greenpass.codeidea.io/login/oauth/kakao'
-                , scope: 'account_email'
-            });
-            */
-           location.href = 'https://kauth.kakao.com/oauth/authorize?client_id=c5471e6c4033e7f336db378aaa6aa3ff&redirect_uri=https://greenpass.codeidea.io/login/oauth/kakao&response_type=code&prompt=account_email';
-        });
-        // 구글 로그인
-		setTimeout(() => {
-			gapi.load('auth2', function() {
-				gapi.auth2.init({
-					client_id: '212708314746-p8sopoc8o3u8utf0sam77nscdf0krqch.apps.googleusercontent.com'
-					, cookiepolicy: 'single_host_origin'
-					, scope: "profile email"
-					, ux_mode: 'redirect'
-					, redirect_uri: 'https://greenpass.codeidea.io/login/oauth/google'
+		if(allowedCookies) {
+			Kakao.init('adb8b97705c5a5b8b5e85521904bdd5a');
+			// loginKakao
+			$('#loginKakao').off().on('click', function(){
+				/*
+				Kakao.Auth.authorize({
+					redirectUri: 'https://greenpass.codeidea.io/login/oauth/kakao'
+					, scope: 'account_email'
 				});
-				attachSignin(document.getElementById('loginGoogle'));
+				*/
+			location.href = 'https://kauth.kakao.com/oauth/authorize?client_id=c5471e6c4033e7f336db378aaa6aa3ff&redirect_uri=https://greenpass.codeidea.io/login/oauth/kakao&response_type=code&prompt=account_email';
 			});
+		} else {
+			$('#loginKakao').off().on('click', function(){
+				alert('구글 및 카카오 로그인을 위해 쿠키 허용을 해주시고 앱을 다시 실행하여 주세요. (애플사의 최신 사파리 브라우저에서는 보안을 위해 쿠키 사용을 제한하고 있습니다.)');
+			});
+		}
+		// 구글 로그인
+		setTimeout(() => {
+			if(allowedCookies) {
+				gapi.load('auth2', function() {
+					gapi.auth2.init({
+						client_id: '212708314746-p8sopoc8o3u8utf0sam77nscdf0krqch.apps.googleusercontent.com'
+//						, cookiepolicy: 'single_host_origin'
+						, scope: "profile email"
+						, ux_mode: 'redirect'
+						, redirect_uri: 'https://greenpass.codeidea.io/login/oauth/google'
+					});
+					attachSignin(document.getElementById('loginGoogle'));
+				});
+			} else {
+				$('#loginGoogle').off().on('click', function(){
+					alert('구글 및 카카오 로그인을 위해 쿠키 허용을 해주시고 앱을 다시 실행하여 주세요. (애플사의 최신 사파리 브라우저에서는 보안을 위해 쿠키 사용을 제한하고 있습니다.)');
+				});
+			}
         	$('#appleid-signin').html('애플 아이디로 로그인');
 		}, 300);
 

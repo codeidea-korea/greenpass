@@ -14,17 +14,19 @@ setTimeout(() => {
 
         gauth.then(function (){
             var isLogined = gauth.isSignedIn.get();
+
             if(!isLogined) {
-                alert('로그인에 실패하였습니다.');
-                location.href='/user/login';
+                alert('로그인에 실패하였습니다. 최신 사파리 브라우저(iOS, Mac)인 경우에는 타사 쿠키 허용을 해야만 구글 로그인이 가능합니다.');
+                location.href='/user/login?set=test1';
                 return false;
             }
 
             var authId = gauth.currentUser.get().getBasicProfile().getEmail();
 
             if(!authId || (authId+'').length < 2) {
-                alert('로그인에 실패하였습니다.');
-                location.href='/user/login';
+                alert('로그인에 실패하였습니다. [프로필 로드 실패]');
+                alert(gauth.currentUser.get().getBasicProfile());
+                location.href='/user/login?set=test1';
                 return false;
             }
 
@@ -45,8 +47,8 @@ setTimeout(() => {
             });
         }, function (){
             if(!isLogined) {
-                alert('로그인에 실패하였습니다.');
-                location.href='/user/login';
+                alert('로그인에 실패하였습니다. [gauth 초기화 오류]');
+                location.href='/user/login?set=test1';
                 return false;
             }
         });

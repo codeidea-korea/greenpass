@@ -8,7 +8,7 @@
 setTimeout(function () {
 	var user_key = localStorage.getItem('user-key');
 	if(!user_key) {
-		window.location.href = '/user/login';
+		window.location.href = '/user/login?set=test1';
 		return;
 	}
 	// 유저 정보가 존재하는 경우 -> 인증된 고객의 경우 --> index 로 이동

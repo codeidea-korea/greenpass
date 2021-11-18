@@ -81,7 +81,7 @@
 
 <script>
 var user_key = localStorage.getItem('user-key');
-if(!user_key) window.location.href = '/user/login';
+if(!user_key) window.location.href = '/user/login?set=test1';
 
 $(document).ready(function(){
 	greenpass.methods.user.info({
@@ -90,7 +90,7 @@ $(document).ready(function(){
 		console.log('output : ' + response);
 		if(!response.user_seqno){
 			alert('로그인이 만료되었습니다.');
-			window.location.href = '/user/login';
+			window.location.href = '/user/login?set=test1';
 			return false;
 		}
 		loadAuths();
@@ -212,9 +212,9 @@ function openGPS(){
 }
 
 function openNFS(){
-		greenpass.methods.hybridapp.scanNFC('pop-npc'); 
+//		greenpass.methods.hybridapp.scanNFC('pop-npc'); 
 
-		/*
+		
 	if(window.ReactNativeWebView) {
 		$.magnificPopup.open({
 			items: {
@@ -228,7 +228,6 @@ function openNFS(){
 	} else {
 		greenpass.methods.hybridapp.scanNFC('pop-npc'); 
 	}
-	*/
 }
 
 var prev_no;

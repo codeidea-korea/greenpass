@@ -38,6 +38,7 @@ Route::get('/login/oauth/google', [UserController::class, 'sns_google'])->name('
 Route::post('/login/oauth/apple', [UserController::class, 'sns_apple'])->name('user.apple');
 Route::get('/login/oauth/kakao', [UserController::class, 'sns_kakao'])->name('user.kakao');
 Route::get('/login/oauth/naver', [UserController::class, 'sns_naver'])->name('user.naver');
+Route::get('/login/cookie-check', [UserController::class, 'sns_cookie_check'])->name('user.cookie_check');
 
 Route::fallback(function () {
     return view('user.notfound');

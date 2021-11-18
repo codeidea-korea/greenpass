@@ -39,6 +39,31 @@ var bfCall = (function(){
             }
         });
     }
+    function ajaxCallCust(method, type, contentType, params, successThenFn, errorThenFn, async)
+    {
+        showSplashLoading();
+        if(contentType == 'application/json') params = JSON.stringify(params);
+        $.ajax({
+            url: method
+            , data: params
+            , type: type
+            , async: async
+            , contentType: contentType
+            , cache: false
+            , timeout: 20000
+            , success: function(response){ 
+              console.log(response); 
+              hideSplashLoading();
+              successThenFn(params, response);
+            }
+            , error: function(e, xpr, mm){ 
+              console.log(e); 
+              hideSplashLoading();
+              errorThenFn(params);
+            }
+        });
+    }
+    
     function ajaxCallMulti(method, type, params, successThenFn, errorThenFn, async)
     {
         showSplashLoading();
@@ -102,6 +127,8 @@ var bfCall = (function(){
                 smsAuthCheck: function (params, successThenFn, errorThenFn){ ajaxCall('auth/sms/check', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
                 smsAuthSend: function (params, successThenFn, errorThenFn){ ajaxCall('auth/sms/send', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
                 snsLogin: function (params, successThenFn, errorThenFn){ ajaxCall('login/sns', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
+
+                checkAllowThirdPartyCookies: function (params, successThenFn, errorThenFn){ ajaxCallCust('/login/cookie-check', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, false); },
                 
             }, auth:{
                 list: function (params, successThenFn, errorThenFn){ ajaxCall('user/auths', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },

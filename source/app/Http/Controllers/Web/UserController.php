@@ -52,4 +52,9 @@ class UserController extends Controller
     {
         return view('user.naver');
     }
+    
+    public function sns_cookie_check(Request $request)
+    {
+        return view('user.cookie-check');
+    }
 }

@@ -4,12 +4,17 @@
 $state = $_POST['state'];
 $code = $_POST['code'];
 $id_token = $_POST['id_token'];
+
+$claims = explode('.', $id_token)[1];
+$claims = json_decode(base64_decode($claims));
+// print_r($claims->email);
 @endphp
 
 <script>
 var authId;
+
 @php
-echo 'authId = "' . $id_token . '";';
+echo 'authId = "' . $claims->email . '";';
 @endphp
 
 $(document).ready(function(){	

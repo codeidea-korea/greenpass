@@ -75,6 +75,11 @@ var allowedCookies = true;
 echo 'allowedCookies = ' . $allowedThirdPartCokies . ';';
 @endphp
 
+var platformType = localStorage.getItem('platform');
+if(platformType != 'android') {
+	$('#loginGoogle').hide();
+}
+
 function initSNS() {
 
 //    if(window.ReactNativeWebView) {

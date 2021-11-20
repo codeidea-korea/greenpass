@@ -2,11 +2,11 @@
 
 <section id="main">
 <!-- 2021.11.14. 안드로이드 승인을 위해 잠시 주석 -->
-<!--
-	<div class="top-banner">
+
+	<div class="top-banner" style="display:none;">
 		<a href="/user/register_certify2"><img src="{{ asset('user/img/top-banner01.png') }}"></a>
 	</div>
-	-->
+
 	<div class="main-top">
 		<a href="void(0)" onclick="openNFS()" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
 		<a href="#" onclick="openGPS()" class="popup-inline"><span class="icon-btn-gps"></span>GPS 인증</a>

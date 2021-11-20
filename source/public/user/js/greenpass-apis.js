@@ -296,7 +296,7 @@ var bfCall = (function(){
 
     function receiveMsgFromParent( e ) {
         var response = JSON.parse(e.data);
-        alert('받은 메시지 ' + response );
+        alert(response );
 
         var type = response.type;
         if(!type) {
@@ -304,6 +304,7 @@ var bfCall = (function(){
             return false;
         }
         switch (type) {
+            /*
             case 'SNS_SIGN_IN':
                 // 로그인 결과
         alert(response);
@@ -343,6 +344,7 @@ var bfCall = (function(){
                         alert('서버 통신 에러');
                     });
                 break;
+                */
             case 'NFC_ACTION':
                 // NFC 통신 결과
         alert(response);
@@ -353,6 +355,9 @@ var bfCall = (function(){
                     },
                     type: 'inline'
                 });
+                break;
+            case 'Platform':
+                localStorage.setItem('platform', response.data);
                 break;
             default:
                 return false;

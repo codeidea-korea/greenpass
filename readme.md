@@ -53,9 +53,8 @@ Development app or program, using resources : Properties, Settings, Command, any
 
 ### 배포 주소
 
-- 프론트 주소 : http://todak.codeidea.io/
-- 관리자 주소 : http://todak.codeidea.io/admin/
-- 라라벨 API swagger docs : http://todak.codeidea.io/api/docs
+- 프론트 주소 : https://greenpass.codeidea.io/
+- 관리자 주소 : https://greenpass.codeidea.io/admin/
 
 
 - Copyrighted by codeidea. and botbinoo.

@@ -5,6 +5,13 @@
 </section>
 
 <script>
+var agent = navigator.userAgent.toLowerCase();
+if (agent.indexOf("chrome") < 0) {
+	localStorage.setItem('platform', 'ios');
+} else {
+	localStorage.setItem('platform', 'android');
+}
+
 setTimeout(function () {
 	var user_key = localStorage.getItem('user-key');
 	if(!user_key) {

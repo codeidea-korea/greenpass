@@ -2,13 +2,13 @@
 
 <section id="main">
 <!-- 2021.11.14. 안드로이드 승인을 위해 잠시 주석 -->
-<!--
-	<div class="top-banner">
+
+	<div class="top-banner" style="display:none;">
 		<a href="/user/register_certify2"><img src="{{ asset('user/img/top-banner01.png') }}"></a>
 	</div>
-	-->
+
 	<div class="main-top">
-		<a href="void(0)" onclick="openNFS()" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
+		<a href="#" id="nfcClk" onclick="openNFS()" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
 		<a href="#" onclick="openGPS()" class="popup-inline"><span class="icon-btn-gps"></span>GPS 인증</a>
 	</div>
 	
@@ -84,6 +84,8 @@ var user_key = localStorage.getItem('user-key');
 if(!user_key) window.location.href = '/user/login?set=test1';
 
 $(document).ready(function(){
+	$('#nfcClk').off().on('click', openNFS);
+
 	greenpass.methods.user.info({
 		id: atob(user_key)
 	}, function(request, response){
@@ -151,83 +153,92 @@ function openGPS(){
 		alert('GPS 연결을 할 수 없습니다. 권한을 허가하여 주세요.');
 		return false;
 	}
-	greenpass.methods.hybridapp.getGpsData(function (location){
-//		alert(location);
-		var latitude = !location || !location.coords || location.coords.latitude;
-		var longitude = !location || !location.coords || location.coords.longitude;
-		if(latitude === true || longitude === true) {
-			alert('현재 GPS 주소를 불러올 수 없습니다. 잠시 후 시도해주세요.');
-			return;
-		}
-		localStorage.setItem('latitude', latitude);
-		localStorage.setItem('longitude', longitude);
+	
+	if(window.ReactNativeWebView) {
+		window.ReactNativeWebView.postMessage(
+			JSON.stringify({ type: "GPS_INFO", dept: 'read' })
+		);
+		return false;
+	} else {
+//		greenpass.methods.hybridapp.scanNFC('pop-npc'); 
+	}
 
-		// TODO: 현재 위치로 부터 가장 가까운 순으로 20m 이내 리스트 불러오기
-		greenpass.methods.partners.list({
-			latitude: latitude,
-			longitude: longitude,
-			user_key: atob(localStorage.getItem('user-key'))
-		}, function(request, response){
-			console.log('output : ' + response);
-
-			if(response.ment != '성공'){
-				alert('서버 통신 에러');
-				return false;
-			}
-	//		$('#totCnt').text(response.totCnt);
-
-			if(response.totCnt == 0){
-				$('#certify-list').html('<li>'
-										+'	<div class="textContent">'
-										+'		근처에 등록된 지점이 없습니다.<br>'
-										+'	</div>'
-										+'</li>');
-			} else {
-				var bodyData = '';
-				partners = response.data;
-				for(var inx=0; inx<response.data.length; inx++){
-					bodyData = bodyData 
-								+'<li>'
-								+'	<img onclick="addGpsAuth('+inx+')" src="'+response.data[inx].location_img+'">'
-								+'	<div class="textContent">'
-								+'		'+response.data[inx].location_name
-								+'	</div>'
-								+'	<span id="isfavorite-'+inx+'" class="bookmark-tag' +(!response.data[inx].isfavorite ? '' : ' active')+ '" onclick="toggleFavorite('+inx+')">즐겨찾기</span>'
-								+'</li>';
-				}
-				$('#certify-list').html(bodyData);
-			}
-
-			$.magnificPopup.open({
-				items: {
-					src: '#pop-gps'
-				},
-				type: 'inline'
-			});
-		}, function(e){
-			console.log(e);
-			alert('서버 통신 에러');
-		});
-	});
+	greenpass.methods.hybridapp.getGpsData(processingLocationData);
 }
 
-function openNFS(){
-//		greenpass.methods.hybridapp.scanNFC('pop-npc'); 
+var processingLocationData = function (location){
+//		alert(location);
+	var latitude = !location || !location.coords || location.coords.latitude;
+	var longitude = !location || !location.coords || location.coords.longitude;
+	if(latitude === true || longitude === true) {
+		alert('현재 GPS 주소를 불러올 수 없습니다. 잠시 후 시도해주세요.');
+		return;
+	}
+	localStorage.setItem('latitude', latitude);
+	localStorage.setItem('longitude', longitude);
 
-		
-	if(window.ReactNativeWebView) {
+	// TODO: 현재 위치로 부터 가장 가까운 순으로 20m 이내 리스트 불러오기
+	greenpass.methods.partners.list({
+		latitude: latitude,
+		longitude: longitude,
+		user_key: atob(localStorage.getItem('user-key'))
+	}, function(request, response){
+		console.log('output : ' + response);
+
+		if(response.ment != '성공'){
+			alert('서버 통신 에러');
+			return false;
+		}
+//		$('#totCnt').text(response.totCnt);
+
+		if(response.totCnt == 0){
+			$('#certify-list').html('<li>'
+									+'	<div class="textContent">'
+									+'		근처에 등록된 지점이 없습니다.<br>'
+									+'	</div>'
+									+'</li>');
+		} else {
+			var bodyData = '';
+			partners = response.data;
+			for(var inx=0; inx<response.data.length; inx++){
+				bodyData = bodyData 
+							+'<li>'
+							+'	<img onclick="addGpsAuth('+inx+')" src="'+response.data[inx].location_img+'">'
+							+'	<div class="textContent">'
+							+'		'+response.data[inx].location_name
+							+'	</div>'
+							+'	<span id="isfavorite-'+inx+'" class="bookmark-tag' +(!response.data[inx].isfavorite ? '' : ' active')+ '" onclick="toggleFavorite('+inx+')">즐겨찾기</span>'
+							+'</li>';
+			}
+			$('#certify-list').html(bodyData);
+		}
+
 		$.magnificPopup.open({
 			items: {
-				src: '#pop-npc'
+				src: '#pop-gps'
 			},
 			type: 'inline'
 		});
+	}, function(e){
+		console.log(e);
+		alert('서버 통신 에러');
+	});
+}
+
+function openNFS(){		
+	if(window.ReactNativeWebView) {
 		window.ReactNativeWebView.postMessage(
 			JSON.stringify({ type: "NFC_ACTION", dept: 'read' })
 		);
 	} else {
 		greenpass.methods.hybridapp.scanNFC('pop-npc'); 
 	}
+	$.magnificPopup.open({
+		items: {
+			src: '#pop-npc'
+		},
+		type: 'inline'
+	});
 }
 
 var prev_no;

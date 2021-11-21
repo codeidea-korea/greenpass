@@ -184,94 +184,14 @@ var bfCall = (function(){
                     }
                 }, scanNFC: async (magnificPopId) => {
                     
-                    try {
-                        const ndef = new NDEFReader();
-                        await ndef.scan();
-                        $.magnificPopup.open({
-                            items: {
-                                src: '#'+magnificPopId
-                            },
-                            type: 'inline'
-                        });
-                        
-                        console.log("> Scan started");
-
-                        ndef.addEventListener("readingerror", () => {
-                            alert('NFC 데이터 읽기에 실패하였습니다. 다시 시도해주세요.');
-                            
+                    $.magnificPopup.close({
+                        items: {
+                            src: '#'+magnificPopId
+                        },
+                        type: 'inline'
+                    });
                     
-                            $.magnificPopup.close({
-                                items: {
-                                    src: '#'+magnificPopId
-                                },
-                                type: 'inline'
-                            });
-                        });
-
-                        ndef.addEventListener("reading", ({ message, serialNumber }) => {
-//                            console.log(`> Serial Number: ${serialNumber}`);
-//                            console.log(`> message: (${message})`);
-
-                            // 기반으로 인증 통신 진행
-                            alert(message);
-                        });
-
-                    } catch (er) {
-                        console.log('NFC 를 우선 켜신 뒤 앱을 재실행 하여주세요.');
-//                        alert(er);
-                    }
-
-                    // 태깅 정보가 없으므로 가상 인증
-                    setTimeout(function(){
-                    
-                        var thisDate = new Date();
-
-                        $('._certify-date').html('<span class="fs20">'
-                            +thisDate.getFullYear()+'.'+(thisDate.getMonth()+1 < 10 ? '0' : '') + (thisDate.getMonth()+1)+'.'
-                            +(thisDate.getDate()< 10 ? '0' : '') + thisDate.getDate() +'</span><br>'
-                            +(thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours() +'시'
-                            +(thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes() +'분');
-                        $('._certify-logo').attr('src', '/user/img/logo/logo07_90_90.png?v='+new Date().getTime());
-                        $('._certify-partner-name').html('<h3 class="mt15">테스트</h3>(테스트)');
-
-                        var user_key = atob(localStorage.getItem('user-key'));
-                        var auth_type = 'N';
-                        var partner_auth_seqno = 1; // NFC 태그 데이터 등록이 되면 그걸 매칭해서 가져오도록 수정해야함
-                            
-                        var location_x = 1;
-                        var location_y = 1;
-                        var location_name = '테스트';
-                        var location_sub_name = '테스트';
-                            
-                        greenpass.methods.auth.add({
-                            user_key: user_key,
-                            auth_type: auth_type,
-                            partner_auth_seqno: partner_auth_seqno,
-                            location_x: location_x,
-                            location_y: location_y,
-                            location_name: location_name,
-                            location_sub_name: location_sub_name
-                        }, function(request, response){
-                            console.log('output : ' + response);
-
-                            if(response.ment != '성공'){
-//                                alert('서버 통신 에러');
-                                return false;
-                            }
-                            prev_auth_type = 'N';
-                            loadAuths();
-                            
-                            $.magnificPopup.open({
-                                items: {
-                                    src: '#pop-certify'
-                                },
-                                type: 'inline'
-                            });
-                        }, function(e){
-                            console.log(e);
-                            alert('서버 통신 에러');
-                        });
-                    }, 5000);
+                    alert('NFC 기능은 앱 에서 실행하여 주세요.');
                 }
             }
         };
@@ -307,7 +227,17 @@ function receiveMsgFromParent( e ) {
     switch (type) {
         case 'NFC_ACTION':
             // NFC 통신 결과
-            // response.data
+            if(! response.is_success) {
+                alert('NFC 오류 발생 : ' + response.data);
+                
+                $.magnificPopup.close({
+                    items: {
+                        src: '#pop-certify'
+                    },
+                    type: 'inline'
+                });
+                return false;
+            }
             var thisDate = new Date();
 
             $('._certify-date').html('<span class="fs20">'
@@ -315,17 +245,15 @@ function receiveMsgFromParent( e ) {
                 +(thisDate.getDate()< 10 ? '0' : '') + thisDate.getDate() +'</span><br>'
                 +(thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours() +'시'
                 +(thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes() +'분');
-            $('._certify-logo').attr('src', '/user/img/logo/logo07_90_90.png?v='+new Date().getTime());
-            $('._certify-partner-name').html('<h3 class="mt15">테스트</h3>(테스트)');
 
             var user_key = atob(localStorage.getItem('user-key'));
             var auth_type = 'N';
-            var partner_auth_seqno = 1; // NFC 태그 데이터 등록이 되면 그걸 매칭해서 가져오도록 수정해야함
+            var partner_auth_seqno = 0; // NFC 태그 데이터를 기준으로 서버에서 조회해서 유니크한 1종의 seq 를 자동 저장
                 
-            var location_x = 1;
-            var location_y = 1;
-            var location_name = '테스트';
-            var location_sub_name = '테스트';
+            var location_x = 0;
+            var location_y = 0;
+            var location_name = response.data;
+            var location_sub_name = response.data;
                 
             greenpass.methods.auth.add({
                 user_key: user_key,
@@ -335,19 +263,23 @@ function receiveMsgFromParent( e ) {
                 location_y: location_y,
                 location_name: location_name,
                 location_sub_name: location_sub_name
-            }, function(request, response){
-                console.log('output : ' + response);
+            }, function(request, response2){
+                console.log('output : ' + response2);
 
-                if(response.ment != '성공'){
-        //                                alert('서버 통신 에러');
+                if(response2.ment != '성공'){
+                    alert(response2.ment);
                     return false;
                 }
+                $('._certify-logo').attr('src', response2.result.location_img+'?v='+new Date().getTime());
+                $('._certify-partner-name').html('<h3 class="mt15">'+response2.result.location_name+'</h3>'
+                                                + (response2.result.location_sub_name ? '('+response2.result.location_sub_name+')' : ''));
+
                 prev_auth_type = 'N';
                 loadAuths();
                 
                 $.magnificPopup.open({
                     items: {
-                        src: '#pop-certify'
+                        src: '#pop-npc'
                     },
                     type: 'inline'
                 });
@@ -359,6 +291,18 @@ function receiveMsgFromParent( e ) {
             break;
         case 'GPS_INFO':
             // GPS 통신 결과
+            if(! response.is_success) {
+                alert('GPS 오류 발생 : ' + response.data);
+                
+                $.magnificPopup.close({
+                    items: {
+                        src: '#pop-gps'
+                    },
+                    type: 'inline'
+                });
+                return false;
+            }
+
             var location = {
                 coords: {
                     latitude: response.data.latitude

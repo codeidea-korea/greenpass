@@ -8,7 +8,7 @@
 	</div>
 
 	<div class="main-top">
-		<a href="#" id="nfcClk" onclick="openNFS()" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
+		<a href="#" id="nfcClk" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
 		<a href="#" onclick="openGPS()" class="popup-inline"><span class="icon-btn-gps"></span>GPS 인증</a>
 	</div>
 	
@@ -84,7 +84,7 @@ var user_key = localStorage.getItem('user-key');
 if(!user_key) window.location.href = '/user/login?set=test1';
 
 $(document).ready(function(){
-	$('#nfcClk').off().on('click', openNFS);
+	$('#nfcClk').off().on('click', openNFC);
 
 	greenpass.methods.user.info({
 		id: atob(user_key)
@@ -225,13 +225,14 @@ var processingLocationData = function (location){
 	});
 }
 
-function openNFS(){		
+function openNFC(e){		
 	if(window.ReactNativeWebView) {
 		window.ReactNativeWebView.postMessage(
 			JSON.stringify({ type: "NFC_ACTION", dept: 'read' })
 		);
 	} else {
 		greenpass.methods.hybridapp.scanNFC('pop-npc'); 
+		return false;
 	}
 	$.magnificPopup.open({
 		items: {
@@ -298,7 +299,8 @@ function addGpsAuth(no){
 		+(thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours() +'시'
 		+(thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes() +'분');
 	$('._certify-logo').attr('src', partners[no].location_img+'?v='+new Date().getTime());
-	$('._certify-partner-name').html('<h3 class="mt15">'+partners[no].location_name+'</h3>('+partners[no].location_sub_name+')');
+	$('._certify-partner-name').html('<h3 class="mt15">'+partners[no].location_name+'</h3>'
+										+ (partners[no].location_sub_name ? '('+partners[no].location_sub_name+')' : '' ));
 
 	var user_key = atob(localStorage.getItem('user-key'));
     var auth_type = 'G';

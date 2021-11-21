@@ -30,7 +30,7 @@ class UserController extends Controller
     {
         $user_key = $request->post('user_key', '');
         $auth_type = $request->post('auth_type', '');
-        $partner_auth_seqno = $request->post('partner_auth_seqno', '');
+        $partner_auth_seqno = $request->post('partner_auth_seqno', '0');
         
         $location_x = $request->post('location_x', '');
         $location_y = $request->post('location_y', '');
@@ -50,6 +50,34 @@ class UserController extends Controller
             return $result;
         }
 
+        if($partner_auth_seqno == 0) {
+            if($auth_type == 'N') {
+                // NFC 인 경우에는 매장 상세 명칭으로 조회해서 저장, 미승인 매장이거나 없는 매장인 경우에는 에러 처리
+                $authPartner = DB::table("partner_auth")->where([
+                    ['location_name', '=', $location_name]
+                ])->first();
+
+                if(empty($authPartner)) {
+                    $result['ment'] = '없는 매장입니다.';
+                    return $result;
+                }
+                $partner_auth_seqno = $authPartner->$partner_auth_seqno;
+            } else {
+                $result['ment'] = '없는 매장입니다.';
+                return $result;
+            }
+        }
+        
+        $authPartner = DB::table("partner_auth")->where([
+            ['partner_auth_seqno', '=', $partner_auth_seqno]
+        ])->first();
+
+        if(empty($authPartner) || $authPartner->admin_seqno == 0) {
+            // NOTICE: 미승인 매장
+            $result['ment'] = '아직 승인 되지 않은 매장입니다.';
+            return $result;
+        }
+
         $id = DB::table('user_auth_hst')->insertGetId(
             [
                 'user_seqno' => $user_key
@@ -64,7 +92,7 @@ class UserController extends Controller
             ]
         );
         $result['ment'] = '성공';
-        $result['result'] = true;
+        $result['result'] = $authPartner;
         $result['data'] = $id;
 
         return $result;

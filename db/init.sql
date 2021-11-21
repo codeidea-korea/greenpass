@@ -47,7 +47,7 @@ create table partner_auth
 (
     partner_auth_seqno bigint auto_increment
         primary key,
-    admin_seqno    bigint      not null, -- 등록한 어드민 계정 식별자
+    admin_seqno    bigint      not null, -- 승인한 어드민 계정 식별자 <-- 미승인시 0
     gps_used   varchar(1)      not null, -- Y: 1, N: 0
     beacon_used   varchar(1)      not null, -- Y: 1, N: 0
     nfc_used   varchar(1)      not null, -- Y: 1, N: 0

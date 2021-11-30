@@ -140,6 +140,73 @@ function loadAuths(type){
 						+'</li>';
 		}
 		$('#auth_list_m').html(bodyData);
+
+		fnNFCnotificationOn();
+	}, function(e){
+		console.log(e);
+		alert('서버 통신 에러');
+	});
+}
+
+function fnNFCnotificationOn(){
+	if(localStorage.getItem('nfc_action_req') !== 'Y') {
+		return false;
+	}
+	if(!localStorage.getItem('nfc_action_req_data')) {
+		alert('인증 업체 태그 정보가 잘못되었습니다.');
+		return false;
+	}
+	var nfc_action_req_data = localStorage.getItem('nfc_action_req_data');
+	
+	localStorage.removeItem('nfc_action_req');
+	localStorage.removeItem('nfc_action_req_data');
+
+	var user_key = atob(localStorage.getItem('user-key'));
+	var thisDate = new Date();
+
+	$('._certify-date').html('<span class="fs20">'
+		+thisDate.getFullYear()+'.'+(thisDate.getMonth()+1 < 10 ? '0' : '') + (thisDate.getMonth()+1)+'.'
+		+(thisDate.getDate()< 10 ? '0' : '') + thisDate.getDate() +'</span><br>'
+		+(thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours() +'시'
+		+(thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes() +'분');
+
+	var auth_type = 'N';
+	var partner_auth_seqno = 0; // NFC 태그 데이터를 기준으로 서버에서 조회해서 유니크한 1종의 seq 를 자동 저장
+		
+	var location_x = 0;
+	var location_y = 0;
+	var location_name = nfc_action_req_data; //response.data;
+	var location_sub_name = nfc_action_req_data; //response.data;
+		
+	greenpass.methods.auth.add({
+		user_key: user_key,
+		auth_type: auth_type,
+		partner_auth_seqno: partner_auth_seqno,
+		location_x: location_x,
+		location_y: location_y,
+		location_name: location_name,
+		location_sub_name: location_sub_name
+	}, function(request, response2){
+		console.log('output : ' + response2);
+
+		if(response2.ment != '성공'){
+			alert(response2.ment);
+			return false;
+		}
+		$('._certify-logo').attr('src', response2.result.location_img+'?v='+new Date().getTime());
+		$('._certify-partner-name').html('<h3 class="mt15">'+response2.result.location_name+'</h3>'
+										+ (response2.result.location_sub_name ? '('+response2.result.location_sub_name+')' : ''));
+
+		prev_auth_type = 'N';
+		loadAuths();
+		
+		$.magnificPopup.open({
+			items: {
+				src: '#pop-certify'
+			},
+			type: 'inline'
+		});
+
 	}, function(e){
 		console.log(e);
 		alert('서버 통신 에러');
@@ -378,9 +445,18 @@ function reauth() {
 		alert('인증 내용이 없습니다.');
 		return;
 	}
+	$.magnificPopup.close({
+		items: {
+			src: '#pop-certify'
+		},
+		type: 'inline'
+	});
 	switch(prev_auth_type){
 		case 'G':
 			openGPS();
+			break;
+		case 'N':
+			openNFC();
 			break;
 	}
 }

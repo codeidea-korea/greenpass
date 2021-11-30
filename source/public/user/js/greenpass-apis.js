@@ -228,11 +228,11 @@ function receiveMsgFromParent( e ) {
         case 'NFC_ACTION':
             // NFC 통신 결과
             if(! response.is_success) {
-                alert('NFC 오류 발생 : ' + response.data);
+                console.log('NFC 오류 발생 : ' + response.data);
                 
                 $.magnificPopup.close({
                     items: {
-                        src: '#pop-certify'
+                        src: '#pop-npc'
                     },
                     type: 'inline'
                 });
@@ -248,12 +248,12 @@ function receiveMsgFromParent( e ) {
 
             var user_key = atob(localStorage.getItem('user-key'));
             var auth_type = 'N';
-            var partner_auth_seqno = 0; // NFC 태그 데이터를 기준으로 서버에서 조회해서 유니크한 1종의 seq 를 자동 저장
+            var partner_auth_seqno = 30; // NFC 태그 데이터를 기준으로 서버에서 조회해서 유니크한 1종의 seq 를 자동 저장
                 
             var location_x = 0;
             var location_y = 0;
-            var location_name = response.data;
-            var location_sub_name = response.data;
+            var location_name = '그린패스테스트'; //response.data;
+            var location_sub_name = '그린패스테스트'; //response.data;
                 
             greenpass.methods.auth.add({
                 user_key: user_key,
@@ -279,7 +279,7 @@ function receiveMsgFromParent( e ) {
                 
                 $.magnificPopup.open({
                     items: {
-                        src: '#pop-npc'
+                        src: '#pop-certify'
                     },
                     type: 'inline'
                 });
@@ -292,7 +292,7 @@ function receiveMsgFromParent( e ) {
         case 'GPS_INFO':
             // GPS 통신 결과
             if(! response.is_success) {
-                alert('GPS 오류 발생 : ' + response.data);
+                console.log('GPS 오류 발생 : ' + response.data);
                 
                 $.magnificPopup.close({
                     items: {
@@ -312,7 +312,21 @@ function receiveMsgFromParent( e ) {
             processingLocationData(location);
             break;
         case 'Platform':
-            localStorage.setItem('platform', response);
+            localStorage.setItem('platform', response.data);
+            localStorage.setItem('nfc_action', response.type2);
+            if(response.data2 && window.location.href.length < 32) {
+                // nfc 태깅 정보가 오는 경우, 로그인 체크후 인증으로 넘어가기
+                if(!localStorage.getItem('user-key')) {
+                    alert('로그인이 만료되어 인증을 할 수 없습니다. 먼저 로그인을 하여주세요.');
+                    window.location.href = '/user/login?set=test1';
+                    return false;
+                }
+
+                localStorage.setItem('nfc_action_req', 'Y');
+                localStorage.setItem('nfc_action_req_data', response.data2);
+
+                window.location.href = '/user/index';
+            }
             break;
         default:
             return false;

@@ -1,4 +1,8 @@
-
+<style>
+.mfp-wrap.mfp-close-btn-in button.mfp-close{
+	display:none;
+}
+</style>
 
 <div id="pop-certify" class="layerPopup zoom-anim-dialog mfp-hide">
 

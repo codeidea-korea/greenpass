@@ -61,7 +61,7 @@ class UserController extends Controller
                     $result['ment'] = '없는 매장입니다.';
                     return $result;
                 }
-                $partner_auth_seqno = $authPartner->$partner_auth_seqno;
+                $partner_auth_seqno = $authPartner->partner_auth_seqno;
             } else {
                 $result['ment'] = '없는 매장입니다.';
                 return $result;

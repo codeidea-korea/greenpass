@@ -142,6 +142,29 @@ var bfCall = (function(){
             ,toCurrency: function(x){
                 return '&#x20a9;'+x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
+            , getMyLanguage(){
+                var languageType = localStorage.getItem('lan');
+                var lanArr = [{code:'ko', class: 'korean', label: 'Korean'}
+                                , {code:'vt', class: 'vietnamese', label: 'Vietnamese'}
+                                , {code:'lao', class: 'lao', label: 'Lao'}];
+    
+                if(!languageType || languageType == 'ko') {
+                    languageType = 'ko';
+                }
+                var isValidLanguage = false;
+                for(var inx=0; inx<lanArr.length; inx++){
+                    if(lanArr[inx].code == languageType) {
+                        isValidLanguage = true;
+                        break;
+                    } 
+                }
+                if(!isValidLanguage) {
+                    alert(greenpass.globalLanBF.api.not_allow_language[greenpass.methods.getMyLanguage()]);
+                    return false;
+                }
+    
+                return languageType;
+            }
             , hybridapp: {
                 gpscheck : function(){
                     return navigator.geolocation;
@@ -178,7 +201,7 @@ var bfCall = (function(){
                                 );
                                 break;
                             default :
-                                alert('알 수 없는 sns 입니다.');
+                                alert(greenpass.globalLanBF.api.not_allow_language[greenpass.methods.getMyLanguage()]);
                                 break;
                         }
                     }
@@ -191,7 +214,7 @@ var bfCall = (function(){
                         type: 'inline'
                     });
                     
-                    alert('NFC 기능은 앱 에서 실행하여 주세요.');
+                    alert(greenpass.globalLanBF.api.need_app[greenpass.methods.getMyLanguage()]);
                 }
             }
         };
@@ -209,6 +232,11 @@ var bfCall = (function(){
         		return localStorage.getItem(attr);
         	}
         };
+        this.globalLanBF;
+        fetch('/user/js/greenpass-lan-global.json').then(response=>{
+			return response.json();
+        }).catch(console.error).then(data=>{ this.globalLanBF = data; loadPageLanguage(); });
+        
         return this;
     }
     
@@ -286,7 +314,7 @@ function receiveMsgFromParent( e ) {
     
             }, function(e){
                 console.log(e);
-                alert('서버 통신 에러');
+                alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
             });
             break;
         case 'GPS_INFO':
@@ -317,7 +345,7 @@ function receiveMsgFromParent( e ) {
             if(response.data2 && window.location.href.length < 32) {
                 // nfc 태깅 정보가 오는 경우, 로그인 체크후 인증으로 넘어가기
                 if(!localStorage.getItem('user-key')) {
-                    alert('로그인이 만료되어 인증을 할 수 없습니다. 먼저 로그인을 하여주세요.');
+                    alert(greenpass.globalLanBF.api.expired_login_error[greenpass.methods.getMyLanguage()]);
                     window.location.href = '/user/login?set=test1';
                     return false;
                 }

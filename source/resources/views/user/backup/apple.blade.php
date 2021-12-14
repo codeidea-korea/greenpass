@@ -24,14 +24,14 @@ $(document).ready(function(){
 	}, function(request, response){
 		console.log('output : ' + response);
 		if(!response.data){
-			alert(greenpass.globalLanBF.login.inErrorDb[greenpass.methods.getMyLanguage()]);
+			alert('디비 등록 오류');
 			return false;
 		}
 		localStorage.setItem('user-key', btoa(response.user_key));
 		window.location.href = '/user/index';
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+		alert('서버 통신 에러');
 	});
 });
 </script>

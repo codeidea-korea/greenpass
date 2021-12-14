@@ -31,7 +31,7 @@ setTimeout(function () {
 		window.location.href = '/user/index';
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+		alert('서버 통신 에러');
 	});
 }, 2500);
 </script>

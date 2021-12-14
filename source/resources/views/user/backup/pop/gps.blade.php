@@ -15,7 +15,7 @@
 		
 		<div class="tcenter">
 			<h3 class="noto600 fs20 color-green mt25 mb5">GREEN PASS ZONE</h3>
-			<p id="lb-branch-list">주변목록중에서 선택하세요</p>
+			<p>주변목록중에서 선택하세요</p>
 		</div>
 
 		<ul class="certify-list line mt15" id="certify-list">
@@ -70,5 +70,10 @@
 			</li>
 		</ul>
     </section>
+	<div class="ani-nfc">
+		<span></span>
+		<span></span>
+		<span></span>
+	</div>
 
 </div>

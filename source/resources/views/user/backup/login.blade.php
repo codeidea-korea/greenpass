@@ -23,7 +23,7 @@ $allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
 	<form name="" action="" method="post">
 		
 		<div class="inner">
-			<h3 id="login-tit">간편로그인</h3>
+			<h3>간편로그인</h3>
 			<div class="select-lag _selectLanguage">
 				<div class="korean current">Korean</div>
 				<ul class="option">
@@ -32,28 +32,28 @@ $allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
 				</ul>
 			</div>
 			<p class="mt10">
-				<span id="lb-birth" class="label">생년월일(YYYYMMDD)</span>
-				<input type="tel" id="inp-birth" name="user_birth" value="" class="span" placeholder="생년월일">
+				<span class="label">생년월일(YYYYMMDD)</span>
+				<input type="tel" name="user_birth" value="" class="span" placeholder="생년월일">
 			</p>
 			<p class="mt10">
-				<span class="label" id="lb-phone">휴대폰 번호</span>
-				<input type="tel" id="inp-phone" name="phoneNo" value="" class="span" placeholder="휴대폰 번호">
-				<a href="#" class="send_cerifity" id="auth-send-clk" onclick="sendSmsAuth()">인증번호 전송</a>
+				<span class="label">휴대폰 번호</span>
+				<input type="tel" name="phoneNo" value="" class="span" placeholder="휴대폰 번호">
+				<a href="#" class="send_cerifity" onclick="sendSmsAuth()">인증번호 전송</a>
 			</p>
 			<p class="mt10">
-				<span class="label" id="lb-auth-input">인증번호 입력</span>				
-				<input type="tel" id="inp-auth-input" name="authCode" value="" class="span" placeholder="인증번호 입력">
+				<span class="label">인증번호 입력</span>				
+				<input type="tel" name="authCode" value="" class="span" placeholder="인증번호 입력">
 				<span class="timer _timer">03:00</span>
 			</p>
-			<a href="#" class="btn blue span mt15" onclick="confirmAuthCode()" id="login-clk">로그인</a>
+			<a href="#" class="btn blue span mt15" onclick="confirmAuthCode()">로그인</a>
 		</div>
 		
 <!-- 2021.11.14. 안드로이드 승인을 위해 잠시 주석 -->
 		<div class="btnSet column mt30">
 			<a href="#" id="loginKakao" onclick="snsLgn('kakao')" class="btn_login span icon_kakao">카카오로 로그인</a>
 			<a href="#" id="naver_id_login" onclick="snsLgn('naver')" class="btn_login icon_naver">네이버로 로그인</a>
-			<a href="#" id="loginFacebook" onclick="waitFor()" class="btn_login icon_facebook">페이스북으로 로그인</a>
-			<a href="#" id="loginZalo" onclick="waitFor()" class="btn_login icon_zalo">Zalo로 로그인</a>
+			<a href="#" onclick="waitFor()" class="btn_login icon_facebook">페이스북으로 로그인</a>
+			<a href="#" onclick="waitFor()" class="btn_login icon_zalo">Zalo로 로그인</a>
 			<a href="#" id="appleid-signin" onclick="snsLgn('apple')" class="btn_login icon_apple">Apple로 로그인</a>
 			<a href="#" id="loginGoogle" onclick="snsLgn('google')" class="btn_login icon_google">Google로 로그인</a>
 		</div>
@@ -67,29 +67,6 @@ $allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
 <script>
 //입력폼 전부 채운후, 다음버튼 활성화 되도록 스크립트 요청..
 //$('.btnSet .btnNext').addClass('active');
-
-function loadPageLanguage(){
-	$('#login-tit').text(greenpass.globalLanBF.login.simple[greenpass.methods.getMyLanguage()]);
-
-	$('#lb-birth').text(greenpass.globalLanBF.login.birthday[greenpass.methods.getMyLanguage()] + '(YYYYMMDD)');
-	$('#inp-birth').attr('placeholder', greenpass.globalLanBF.login.birthday[greenpass.methods.getMyLanguage()]);
-	
-	$('#lb-phone').text(greenpass.globalLanBF.login.phone_number[greenpass.methods.getMyLanguage()]);
-	$('#inp-phone').attr('placeholder', greenpass.globalLanBF.login.phone_number[greenpass.methods.getMyLanguage()]);
-	
-	$('#lb-auth-input').text(greenpass.globalLanBF.login.auth_number_input[greenpass.methods.getMyLanguage()]);
-	$('#inp-auth-input').attr('placeholder', greenpass.globalLanBF.login.auth_number_input[greenpass.methods.getMyLanguage()]);
-	
-	$('#auth-send-clk').text(greenpass.globalLanBF.login.auth_number_send[greenpass.methods.getMyLanguage()]);
-	$('#login-clk').text(greenpass.globalLanBF.login.login[greenpass.methods.getMyLanguage()]);
-	
-	$('#loginKakao').text(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'KAKAO'));
-	$('#naver_id_login').text(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'NAVER'));
-	$('#loginFacebook').text(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'facebook'));
-	$('#loginZalo').text(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'ZALO'));
-	$('#appleid-signin').text(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'APPLE'));
-	$('#loginGoogle').text(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'Google'));
-}
 
 function onloadLanguageBox(){
 	var languageType = localStorage.getItem('lan');
@@ -129,7 +106,7 @@ function chooseLanguage(lanCode){
 }
 
 function waitFor(){
-	alert(greenpass.globalLanBF.login.wait[greenpass.methods.getMyLanguage()]);
+	alert('준비중입니다.');
 }
 
 var naver_id_login;
@@ -157,7 +134,7 @@ function initSNS() {
 {
 	// 2021.11.19. 추가 : Apple Safari third party cookie 관련 미허용시 구글 로그인 제한 알럿
 	if(!allowedCookies) {
-		alert(greenpass.globalLanBF.login.cokiesRequire[greenpass.methods.getMyLanguage()]);
+		alert('구글 및 카카오 로그인을 위해 쿠키 허용을 해주시고 앱을 다시 실행하여 주세요. (애플사의 최신 사파리 브라우저에서는 보안을 위해 쿠키 사용을 제한하고 있습니다.)');
 	}
 	
 
@@ -176,7 +153,7 @@ function initSNS() {
         naver_id_login.setState(state);
         //  	naver_id_login.setPopup();
         naver_id_login.init_naver_id_login();
-        $('#naver_id_login > a').html(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'NAVER'));
+        $('#naver_id_login > a').html('네이버 아이디로 로그인');
     
         // 카카오 로그인
 		if(allowedCookies) {
@@ -193,7 +170,7 @@ function initSNS() {
 			});
 		} else {
 			$('#loginKakao').off().on('click', function(){
-				alert(greenpass.globalLanBF.login.cokiesRequire[greenpass.methods.getMyLanguage()]);
+				alert('구글 및 카카오 로그인을 위해 쿠키 허용을 해주시고 앱을 다시 실행하여 주세요. (애플사의 최신 사파리 브라우저에서는 보안을 위해 쿠키 사용을 제한하고 있습니다.)');
 			});
 		}
 		// 구글 로그인
@@ -211,10 +188,10 @@ function initSNS() {
 				});
 			} else {
 				$('#loginGoogle').off().on('click', function(){
-					alert(greenpass.globalLanBF.login.cokiesRequire[greenpass.methods.getMyLanguage()]);
+					alert('구글 및 카카오 로그인을 위해 쿠키 허용을 해주시고 앱을 다시 실행하여 주세요. (애플사의 최신 사파리 브라우저에서는 보안을 위해 쿠키 사용을 제한하고 있습니다.)');
 				});
 			}
-        	$('#appleid-signin').html(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'APPLE'));
+        	$('#appleid-signin').html('애플 아이디로 로그인');
 		}, 300);
 
         // 구글 로그인 핸들러
@@ -232,14 +209,14 @@ function initSNS() {
                 }, function(request, response){
                     console.log('output : ' + response);
                     if(!response.data){
-                        alert(greenpass.globalLanBF.login.inErrorDb[greenpass.methods.getMyLanguage()]);
+                        alert('디비 등록 오류');
                         return false;
                     }
                     localStorage.setItem('user-key', btoa(response.user_key));
                     window.location.href = '/user/index';
                 }, function(e){
                     console.log(e);
-                    alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+                    alert('서버 통신 에러');
                 });
             }, function(e) {
                 alert(JSON.stringify(e, undefined, 2));
@@ -255,7 +232,7 @@ function initSNS() {
             redirectURI: 'https://'+location.hostname+'/login/oauth/apple',
             state : 'k'
         });
-        	$('#appleid-signin').html(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'APPLE'));
+        	$('#appleid-signin').html('애플 아이디로 로그인');
     }
 }
 
@@ -270,19 +247,19 @@ document.addEventListener('AppleIDSignInOnSuccess', (userInfo) => {
     }, function(request, response){
         console.log('output : ' + response);
         if(!response.data){
-            alert(greenpass.globalLanBF.login.inErrorDb[greenpass.methods.getMyLanguage()]);
+            alert('디비 등록 오류');
             return false;
         }
         localStorage.setItem('user-key', btoa(response.user_key));
         window.location.href = '/user/index';
     }, function(e){
         console.log(e);
-        alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+        alert('서버 통신 에러');
     });
 });
 document.addEventListener('AppleIDSignInOnFailure', (error) => {
     console.log(error);
-    alert('error in apple');
+    alert('오류가 발생했습니다.');
 });
 
 $(document).ready(function (){
@@ -304,12 +281,12 @@ function sendSmsAuth(target)
 	
 	if(!phoneNo || phoneNo == '' || phoneNo.length < 8)
 	{
-		alert(greenpass.globalLanBF.login.validationPhoneInput[greenpass.methods.getMyLanguage()]);
+		alert('핸드폰 번호를 확인해주세요.');
 		return false;
 	}
 	if(!user_birth || user_birth == '' || user_birth.length < 8)
 	{
-		alert(greenpass.globalLanBF.login.validationBirthdayInput[greenpass.methods.getMyLanguage()]);
+		alert('생년월일을 확인해주세요.');
 		return false;
 	}
 	$('._timer').show();
@@ -320,7 +297,7 @@ function sendSmsAuth(target)
 	}, function(request, response){
 		console.log('output : ' + response);
 		if(!response.result){
-			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+			alert('서버 통신 에러');
 			return false;
 		}
 
@@ -331,7 +308,7 @@ function sendSmsAuth(target)
 		timerAuthCode = setInterval(function (){
 			if(timerCnt >= maxTime)
 			{
-				alert(greenpass.globalLanBF.login.alert_auth_over[greenpass.methods.getMyLanguage()]);
+				alert('인증 시간이 만료되었습니다. 다시 인증을 요청해주세요.');
 				isAllowed = false; 
 				if(timerAuthCode) clearInterval(timerAuthCode);				
 				$('._timer').text( '00:00' );
@@ -344,10 +321,10 @@ function sendSmsAuth(target)
 		}, 1000);
 		$('input[name=authCode]').removeAttr('disabled');
 		$('._timer').show();
-		alert(greenpass.globalLanBF.login.alert_auth_send[greenpass.methods.getMyLanguage()]);
+		alert('인증번호가 발송되었습니다.');
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+		alert('서버 통신 에러');
 	});
 }
 function confirmAuthCode()
@@ -361,11 +338,11 @@ function confirmAuthCode()
 	$('input[name=authCode]').attr('disabled', 'disabled');
 
 	if(!phoneNo || phoneNo == ''){
-		alert(greenpass.globalLanBF.login.alert_auth_first[greenpass.methods.getMyLanguage()]);
+		alert('본인인증을 먼저 진행해 주세요.');
 		return false;
 	}
 	if(!authCode || authCode == ''){
-		alert(greenpass.globalLanBF.login.alert_auth_first[greenpass.methods.getMyLanguage()]);
+		alert('본인인증을 먼저 진행해 주세요.');
 		return false;
 	}
 	
@@ -383,7 +360,7 @@ function confirmAuthCode()
 		window.location.href = '/user/index';
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+		alert('서버 통신 에러');
 	});
 	return true;
 }

@@ -95,6 +95,13 @@ $(document).ready(function(){
 	$('#wrapper').css('min-height',win_height);
 
 
+
+
+	$('.select-lag .current').click(function() {
+		$(this).parent().toggleClass('open');
+	});
+
+
 	/* 레이어 팝업 */
 	$('.popup-inline.inside').magnificPopup({
 		type: 'inline',

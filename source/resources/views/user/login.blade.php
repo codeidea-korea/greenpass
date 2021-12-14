@@ -100,10 +100,10 @@ function initSNS() {
 //		https://accounts.google.com/o/oauth2/v2/auth?scope=email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=https://greenpass.codeidea.io/login/oauth/google&response_type=code&client_id=212708314746-p8sopoc8o3u8utf0sam77nscdf0krqch.apps.googleusercontent.com
 
         // 네이버 로그인
-        naver_id_login = new naver_id_login("gubQnwLjz_KP_JLWm_QT", "https://greenpass.codeidea.io/login/oauth/naver");
+        naver_id_login = new naver_id_login("vRzLLD7UKeaznUbUEKWt", "https://"+location.hostname+"/login/oauth/naver");
         var state = naver_id_login.getUniqState();
         naver_id_login.setButton("white", 2,40);
-        naver_id_login.setDomain("greenpass.codeidea.io");
+        naver_id_login.setDomain(location.hostname);
         naver_id_login.setState(state);
         //  	naver_id_login.setPopup();
         naver_id_login.init_naver_id_login();
@@ -111,7 +111,7 @@ function initSNS() {
     
         // 카카오 로그인
 		if(allowedCookies) {
-			Kakao.init('adb8b97705c5a5b8b5e85521904bdd5a');
+			Kakao.init('258c1a5f5c8e8abc5deb4cbf907db52a');
 			// loginKakao
 			$('#loginKakao').off().on('click', function(){
 				/*
@@ -120,7 +120,7 @@ function initSNS() {
 					, scope: 'account_email'
 				});
 				*/
-			location.href = 'https://kauth.kakao.com/oauth/authorize?client_id=c5471e6c4033e7f336db378aaa6aa3ff&redirect_uri=https://greenpass.codeidea.io/login/oauth/kakao&response_type=code&prompt=account_email';
+			location.href = 'https://kauth.kakao.com/oauth/authorize?client_id=258c1a5f5c8e8abc5deb4cbf907db52a&redirect_uri=https://greenpass.codeidea.io/login/oauth/kakao&response_type=code&prompt=account_email';
 			});
 		} else {
 			$('#loginKakao').off().on('click', function(){
@@ -136,7 +136,7 @@ function initSNS() {
 //						, cookiepolicy: 'single_host_origin'
 						, scope: "profile email"
 						, ux_mode: 'redirect'
-						, redirect_uri: 'https://greenpass.codeidea.io/login/oauth/google'
+						, redirect_uri: 'https://'+location.hostname+'/login/oauth/google'
 					});
 					attachSignin(document.getElementById('loginGoogle'));
 				});
@@ -183,7 +183,7 @@ function initSNS() {
         AppleID.auth.init({
             clientId : 'www.greenpass.codeidea.io',
             scope : 'email',
-            redirectURI: 'https://greenpass.codeidea.io/login/oauth/apple',
+            redirectURI: 'https://'+location.hostname+'/login/oauth/apple',
             state : 'k'
         });
         	$('#appleid-signin').html('애플 아이디로 로그인');

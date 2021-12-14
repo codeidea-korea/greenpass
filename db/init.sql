@@ -21,7 +21,7 @@ create table user_info
 create index user_info__index_1
     on user_info (user_phone);
 
--- 사용자
+-- 사용자 인증정보
 create table user_auth_hst
 (
     user_auth_hst_seqno bigint auto_increment
@@ -123,3 +123,60 @@ create table if_send_sms_hst
     send_time    varchar(50)      null, -- 
     create_dt        datetime         default CURRENT_TIMESTAMP null
 ) character set utf16;
+
+
+-- 글로벌 번역 서비스
+create table translate
+(
+    translate_seqno bigint auto_increment
+        primary key,
+    detail_code          varchar(200)        not null, -- 구분
+    language_code          varchar(2)        not null default 'KR', -- 
+    meta_data    varchar(500)        null, -- 
+    create_dt        datetime         default CURRENT_TIMESTAMP null
+) character set utf16;
+
+-- 첨부 파일
+create table upload_file
+(
+    file_seqno bigint auto_increment
+        primary key,
+    origin_file_name          varchar(200)        not null, -- 구분
+    web_file_name          varchar(200)        not null, -- 구분
+    file_type          varchar(3)        not null default 'TXT', -- 
+    create_dt        datetime         default CURRENT_TIMESTAMP null
+) character set utf16;
+
+-- 관리자 - 가맹점
+create table partner_user
+(
+    partner_seqno bigint auto_increment
+        primary key,
+    partner_type   varchar(1)      not null default 'C', -- C: 회사, A: 유저
+    status   varchar(1)      not null default 'A', -- A: 승인완료, I: 신청접수, N: 반려
+    status_content   text      null, 
+
+    partner_id   varchar(200)      not null,
+    partner_password   varchar(512)      not null,
+    business_registration_no   varchar(30)      null,
+    business_registration_file   varchar(200)      null,
+    company_name   varchar(200)      null,
+    partner_name   varchar(100)      null,
+    partner_phone   varchar(20)      null,
+    company_phone   varchar(20)      null,
+
+    -- 일반 주소
+    company_address1   varchar(200)      null,
+    company_address2   varchar(200)      null,
+    company_address3   varchar(200)      null,
+
+    -- 집계용 주소 (한국만이면 필요없으나, 글로벌 용도라 지역 그룹 집계가 언어별로 어려워 질 수 있어 분리)
+    depth1   varchar(200)      null, -- ~시
+    depth2   varchar(200)      null, -- ~구
+
+    create_dt        datetime         default CURRENT_TIMESTAMP null,
+    update_dt        datetime         default CURRENT_TIMESTAMP null
+) character set utf16;
+
+create index partner_user__index_1
+    on partner_user (partner_id);

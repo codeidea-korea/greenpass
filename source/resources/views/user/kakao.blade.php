@@ -3,8 +3,8 @@
 @php
 $code = $_GET['code'];
 
-$client_id = 'c5471e6c4033e7f336db378aaa6aa3ff';
-$client_secret = 'P7HtRb3QbhRg0WfL7Qtx682bQV3I4nFG';
+$client_id = '258c1a5f5c8e8abc5deb4cbf907db52a';
+$client_secret = 'p2YJsn0wYiSOZLLJTeRP20e44nqsN7wA';
 $redirect_uri = 'https://greenpass.codeidea.io/login/oauth/kakao';
 
 $data = sprintf( 'grant_type=authorization_code&client_id=%s&redirect_uri=%s&code=%s&client_secret=%s', $client_id, $redirect_uri, $code, $client_secret);

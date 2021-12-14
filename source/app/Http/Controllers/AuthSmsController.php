@@ -34,7 +34,8 @@ class AuthSmsController extends Controller
         }
 
         $auth_code = random_int(1000, 9999);
-        $sender = "01054405414";                    //필수입력
+//        $sender = "01054405414";                    //필수입력
+        $sender = "15886306";                    //필수입력
 
         $id = DB::table('send_sms_auth_hst')->insertGetId(
             [

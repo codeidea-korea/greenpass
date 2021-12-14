@@ -29,7 +29,7 @@ class GreenPassController extends Controller
 //        $gpslist = DB::table("partner_auth")->offset(0)->limit(20)->orderBy('order', 'asc')->orderBy('partner_auth_seqno', 'desc')->orderBy('location_name', 'asc')->get();
         $gpslist = DB::table("partner_auth")
             ->select(DB::raw('CASE WHEN (location_x is null OR location_y is null OR location_x < 0 OR location_y < 0) 
-                                        THEN -1 
+                                        THEN 3400000000.0
                                         ELSE (POW((location_x-'.((float)$latitude).'), 2) + POW((location_y-'.((float)$longitude).'), 2)) END
                                 as distance
                                , partner_auth_seqno, admin_seqno, gps_used, beacon_used, nfc_used, location_x, location_y, location_name, location_sub_name, location_img'))

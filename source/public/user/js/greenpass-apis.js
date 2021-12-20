@@ -233,7 +233,7 @@ var bfCall = (function(){
         	}
         };
         this.globalLanBF;
-        fetch('/user/js/greenpass-lan-global.json').then(response=>{
+        fetch('/user/js/greenpass-lan-global.json?v=2021122010').then(response=>{
 			return response.json();
         }).catch(console.error).then(data=>{ this.globalLanBF = data; loadPageLanguage(); });
         
@@ -268,11 +268,16 @@ function receiveMsgFromParent( e ) {
             }
             var thisDate = new Date();
 
+            var hourCaption = (thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours();
+            var minuteCaption = (thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes();
+            var template = greenpass.globalLanBF.index.time[greenpass.methods.getMyLanguage()];
+            template = template.replace('ㅁㅁ', hourCaption);
+            template = template.replace('ㅇㅇ', minuteCaption);
+
             $('._certify-date').html('<span class="fs20">'
                 +thisDate.getFullYear()+'.'+(thisDate.getMonth()+1 < 10 ? '0' : '') + (thisDate.getMonth()+1)+'.'
                 +(thisDate.getDate()< 10 ? '0' : '') + thisDate.getDate() +'</span><br>'
-                +(thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours() +'시'
-                +(thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes() +'분');
+                +template);
 
             var user_key = atob(localStorage.getItem('user-key'));
             var auth_type = 'N';
@@ -314,7 +319,7 @@ function receiveMsgFromParent( e ) {
     
             }, function(e){
                 console.log(e);
-                alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+                alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- NFC 인증 > 데이터 파싱 오류');
             });
             break;
         case 'GPS_INFO':

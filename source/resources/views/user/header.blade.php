@@ -16,14 +16,14 @@
 	<link rel="stylesheet" href="{{ asset('user/css/root.css') }}">
 	<link rel="stylesheet" href="{{ asset('user/js/form/myform.css') }}">
 	<link rel="stylesheet" href="{{ asset('user/css/mobileDefault.css') }}">
-	<link rel="stylesheet" href="{{ asset('user/css/mobile.css') }}">
+	<link rel="stylesheet" href="{{ asset('user/css/mobile.css') }}?v=2021121920">
 
 	<script type="text/javascript" src="{{ asset('user/js/jquery-1.12.4.min.js') }}"></script>
 	<script src="{{ asset('user/js/magnific-popup/jquery.magnific-popup.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('user/js/easing.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('user/js/form/myform.js') }}"></script>	
 	<script type="text/javascript" src="{{ asset('user/js/myScript.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('user/js/greenpass-apis.js') }}?v=20211122"></script>
+	<script type="text/javascript" src="{{ asset('user/js/greenpass-apis.js') }}?v=2021122010"></script>
 
 	<!-- google 로그인 추가 -->
 	<script src="https://apis.google.com/js/api:client.js" async defer></script>

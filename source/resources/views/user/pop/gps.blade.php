@@ -20,7 +20,10 @@
 
 		<ul class="certify-list line mt15" id="certify-list">
 			<li>
+			<!--
 				<img src="./img/logo/logo01_90_90.png">
+				-->
+				<div class="thumb" style="background-image:url('img/logo/logo01_90_90.png')"></div>
 				<div class="textContent">
 					남양주시 1층공관
 				</div>
@@ -70,5 +73,9 @@
 			</li>
 		</ul>
     </section>
-
+	<div class="ani-nfc">
+		<span></span>
+		<span></span>
+		<span></span>
+	</div>
 </div>

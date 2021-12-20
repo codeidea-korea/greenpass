@@ -178,11 +178,17 @@ function fnNFCnotificationOn(){
 	var user_key = atob(localStorage.getItem('user-key'));
 	var thisDate = new Date();
 
+	var hourCaption = (thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours();
+	var minuteCaption = (thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes();
+	var template = greenpass.globalLanBF.index.time[greenpass.methods.getMyLanguage()];
+	template = template.replace('ㅁㅁ', hourCaption);
+	template = template.replace('ㅇㅇ', minuteCaption);
+
 	$('._certify-date').html('<span class="fs20">'
 		+thisDate.getFullYear()+'.'+(thisDate.getMonth()+1 < 10 ? '0' : '') + (thisDate.getMonth()+1)+'.'
 		+(thisDate.getDate()< 10 ? '0' : '') + thisDate.getDate() +'</span><br>'
-		+(thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours() +'시'
-		+(thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes() +'분');
+		+template);
+
 
 	var auth_type = 'N';
 	var partner_auth_seqno = 0; // NFC 태그 데이터를 기준으로 서버에서 조회해서 유니크한 1종의 seq 를 자동 저장
@@ -223,7 +229,7 @@ function fnNFCnotificationOn(){
 
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- 앱 비활성화 상태에서 NFC 인증 > 데이터 파싱 오류');
 	});
 }
 
@@ -267,7 +273,7 @@ var processingLocationData = function (location){
 		console.log('output : ' + response);
 
 		if(response.ment != '성공'){
-			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 리스트 > 테이블 조회 오류');
 			return false;
 		}
 //		$('#totCnt').text(response.totCnt);
@@ -284,7 +290,8 @@ var processingLocationData = function (location){
 			for(var inx=0; inx<response.data.length; inx++){
 				bodyData = bodyData 
 							+'<li>'
-							+'	<img onclick="addGpsAuth('+inx+')" src="'+response.data[inx].location_img+'">'
+//							+'	<img onclick="addGpsAuth('+inx+')" src="'+response.data[inx].location_img+'">'
+							+'	<div onclick="addGpsAuth('+inx+')" class="thumb" style="background-image:url(\''+response.data[inx].location_img+'\')"></div>'
 							+'	<div class="textContent">'
 							+'		'+response.data[inx].location_name
 							+'	</div>'
@@ -303,7 +310,7 @@ var processingLocationData = function (location){
 		});
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 리스트 > 사용자 식별자 오류');
 	});
 }
 
@@ -347,7 +354,7 @@ function toggleFavorite(no) {
 		console.log('output : ' + response);
 
 		if(response.ment != '성공'){
-			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- 즐겨찾기 > 테이블 반영 오류');
 			return false;
 		}
 		if(response.data === 'I')
@@ -360,7 +367,7 @@ function toggleFavorite(no) {
 		}
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- 즐겨찾기 > 테이블 조회 오류');
 	});
 }
 
@@ -375,11 +382,16 @@ function addGpsAuth(no){
 	}
 	var thisDate = new Date();
 
+	var hourCaption = (thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours();
+	var minuteCaption = (thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes();
+	var template = greenpass.globalLanBF.index.time[greenpass.methods.getMyLanguage()];
+	template = template.replace('ㅁㅁ', hourCaption);
+	template = template.replace('ㅇㅇ', minuteCaption);
+
 	$('._certify-date').html('<span class="fs20">'
 		+thisDate.getFullYear()+'.'+(thisDate.getMonth()+1 < 10 ? '0' : '') + (thisDate.getMonth()+1)+'.'
 		+(thisDate.getDate()< 10 ? '0' : '') + thisDate.getDate() +'</span><br>'
-		+(thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours() +'시'
-		+(thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes() +'분');
+		+template);
 	$('._certify-logo').attr('src', partners[no].location_img+'?v='+new Date().getTime());
 	$('._certify-partner-name').html('<h3 class="mt15">'+partners[no].location_name+'</h3>'
 										+ (partners[no].location_sub_name ? '('+partners[no].location_sub_name+')' : '' ));
@@ -405,7 +417,7 @@ function addGpsAuth(no){
 		console.log('output : ' + response);
 
 		if(response.ment != '성공'){
-			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 > 입력 오류');
 			return false;
 		}
 		prev_auth_type = 'G';
@@ -419,7 +431,7 @@ function addGpsAuth(no){
 		});
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 > 사용자 정보, 인증업체 정보 이상');
 	});
 }
 
@@ -437,7 +449,7 @@ function authCancel(){
 		console.log('output : ' + response);
 
 		if(response.ment != '성공'){
-			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 취소 > 삭제 오류');
 			return false;
 		}
 		alert(greenpass.globalLanBF.index.alert_auth_remove[greenpass.methods.getMyLanguage()]);
@@ -451,7 +463,7 @@ function authCancel(){
 		});
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 취소 > 사용자 식별자 오류');
 	});	
 }
 function reauth() {

@@ -52,8 +52,10 @@ $allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
 		<div class="btnSet column mt30">
 			<a href="#" id="loginKakao" onclick="snsLgn('kakao')" class="btn_login span icon_kakao">카카오로 로그인</a>
 			<a href="#" id="naver_id_login" onclick="snsLgn('naver')" class="btn_login icon_naver">네이버로 로그인</a>
+			<!--
 			<a href="#" id="loginFacebook" onclick="waitFor()" class="btn_login icon_facebook">페이스북으로 로그인</a>
 			<a href="#" id="loginZalo" onclick="waitFor()" class="btn_login icon_zalo">Zalo로 로그인</a>
+			-->
 			<a href="#" id="appleid-signin" onclick="snsLgn('apple')" class="btn_login icon_apple">Apple로 로그인</a>
 			<a href="#" id="loginGoogle" onclick="snsLgn('google')" class="btn_login icon_google">Google로 로그인</a>
 		</div>
@@ -89,6 +91,8 @@ function loadPageLanguage(){
 	$('#loginZalo').text(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'ZALO'));
 	$('#appleid-signin').text(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'APPLE'));
 	$('#loginGoogle').text(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'Google'));
+
+	initSNS();
 }
 
 function onloadLanguageBox(){
@@ -287,7 +291,7 @@ document.addEventListener('AppleIDSignInOnFailure', (error) => {
 
 $(document).ready(function (){
 	onloadLanguageBox();
-	initSNS();
+//	initSNS();
 });
 
 $('._timer').hide();

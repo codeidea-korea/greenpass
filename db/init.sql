@@ -9,14 +9,22 @@ create table user_info
         primary key,
     user_birthday    int(8)      default 0,
     user_phone   varchar(20)      null,
+    sns_mail   varchar(200)      null,
     sns_kakao   varchar(200)      null,
     sns_naver   varchar(200)      null,
     sns_apple   varchar(200)      null,
     sns_google   varchar(200)      null,
+    sns_facebook   varchar(200)      null,
+    sns_zalo   varchar(200)      null,
     create_dt        datetime         default CURRENT_TIMESTAMP null,
     update_dt        datetime         default CURRENT_TIMESTAMP null
 )
     character set utf16;
+    
+ALTER TABLE user_info ADD COLUMN sns_facebook varchar(200) NULL;
+ALTER TABLE user_info ADD COLUMN sns_zalo varchar(200) NULL;
+ALTER TABLE user_info ADD COLUMN sns_mail varchar(200) NULL;
+
 
 create index user_info__index_1
     on user_info (user_phone);

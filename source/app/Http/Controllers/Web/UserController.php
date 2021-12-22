@@ -52,6 +52,15 @@ class UserController extends Controller
     {
         return view('user.naver');
     }
+    public function sns_zalo(Request $request)
+    {
+        return view('user.zalo');
+    }
+    public function sns_facebook(Request $request)
+    {
+        return view('user.facebook');
+    }
+    
     
     public function sns_cookie_check(Request $request)
     {

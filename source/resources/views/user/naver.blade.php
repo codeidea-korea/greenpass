@@ -30,6 +30,7 @@ function naverSignInCallback() {
 	}, function(e){
 		console.log(e);
 		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+        location.href='/user/login?set=test1';
 	});
 }
 

@@ -52,14 +52,16 @@ $allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
 		<div class="btnSet column mt30">
 			<a href="#" id="loginKakao" onclick="snsLgn('kakao')" class="btn_login span icon_kakao">카카오로 로그인</a>
 			<a href="#" id="naver_id_login" onclick="snsLgn('naver')" class="btn_login icon_naver">네이버로 로그인</a>
+
+			<a href="#" id="loginFacebook" onclick="onFacebookLogin()" class="btn_login icon_facebook">페이스북으로 로그인</a>
 			<!--
-			<a href="#" id="loginFacebook" onclick="waitFor()" class="btn_login icon_facebook">페이스북으로 로그인</a>
+			
 			<a href="#" id="loginZalo" onclick="waitFor()" class="btn_login icon_zalo">Zalo로 로그인</a>
 			-->
 			<a href="#" id="appleid-signin" onclick="snsLgn('apple')" class="btn_login icon_apple">Apple로 로그인</a>
 			<a href="#" id="loginGoogle" onclick="snsLgn('google')" class="btn_login icon_google">Google로 로그인</a>
 		</div>
-	
+
 	</form>
 	</div>
 
@@ -251,7 +253,7 @@ function initSNS() {
 		}
 		/*
 		*/
-        // 애플 로그인 -> 계정 승인은 되었으나 식별자에 대한 승인 아직 안됨
+        // 애플 로그인 -> 계정 승인은 되었으나 식별자에 대한 승인 아직 안됨 
         
         AppleID.auth.init({
             clientId : 'www.greenpass.codeidea.io',
@@ -261,6 +263,12 @@ function initSNS() {
         });
         	$('#appleid-signin').html(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'APPLE'));
     }
+}
+
+		
+function onFacebookLogin(){
+	var uri = encodeURI('https://greenpass.codeidea.io/login/oauth/facebook');
+    window.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=268433665334545&redirect_uri="+uri+"&response_type=token");
 }
 
 // 애플 로그인 핸들러

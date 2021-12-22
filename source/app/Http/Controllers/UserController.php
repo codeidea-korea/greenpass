@@ -251,6 +251,12 @@ class UserController extends Controller
             case 'K':
                 $where = ['sns_kakao', '=', $id];
             break;
+            case 'F':
+                $where = ['sns_facebook', '=', $id];
+            break;
+            case 'Z':
+                $where = ['sns_zalo', '=', $id];
+            break;
             default:
                 $result['ment'] = '정보가 없습니다. 다시 로그인하여 주세요.';
                 return $result;
@@ -272,6 +278,12 @@ class UserController extends Controller
                 break;
                 case 'K':
                     $insert = ['sns_kakao' => $id];
+                break;
+                case 'F':
+                    $insert = ['sns_facebook' => $id];
+                break;
+                case 'Z':
+                    $insert = ['sns_zalo' => $id];
                 break;
                 default:
                     $result['ment'] = '정보가 없습니다. 다시 로그인하여 주세요.';

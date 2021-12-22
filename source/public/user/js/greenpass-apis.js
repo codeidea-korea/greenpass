@@ -361,6 +361,25 @@ function receiveMsgFromParent( e ) {
                 window.location.href = '/user/index';
             }
             break;
+        case 'ALERT_MENT':
+            // ALERT 처리
+            var dept = response.dept;
+            var ment = dept;
+            if(dept == 'not_allow_nfc') {
+                ment = greenpass.globalLanBF.app.not_allow_nfc[greenpass.methods.getMyLanguage()];
+            } else if(dept == 'turn_off_nfc') {
+                ment = greenpass.globalLanBF.app.turn_off_nfc[greenpass.methods.getMyLanguage()];
+                if(window.ReactNativeWebView) {
+                    window.ReactNativeWebView.postMessage(
+                        JSON.stringify({ type: "ALERT_MENT", dept: 'turn_off_nfc', message: ment })
+                    );
+                    return false;
+                }
+            } else if(dept == 'not_allow_gps') {
+                ment = greenpass.globalLanBF.app.not_allow_gps[greenpass.methods.getMyLanguage()];
+            }
+            alert(ment);
+            break;
         default:
             return false;
     }

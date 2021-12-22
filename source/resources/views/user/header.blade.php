@@ -23,7 +23,7 @@
 	<script type="text/javascript" src="{{ asset('user/js/easing.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('user/js/form/myform.js') }}"></script>	
 	<script type="text/javascript" src="{{ asset('user/js/myScript.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('user/js/greenpass-apis.js') }}?v=2021122010"></script>
+	<script type="text/javascript" src="{{ asset('user/js/greenpass-apis.js') }}?v=2021122218"></script>
 
 	<!-- google 로그인 추가 -->
 	<script src="https://apis.google.com/js/api:client.js" async defer></script>

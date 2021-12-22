@@ -12,6 +12,12 @@ if (agent.indexOf("chrome") < 0) {
 	localStorage.setItem('platform', 'android');
 }
 
+if(window.ReactNativeWebView) {
+	window.ReactNativeWebView.postMessage(
+		JSON.stringify({ type: "START", dept: 'init' })
+	);
+}
+
 setTimeout(function () {
 	var user_key = localStorage.getItem('user-key');
 	if(!user_key) {

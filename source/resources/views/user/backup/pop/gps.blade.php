@@ -15,15 +15,12 @@
 		
 		<div class="tcenter">
 			<h3 class="noto600 fs20 color-green mt25 mb5">GREEN PASS ZONE</h3>
-			<p id="lb-branch-list">주변목록중에서 선택하세요</p>
+			<p>주변목록중에서 선택하세요</p>
 		</div>
 
 		<ul class="certify-list line mt15" id="certify-list">
 			<li>
-			<!--
 				<img src="./img/logo/logo01_90_90.png">
-				-->
-				<div class="thumb" style="background-image:url('img/logo/logo01_90_90.png')"></div>
 				<div class="textContent">
 					남양주시 1층공관
 				</div>
@@ -78,4 +75,5 @@
 		<span></span>
 		<span></span>
 	</div>
+
 </div>

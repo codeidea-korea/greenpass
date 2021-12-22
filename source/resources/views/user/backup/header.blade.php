@@ -16,14 +16,14 @@
 	<link rel="stylesheet" href="{{ asset('user/css/root.css') }}">
 	<link rel="stylesheet" href="{{ asset('user/js/form/myform.css') }}">
 	<link rel="stylesheet" href="{{ asset('user/css/mobileDefault.css') }}">
-	<link rel="stylesheet" href="{{ asset('user/css/mobile.css') }}?v=2021121920">
+	<link rel="stylesheet" href="{{ asset('user/css/mobile.css') }}">
 
 	<script type="text/javascript" src="{{ asset('user/js/jquery-1.12.4.min.js') }}"></script>
 	<script src="{{ asset('user/js/magnific-popup/jquery.magnific-popup.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('user/js/easing.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('user/js/form/myform.js') }}"></script>	
 	<script type="text/javascript" src="{{ asset('user/js/myScript.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('user/js/greenpass-apis.js') }}?v=2021122010"></script>
+	<script type="text/javascript" src="{{ asset('user/js/greenpass-apis.js') }}?v=20211122"></script>
 
 	<!-- google 로그인 추가 -->
 	<script src="https://apis.google.com/js/api:client.js" async defer></script>
@@ -40,6 +40,29 @@
   	<script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
 	<!-- 카카오 로그인 추가 -->
   	<script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+	  
+	<script>
+	var globalBf;
+	function loadPageLanguage(data){
+		var languageType = localStorage.getItem('lan');
+		var lanArr = [{code:'ko', class: 'korean', label: 'Korean'}
+						, {code:'vt', class: 'vietnamese', label: 'Vietnamese'}
+						, {code:'lao', class: 'lao', label: 'Lao'}];
+
+		if(!languageType || languageType == 'ko') {
+			languageType = 'ko';
+		}
+		
+		globalBf = data;
+
+		// 실제로 페이지에 데이터 넣기
+	}
+	</script>
+	<script type="module">
+		fetch('/user/js/greenpass-lan-global.json').then(response=>{
+			return response.json();
+		}).catch(console.error).then(data=>{ loadPageLanguage(data); });
+	</script>
 </head>
 <body>
 

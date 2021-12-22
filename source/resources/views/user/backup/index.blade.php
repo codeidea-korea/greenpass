@@ -9,11 +9,11 @@
 
 	<div class="main-top">
 		<a href="#" id="nfcClk" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
-		<a href="#" id="gpsClk" onclick="openGPS()" class="popup-inline"><span class="icon-btn-gps"></span>GPS 인증</a>
+		<a href="#" onclick="openGPS()" class="popup-inline"><span class="icon-btn-gps"></span>GPS 인증</a>
 	</div>
 	
 	<div class="container">
-		<h3 id="auth-list-tit">인증내역</h3>
+		<h3>인증내역</h3>
 		<ul class="certify-list" id="auth_list_m">
 			<li>
 				<img src="{{ asset('user/img/logo/logo01_90_90.png') }}">
@@ -74,7 +74,7 @@
 		</ul>
 		
 		<div class="btnSet mt30">
-			<a href="#" id="show-all-clk" onclick="loadAuths()" class="btn green span">모두보기</a>
+			<a href="#" onclick="loadAuths()" class="btn green span">모두보기</a>
 		</div>
 	</div>
 </section>
@@ -91,30 +91,16 @@ $(document).ready(function(){
 	}, function(request, response){
 		console.log('output : ' + response);
 		if(!response.user_seqno){
-			alert(greenpass.globalLanBF.index.alert_login_expired[greenpass.methods.getMyLanguage()]);
+			alert('로그인이 만료되었습니다.');
 			window.location.href = '/user/login?set=test1';
 			return false;
 		}
 		loadAuths();
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+		alert('서버 통신 에러');
 	});
 });
-
-function loadPageLanguage(){
-	$('#nfcClk').html('<span class="icon-btn-nfc"></span>' + greenpass.globalLanBF.index.authNFC[greenpass.methods.getMyLanguage()]);
-	$('#gpsClk').html('<span class="icon-btn-gps"></span>' + greenpass.globalLanBF.index.authGPS[greenpass.methods.getMyLanguage()]);
-	
-	$('#auth-list-tit').text(greenpass.globalLanBF.index.auth_list[greenpass.methods.getMyLanguage()]);
-	$('#show-all-clk').text(greenpass.globalLanBF.index.see_all[greenpass.methods.getMyLanguage()]);
-
-	$('#lb-auth-compl-tit').text(greenpass.globalLanBF.index.auth_confirm[greenpass.methods.getMyLanguage()]);
-	$('#auth-cancel-clk').text(greenpass.globalLanBF.index.auth_cancel[greenpass.methods.getMyLanguage()]);
-	$('#auth-retry-clk').text(greenpass.globalLanBF.index.auth_retry[greenpass.methods.getMyLanguage()]);
-
-	$('#lb-branch-list').text(greenpass.globalLanBF.index.GPS_around_choose[greenpass.methods.getMyLanguage()]);
-}
 
 function loadAuths(type){
 	// 최신 50개만
@@ -127,7 +113,7 @@ function loadAuths(type){
 		console.log('output : ' + response);
 
 		if(response.ment != '성공'){
-			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+			alert('서버 통신 에러');
 			return false;
 		}
 //		$('#totCnt').text(response.totCnt);
@@ -135,7 +121,7 @@ function loadAuths(type){
 		if(response.totCnt == 0){
 			$('#auth_list_m').html('<li>'
 									+'	<div class="textContent">'
-									+'		'+greenpass.globalLanBF.index.alert_empty_content[greenpass.methods.getMyLanguage()]+'<br>'
+									+'		등록된 내용이 없습니다.<br>'
 									+'	</div>'
 									+'</li>');
 			return;
@@ -150,7 +136,7 @@ function loadAuths(type){
 						+'		'+response.data[inx].location_name+'<br>'
 						+'		<span class="date">'+response.data[inx].create_dt+'</span>'
 						+'	</div>'
-						+'	<span class="state-tag">'+greenpass.globalLanBF.index.alert_auth_complete[greenpass.methods.getMyLanguage()]+'</span>'
+						+'	<span class="state-tag">인증완료</span>'
 						+'</li>';
 		}
 		$('#auth_list_m').html(bodyData);
@@ -158,7 +144,7 @@ function loadAuths(type){
 		fnNFCnotificationOn();
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+		alert('서버 통신 에러');
 	});
 }
 
@@ -167,7 +153,7 @@ function fnNFCnotificationOn(){
 		return false;
 	}
 	if(!localStorage.getItem('nfc_action_req_data')) {
-		alert(greenpass.globalLanBF.index.alert_auth_error_tag[greenpass.methods.getMyLanguage()]);
+		alert('인증 업체 태그 정보가 잘못되었습니다.');
 		return false;
 	}
 	var nfc_action_req_data = localStorage.getItem('nfc_action_req_data');
@@ -178,17 +164,11 @@ function fnNFCnotificationOn(){
 	var user_key = atob(localStorage.getItem('user-key'));
 	var thisDate = new Date();
 
-	var hourCaption = (thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours();
-	var minuteCaption = (thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes();
-	var template = greenpass.globalLanBF.index.time[greenpass.methods.getMyLanguage()];
-	template = template.replace('ㅁㅁ', hourCaption);
-	template = template.replace('ㅇㅇ', minuteCaption);
-
 	$('._certify-date').html('<span class="fs20">'
 		+thisDate.getFullYear()+'.'+(thisDate.getMonth()+1 < 10 ? '0' : '') + (thisDate.getMonth()+1)+'.'
 		+(thisDate.getDate()< 10 ? '0' : '') + thisDate.getDate() +'</span><br>'
-		+template);
-
+		+(thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours() +'시'
+		+(thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes() +'분');
 
 	var auth_type = 'N';
 	var partner_auth_seqno = 0; // NFC 태그 데이터를 기준으로 서버에서 조회해서 유니크한 1종의 seq 를 자동 저장
@@ -229,7 +209,7 @@ function fnNFCnotificationOn(){
 
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- 앱 비활성화 상태에서 NFC 인증 > 데이터 파싱 오류');
+		alert('서버 통신 에러');
 	});
 }
 
@@ -237,7 +217,7 @@ var partners;
 
 function openGPS(){	
 	if(!greenpass.methods.hybridapp.gpscheck()) {
-		alert(greenpass.globalLanBF.index.alert_auth_error_gps_connect[greenpass.methods.getMyLanguage()]);
+		alert('GPS 연결을 할 수 없습니다. 권한을 허가하여 주세요.');
 		return false;
 	}
 	
@@ -258,7 +238,7 @@ var processingLocationData = function (location){
 	var latitude = !location || !location.coords || location.coords.latitude;
 	var longitude = !location || !location.coords || location.coords.longitude;
 	if(latitude === true || longitude === true) {
-		alert(greenpass.globalLanBF.index.alert_auth_error_gps_load[greenpass.methods.getMyLanguage()]);
+		alert('현재 GPS 주소를 불러올 수 없습니다. 잠시 후 시도해주세요.');
 		return;
 	}
 	localStorage.setItem('latitude', latitude);
@@ -273,7 +253,7 @@ var processingLocationData = function (location){
 		console.log('output : ' + response);
 
 		if(response.ment != '성공'){
-			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 리스트 > 테이블 조회 오류');
+			alert('서버 통신 에러');
 			return false;
 		}
 //		$('#totCnt').text(response.totCnt);
@@ -281,7 +261,7 @@ var processingLocationData = function (location){
 		if(response.totCnt == 0){
 			$('#certify-list').html('<li>'
 									+'	<div class="textContent">'
-									+'		'+greenpass.globalLanBF.index.alert_not_found_around[greenpass.methods.getMyLanguage()]+'<br>'
+									+'		근처에 등록된 지점이 없습니다.<br>'
 									+'	</div>'
 									+'</li>');
 		} else {
@@ -290,13 +270,11 @@ var processingLocationData = function (location){
 			for(var inx=0; inx<response.data.length; inx++){
 				bodyData = bodyData 
 							+'<li>'
-//							+'	<img onclick="addGpsAuth('+inx+')" src="'+response.data[inx].location_img+'">'
-							+'	<div onclick="addGpsAuth('+inx+')" class="thumb" style="background-image:url(\''+response.data[inx].location_img+'\')"></div>'
+							+'	<img onclick="addGpsAuth('+inx+')" src="'+response.data[inx].location_img+'">'
 							+'	<div class="textContent">'
 							+'		'+response.data[inx].location_name
 							+'	</div>'
-							+'	<span id="isfavorite-'+inx+'" class="bookmark-tag' +(!response.data[inx].isfavorite ? '' : ' active')
-										+ '" onclick="toggleFavorite('+inx+')">'+greenpass.globalLanBF.index.favorit[greenpass.methods.getMyLanguage()] +'</span>'
+							+'	<span id="isfavorite-'+inx+'" class="bookmark-tag' +(!response.data[inx].isfavorite ? '' : ' active')+ '" onclick="toggleFavorite('+inx+')">즐겨찾기</span>'
 							+'</li>';
 			}
 			$('#certify-list').html(bodyData);
@@ -310,7 +288,7 @@ var processingLocationData = function (location){
 		});
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 리스트 > 사용자 식별자 오류');
+		alert('서버 통신 에러');
 	});
 }
 
@@ -336,11 +314,11 @@ var prev_auth_type;
 // favorite
 function toggleFavorite(no) {
 	if((no !== 0 && !no) || !partners){
-		alert(greenpass.globalLanBF.index.alert_not_found_branch[greenpass.methods.getMyLanguage()]);
+		alert('존재하지 않는 지점입니다.');
 		return;
 	}
 	if(partners.length <= no){
-		alert(greenpass.globalLanBF.index.alert_not_found_branch[greenpass.methods.getMyLanguage()]);
+		alert('존재하지 않는 지점입니다.');
 		return;
 	}
 	prev_no = no;
@@ -354,44 +332,39 @@ function toggleFavorite(no) {
 		console.log('output : ' + response);
 
 		if(response.ment != '성공'){
-			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- 즐겨찾기 > 테이블 반영 오류');
+			alert('서버 통신 에러');
 			return false;
 		}
 		if(response.data === 'I')
 		{
-			alert(greenpass.globalLanBF.index.alert_add_favorit[greenpass.methods.getMyLanguage()]);
+			alert('즐겨찾기에 추가 되었습니다.');
 			$('#isfavorite-'+ prev_no).addClass('active');
 		} else {
-			alert(greenpass.globalLanBF.index.alert_remove_favorit[greenpass.methods.getMyLanguage()]);
+			alert('즐겨찾기에서 삭제 되었습니다.');
 			$('#isfavorite-'+ prev_no).removeClass('active');
 		}
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- 즐겨찾기 > 테이블 조회 오류');
+		alert('서버 통신 에러');
 	});
 }
 
 function addGpsAuth(no){
 	if((no !== 0 && !no) || !partners){
-		alert(greenpass.globalLanBF.index.alert_not_found_branch[greenpass.methods.getMyLanguage()]);
+		alert('존재하지 않는 지점입니다.');
 		return;
 	}
 	if(partners.length <= no){
-		alert(greenpass.globalLanBF.index.alert_not_found_branch[greenpass.methods.getMyLanguage()]);
+		alert('존재하지 않는 지점입니다.');
 		return;
 	}
 	var thisDate = new Date();
 
-	var hourCaption = (thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours();
-	var minuteCaption = (thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes();
-	var template = greenpass.globalLanBF.index.time[greenpass.methods.getMyLanguage()];
-	template = template.replace('ㅁㅁ', hourCaption);
-	template = template.replace('ㅇㅇ', minuteCaption);
-
 	$('._certify-date').html('<span class="fs20">'
 		+thisDate.getFullYear()+'.'+(thisDate.getMonth()+1 < 10 ? '0' : '') + (thisDate.getMonth()+1)+'.'
 		+(thisDate.getDate()< 10 ? '0' : '') + thisDate.getDate() +'</span><br>'
-		+template);
+		+(thisDate.getHours()< 10 ? '0' : '') + thisDate.getHours() +'시'
+		+(thisDate.getMinutes()< 10 ? '0' : '') + thisDate.getMinutes() +'분');
 	$('._certify-logo').attr('src', partners[no].location_img+'?v='+new Date().getTime());
 	$('._certify-partner-name').html('<h3 class="mt15">'+partners[no].location_name+'</h3>'
 										+ (partners[no].location_sub_name ? '('+partners[no].location_sub_name+')' : '' ));
@@ -417,7 +390,7 @@ function addGpsAuth(no){
 		console.log('output : ' + response);
 
 		if(response.ment != '성공'){
-			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 > 입력 오류');
+			alert('서버 통신 에러');
 			return false;
 		}
 		prev_auth_type = 'G';
@@ -431,13 +404,13 @@ function addGpsAuth(no){
 		});
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 > 사용자 정보, 인증업체 정보 이상');
+		alert('서버 통신 에러');
 	});
 }
 
 function authCancel(){
 	// 인증 취소 -> 직전 인증 취소
-	if(!confirm(greenpass.globalLanBF.index.alert_auth_remove_confirm[greenpass.methods.getMyLanguage()])) {
+	if(!confirm('인증 내역을 삭제합니다. 정말 인증을 취소하시겠습니까?')) {
 		return false;
 	}
 
@@ -449,10 +422,10 @@ function authCancel(){
 		console.log('output : ' + response);
 
 		if(response.ment != '성공'){
-			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 취소 > 삭제 오류');
+			alert('서버 통신 에러');
 			return false;
 		}
-		alert(greenpass.globalLanBF.index.alert_auth_remove[greenpass.methods.getMyLanguage()]);
+		alert('인증이 취소 되었습니다.');
 		loadAuths();
 		
 		$.magnificPopup.close({
@@ -463,13 +436,13 @@ function authCancel(){
 		});
 	}, function(e){
 		console.log(e);
-		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 취소 > 사용자 식별자 오류');
+		alert('서버 통신 에러');
 	});	
 }
 function reauth() {
 	// 재인증 절차 -> GPS 다시 목록 열기
 	if(!prev_auth_type){
-		alert(greenpass.globalLanBF.index.alert_auth_empty[greenpass.methods.getMyLanguage()]);
+		alert('인증 내용이 없습니다.');
 		return;
 	}
 	$.magnificPopup.close({

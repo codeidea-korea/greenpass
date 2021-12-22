@@ -10,7 +10,7 @@
 		<div class="tcenter">
 			<h3 class="noto600 fs28 mb5">GREEN PASS ZONE</h3>
 			<div class="flex mb10" style="padding:0 10px">
-				<h3 id="lb-auth-compl-tit" class="fs23">인증되었습니다</h3>
+				<h3 class="fs23">인증되었습니다</h3>
 				<p class="right tright _certify-date"><span class="fs20">2021.07.18</span><br>13시30분</p>
 			</div>
 			<img src="img/logo/logo08_209_209.png" class="certify-logo _certify-logo">
@@ -18,8 +18,8 @@
 			</p>
 		</div>
 		<div class="btnSet mt30">
-			<a href="#" id="auth-cancel-clk" onclick="authCancel()" class="btn green span">인증취소</a>
-			<a href="#" id="auth-retry-clk" onclick="reauth()" class="btn blue span">재인증</a>
+			<a href="#" onclick="authCancel()" class="btn green span">인증취소</a>
+			<a href="#" onclick="reauth()" class="btn blue span">재인증</a>
 		</div>
     </section>
 

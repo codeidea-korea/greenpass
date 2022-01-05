@@ -29,6 +29,9 @@ Route::get('/login/oauth/facebook', [UserController::class, 'sns_facebook'])->na
 Route::get('/login/oauth/zalo', [UserController::class, 'sns_zalo'])->name('user.zalo');
 Route::get('/login/cookie-check', [UserController::class, 'sns_cookie_check'])->name('user.cookie_check');
 
+Route::get('/terms/privacy', [UserController::class, 'privacy']) ->name('terms.privacy');
+Route::get('/terms/usage', [UserController::class, 'usage']) ->name('terms.usage');
+
 
 Route::get('/admin', [AdminController::class, 'index']);
 Route::get('/admin/index', [AdminController::class, 'index']);

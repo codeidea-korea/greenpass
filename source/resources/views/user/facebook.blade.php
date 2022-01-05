@@ -4,12 +4,14 @@
 
 <script>
 function statusChangeCallback(response) {
+	
 	if (response.status === 'connected') {
 		FB.api('/me', 'get', {fields: 'name,email'}, function(r) {
 			console.log(r);
+			// email
 			greenpass.methods.user.snsLogin({
 				type: 'F'
-				, id: r.email
+				, id: r.id
 			}, function(request, response){
 				console.log('output : ' + response);
 				if(!response.data){

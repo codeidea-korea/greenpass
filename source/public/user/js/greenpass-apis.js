@@ -126,6 +126,10 @@ var bfCall = (function(){
 
                 smsAuthCheck: function (params, successThenFn, errorThenFn){ ajaxCall('auth/sms/check', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
                 smsAuthSend: function (params, successThenFn, errorThenFn){ ajaxCall('auth/sms/send', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
+                
+                mailAuthCheck: function (params, successThenFn, errorThenFn){ ajaxCall('auth/mail/check', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
+                mailAuthSend: function (params, successThenFn, errorThenFn){ ajaxCall('auth/mail/send', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
+
                 snsLogin: function (params, successThenFn, errorThenFn){ ajaxCall('login/sns', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
 
                 checkAllowThirdPartyCookies: function (params, successThenFn, errorThenFn){ ajaxCallCust('/login/cookie-check', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, false); },
@@ -379,6 +383,29 @@ function receiveMsgFromParent( e ) {
                 ment = greenpass.globalLanBF.app.not_allow_gps[greenpass.methods.getMyLanguage()];
             }
             alert(ment);
+            break;
+        case 'SNS_SIGN_IN':
+            alert(response.dept);
+            if(response.dept === "F" || response.dept === "f") {
+                alert(e.data);
+                
+                greenpass.methods.user.snsLogin({
+                    type: 'F'
+                    , id: response.data.userID
+                }, function(request, response){
+                    console.log('output : ' + response);
+                    if(!response.data){
+                        alert(greenpass.globalLanBF.login.inErrorDb[greenpass.methods.getMyLanguage()]);
+                        return false;
+                    }
+                    localStorage.setItem('user-key', btoa(response.user_key));
+                    window.location.href = '/user/index';
+                }, function(e){
+                    console.log(e);
+                    alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+                    location.href='/user/login?set=test1';
+                });
+            }
             break;
         default:
             return false;

@@ -30,8 +30,9 @@ Route::get('/login/oauth/zalo', [UserController::class, 'sns_zalo'])->name('user
 Route::get('/login/cookie-check', [UserController::class, 'sns_cookie_check'])->name('user.cookie_check');
 
 
+Route::get('/admin', [AdminController::class, 'index']);
+Route::get('/admin/index', [AdminController::class, 'index']);
 Route::prefix('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     Route::get('login', [AdminController::class, 'login'])->name('admin.login.index');
     Route::get('logout', [AdminController::class, 'logout'])->name('admin.login.logout');
     Route::get('find/password', [AdminController::class, 'find_password'])->name('admin.login.find_password');
@@ -40,6 +41,9 @@ Route::prefix('admin')->group(function () {
     Route::get('join/terms', [AdminController::class, 'join_terms'])->name('admin.join.terms');
     Route::get('join/regist', [AdminController::class, 'join_regist'])->name('admin.join.regist');
     Route::get('join/complete', [AdminController::class, 'join_complete'])->name('admin.join.complete');
+    
+    Route::get('terms/privacy', [AdminController::class, 'terms_privacy'])->name('admin.terms.privacy');
+    Route::get('terms/usage', [AdminController::class, 'terms_usage'])->name('admin.terms.usage');
     
     Route::get('buyers', [AdminController::class, 'buyer_list'])->name('admin.buyer.list');
     Route::get('buyer', [AdminController::class, 'buyer_detail'])->name('admin.buyer.detail');
@@ -60,13 +64,4 @@ Route::prefix('admin')->group(function () {
     
     Route::get('auths/branch-name/excel', [AdminController::class, 'auth_comp_exceldownload'])->name('admin.auth.comp.excel');
     Route::get('auths/visitors/excel', [AdminController::class, 'auth_visitor_exceldownload'])->name('admin.auth.visitor.excel');
-
-    Route::fallback(function () {
-        return view('notfound');
-    });
-});
-
-
-Route::fallback(function () {
-    return view('notfound');
 });

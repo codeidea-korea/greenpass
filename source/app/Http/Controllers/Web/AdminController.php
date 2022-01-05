@@ -106,4 +106,13 @@ class AdminController extends Controller
     {
         return view('admin.login.send_password');
     }
+    
+    public function terms_privacy(Request $request)
+    {
+        return view('admin.login.privacy');
+    }
+    public function terms_usage(Request $request)
+    {
+        return view('admin.login.usage');
+    }
 }

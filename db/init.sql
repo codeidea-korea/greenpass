@@ -155,28 +155,51 @@ create table upload_file
     create_dt        datetime         default CURRENT_TIMESTAMP null
 ) character set utf16;
 
--- 관리자 - 가맹점
-create table partner_user
+
+-- 관리자
+create table `partner`
 (
     partner_seqno bigint auto_increment
         primary key,
-    partner_type   varchar(1)      not null default 'C', -- C: 회사, A: 유저
+    partner_type   varchar(2)      not null, -- BG: 국가 발주처, BL: 지역 발주처, AM: 슈퍼관리자, BR: 가맹점
+    language_code   varchar(2)      not null default 'KR', -- KR: 한국, VN: 베트남, LA: 라오스
+    partner_auth_seqno    bigint      null default 0, -- 승인/부가정보 입력 뒤에 발부됨
+
+    partner_id   varchar(200)      not null,
+    partner_password   varchar(512)      null,
+    
+-- GPS 좌표
+    gps_x   varchar(50)      null,
+    gps_y   varchar(50)      null,
+-- NFC/RFID 태깅 정보
+    nfc_tag   varchar(300)      null,
+-- 비콘 정보
+    beacon_info   varchar(300)      null,
+
+    -- 일반 주소
+    company_address1   varchar(200)      null,
+    company_address2   varchar(200)      null,
+    company_address3   varchar(200)      null,
+
+    create_dt        datetime         default CURRENT_TIMESTAMP null,
+    update_dt        datetime         default CURRENT_TIMESTAMP null
+) character set utf16;
+-- 관리자 > 가맹점 renamed partner_user 
+create table partner_branch
+(
+    partner_branch_seqno bigint auto_increment
+        primary key,
+    partner_seqno bigint not null,
+    
     status   varchar(1)      not null default 'A', -- A: 승인완료, I: 신청접수, N: 반려
     status_content   text      null, 
 
-    partner_id   varchar(200)      not null,
-    partner_password   varchar(512)      not null,
     business_registration_no   varchar(30)      null,
     business_registration_file   varchar(200)      null,
     company_name   varchar(200)      null,
     partner_name   varchar(100)      null,
     partner_phone   varchar(20)      null,
     company_phone   varchar(20)      null,
-
-    -- 일반 주소
-    company_address1   varchar(200)      null,
-    company_address2   varchar(200)      null,
-    company_address3   varchar(200)      null,
 
     -- 집계용 주소 (한국만이면 필요없으나, 글로벌 용도라 지역 그룹 집계가 언어별로 어려워 질 수 있어 분리)
     depth1   varchar(200)      null, -- ~시
@@ -185,6 +208,62 @@ create table partner_user
     create_dt        datetime         default CURRENT_TIMESTAMP null,
     update_dt        datetime         default CURRENT_TIMESTAMP null
 ) character set utf16;
+-- 관리자 > 발주처
+create table partner_buyer
+(
+    partner_branch_seqno bigint auto_increment
+        primary key,
+    partner_seqno bigint not null,
+    
+    status   varchar(1)      not null default 'A', -- A: 등록완료, I: 대기
+    status_content   text      null, 
 
-create index partner_user__index_1
-    on partner_user (partner_id);
+    buyer_name   varchar(200)      null, -- location_name
+    director_name   varchar(100)      null, -- 담당자이름
+
+    -- 집계용 주소 (한국만이면 필요없으나, 글로벌 용도라 지역 그룹 집계가 언어별로 어려워 질 수 있어 분리)
+    depth1   varchar(200)      null, -- ~국가
+    depth2   varchar(200)      null, -- ~시
+    depth3   varchar(200)      null, -- ~구
+
+    create_dt        datetime         default CURRENT_TIMESTAMP null,
+    update_dt        datetime         default CURRENT_TIMESTAMP null
+) character set utf16;
+
+-- 관리자 IP 차단 내역
+create table admin_deny_ips
+(
+    deny_ip_seqno bigint auto_increment
+        primary key,
+    
+    target_ip   varchar(20)      null, -- 접근 IP
+    `status`   varchar(1)      not null default 'A', -- A: 사용중, D: 중단
+    reason   text      null, -- 차단 사유
+
+    create_dt        datetime         default CURRENT_TIMESTAMP null,
+    update_dt        datetime         default CURRENT_TIMESTAMP null
+) character set utf16;
+-- 에러 로그
+create table bf_system_error
+(
+    error_seqno bigint auto_increment
+        primary key,
+    
+    platform   varchar(1)      not null default 'A', -- W: 웹, A: 앱, I: API
+    display   varchar(200)      null, -- 보이던 화면 + 액션있으면 액션. 구분자 ::
+    cause   text      null, -- 내용
+    
+    create_dt        datetime         default CURRENT_TIMESTAMP null,
+    update_dt        datetime         default CURRENT_TIMESTAMP null
+) character set utf16;
+
+create table send_mail_auth_hst
+(
+    hst_seqno bigint auto_increment
+        primary key,
+    receive_mail    varchar(100)        null, -- 수신 메일
+    user_birthday    int(8)      default 0,
+    auth_code    varchar(50)      null, -- 인증번호
+    create_dt        datetime         default CURRENT_TIMESTAMP null
+)
+    character set utf16;

@@ -36,9 +36,13 @@ $allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
 				<input type="tel" id="inp-birth" name="user_birth" value="" class="span" placeholder="생년월일">
 			</p>
 			<p class="mt10">
-				<span class="label" id="lb-phone">휴대폰 번호</span>
-				<input type="tel" id="inp-phone" name="phoneNo" value="" class="span" placeholder="휴대폰 번호">
-				<a href="#" class="send_cerifity" id="auth-send-clk" onclick="sendSmsAuth()">인증번호 전송</a>
+				<span class="label _korea" id="lb-phone">휴대폰 번호</span>
+				<input type="tel" id="inp-phone" name="phoneNo" value="" class="span _korea" placeholder="휴대폰 번호">
+
+				<span class="label _foreg" id="lb-mail">E-mail</span>
+				<input type="email" id="inp-mail" name="mail" value="" class="span _foreg" placeholder="E-mail">
+
+				<a href="#" class="send_cerifity" id="auth-send-clk" onclick="sendAuth()">인증번호 전송</a>
 			</p>
 			<p class="mt10">
 				<span class="label" id="lb-auth-input">인증번호 입력</span>				
@@ -72,7 +76,17 @@ $allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
 //입력폼 전부 채운후, 다음버튼 활성화 되도록 스크립트 요청..
 //$('.btnSet .btnNext').addClass('active');
 
+$('._korea').hide();
+$('._foreg').hide();
+
 function loadPageLanguage(){
+
+	if(greenpass.methods.getMyLanguage() == 'ko') {
+		$('._korea').show();
+	} else {
+		$('._foreg').show();
+	}
+
 	$('#login-tit').text(greenpass.globalLanBF.login.simple[greenpass.methods.getMyLanguage()]);
 
 	$('#lb-birth').text(greenpass.globalLanBF.login.birthday[greenpass.methods.getMyLanguage()] + '(YYYYMMDD)');
@@ -264,11 +278,16 @@ function initSNS() {
         	$('#appleid-signin').html(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'APPLE'));
     }
 }
-
 		
 function onFacebookLogin(){
-	var uri = encodeURI('https://greenpass.codeidea.io/login/oauth/facebook');
-    window.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=268433665334545&redirect_uri="+uri+"&response_type=token");
+	if(window.ReactNativeWebView) {
+		window.ReactNativeWebView.postMessage(
+			JSON.stringify({ type: "SNS_SIGN_IN", dept: 'F' })
+		);
+	} else {
+		var uri = encodeURI('https://greenpass.codeidea.io/login/oauth/facebook');
+		window.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=268433665334545&redirect_uri="+uri+"&response_type=token");
+	}
 }
 
 // 애플 로그인 핸들러
@@ -362,7 +381,7 @@ function sendSmsAuth(target)
 		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
 	});
 }
-function confirmAuthCode()
+function confirmAuthCodeSMS()
 {
 	isAllowed = false; 
 	if(timerAuthCode) clearInterval(timerAuthCode);
@@ -400,6 +419,119 @@ function confirmAuthCode()
 	return true;
 }
 
+function isEmail(asValue) {
+	var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+	return regExp.test(asValue); // 형식에 맞는 경우 true 리턴	
+}
+
+function sendSmsAuthMail(target)
+{
+	var pMail = $('input[name=mail]').val();
+	var user_birth = $('input[name=user_birth]').val();
+	
+	if(!pMail || pMail == '' || !isEmail(pMail))
+	{
+		alert(greenpass.globalLanBF.login.validationPhoneInput[greenpass.methods.getMyLanguage()]);
+		return false;
+	}
+	if(!user_birth || user_birth == '' || user_birth.length < 8)
+	{
+		alert(greenpass.globalLanBF.login.validationBirthdayInput[greenpass.methods.getMyLanguage()]);
+		return false;
+	}
+	$('._timer').show();
+	
+	greenpass.methods.user.mailAuthSend({
+		mail: pMail
+		, user_birth: user_birth
+	}, function(request, response){
+		console.log('output : ' + response);
+		if(!response.result){
+			alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+			return false;
+		}
+
+		if(timerAuthCode) clearInterval(timerAuthCode);
+		timerCnt = 0;
+		var tmpTxtTime = Math.floor((maxTime-timerCnt) / 60) + ':' + ((maxTime-timerCnt) % 60 < 10 ? '0' : '') + (maxTime-timerCnt) % 60;
+		$('._timer').text( tmpTxtTime );
+		timerAuthCode = setInterval(function (){
+			if(timerCnt >= maxTime)
+			{
+				alert(greenpass.globalLanBF.login.alert_auth_over[greenpass.methods.getMyLanguage()]);
+				isAllowed = false; 
+				if(timerAuthCode) clearInterval(timerAuthCode);				
+				$('._timer').text( '00:00' );
+				return;
+			}
+			timerCnt = timerCnt + 1;
+			var txtTime = Math.floor((maxTime-timerCnt) / 60) + ':' + ((maxTime-timerCnt) % 60 < 10 ? '0' : '') + (maxTime-timerCnt) % 60;
+			$('._timer').text( txtTime );
+			$('._ment').hide();
+		}, 1000);
+		$('input[name=authCode]').removeAttr('disabled');
+		$('._timer').show();
+		alert(greenpass.globalLanBF.login.alert_auth_send[greenpass.methods.getMyLanguage()]);
+	}, function(e){
+		console.log(e);
+		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+	});
+}
+function confirmAuthCodeMail()
+{
+	isAllowed = false; 
+	if(timerAuthCode) clearInterval(timerAuthCode);
+	
+	var pMail = $('input[name=mail]').val();
+	var user_birth = $('input[name=user_birth]').val();
+	var authCode = $('input[name=authCode]').val();
+	$('input[name=authCode]').attr('disabled', 'disabled');
+
+	if(!pMail || pMail == '' || !isEmail(pMail))
+	{
+		alert(greenpass.globalLanBF.login.validationPhoneInput[greenpass.methods.getMyLanguage()]);
+		return false;
+	}
+	if(!authCode || authCode == ''){
+		alert(greenpass.globalLanBF.login.alert_auth_first[greenpass.methods.getMyLanguage()]);
+		return false;
+	}
+	
+	greenpass.methods.user.mailAuthCheck({
+		mail: pMail
+		, auth_code: authCode
+		, user_birth: user_birth
+	}, function(request, response){
+		console.log('output : ' + response);
+		if(!response.data.receive_mail){
+			$('._ment').show();
+			return false;
+		}
+		localStorage.setItem('user-key', btoa(response.user_key));
+		window.location.href = '/user/index';
+	}, function(e){
+		console.log(e);
+		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+	});
+	return true;
+}
+
+
+function sendAuth(){
+	if(greenpass.methods.getMyLanguage() == 'ko') {
+		sendSmsAuth();
+	} else {
+		sendSmsAuthMail();
+	}
+}
+
+function confirmAuthCode(){
+	if(greenpass.methods.getMyLanguage() == 'ko') {
+		confirmAuthCodeSMS();
+	} else {
+		confirmAuthCodeMail();
+	}
+}
 </script>
 
 

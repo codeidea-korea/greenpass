@@ -161,6 +161,41 @@ ul.certify-list.line li:not(:first-child){border-top:1px solid rgba(0,0,0,0.1);}
 .area-certificate:not(.empty) > *{z-index:2;}
 
 
+
+
+
+
+
+#subpage{}
+#subpage{}
+
+#subpage #header{position:fixed;top:0;left:0;z-index:9;width:100%;height:72px;font-size:16px;display:flex;align-items:center;justify-content:center;background:#F8F8F8;}
+#subpage #header .back{font-size:0;}
+#subpage #header .back:before{content:'\e3a6';font-family:'newfont';font-size:24px;font-weight:normal;position:absolute;top:0;left:0;height:100%;display:flex;align-items:center;padding:0 10px;}
+#subpage #header .page-title{font-size:17px;font-weight:600;}
+#subpage .headerSpace{position:relative;height:72px;}
+
+
+
+
+.infoContainer{font-size:15px;}
+.infoContainer h3{font-size:17px;}
+.infoContainer p{}
+
+.infoContainer h3 + h3{margin-top:1em;}
+.infoContainer h3 + p{margin-top:0.5em;}
+.infoContainer p + h3{margin-top:2em;}
+.infoContainer p + p{margin-top:1em;}
+
+
+
+
+
+
+
+
+
+
 /*─────────────── LAYER POPUP ───────────────*/
 * {transition:filter;}
 .mfp-bg.my-mfp-popup {background:rgba(0,0,0,0.8);}

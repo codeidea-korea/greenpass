@@ -66,4 +66,13 @@ class UserController extends Controller
     {
         return view('user.cookie-check');
     }
+
+    public function privacy(Request $request)
+    {
+        return view('user.privacy');
+    }
+    public function usage(Request $request)
+    {
+        return view('user.usage');
+    }
 }

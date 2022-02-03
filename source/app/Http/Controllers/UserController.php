@@ -8,8 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Models\UsersImport;
-use App\Models\UsersExport;
 
 class UserController extends Controller
 {

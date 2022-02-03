@@ -1,70 +1,160 @@
 @include('admin.header')
 
-<section id="section-login">
-	<div class="visual"><img src="{{ asset('adm/img/login-img.png') }}">
-	</div>
+<div id="wrapper" style="min-height: 911px;">
+	@include('admin.topContainer')
 
-	<div class="login-wrap">
-	<form name="#" action="#" method="post">
-		<div class="title">관리자 로그인<br><span class="sub"></span></div>
-		<input type="text" name="#" id="login_id2" required="" class="large span" onkeyup="enterLgn();" placeholder="아이디">
-		<input type="password" name="#" id="login_pw2" required="" class="large span" onkeyup="enterLgn();" placeholder="비밀번호">
-		<div class="tcenter">
-			<a href="#" class="btn login" onclick="gotoNext()">로그인</a>
-			<!-- <a href="#" class="pw-find">패스워드 찾기</a> -->
+	<section id="wrtie" class="container">
+		<div class="page-title _detailTitle">&nbsp;</div>
+
+		<div class="wrtieContents">
+			<div class="wr-wrap line label200">
+				
+				<div class="wr-list-con">
+					<div class="wr-list">
+						<h3>기본정보</h3>
+					</div>
+					<div class="wr-list">
+                		<div class="wr-list-label">ID</div>
+						<div class="wr-list-con">
+							
+								<span class="label _buyerId">&nbsp;</span>
+							
+						</div>
+					</div>
+					<div class="wr-list">
+                		<div class="wr-list-label">이름</div>
+						<div class="wr-list-con">
+							
+								<span class="label _buyerName">&nbsp;</span>
+							
+						</div>
+					</div>
+					<div class="wr-list">
+                		<div class="wr-list-label">유형</div>
+						<div class="wr-list-con">
+							
+								<span class="label _buyerType">&nbsp;</span>
+							
+						</div>
+					</div>
+					<div class="wr-list">
+                		<div class="wr-list-label">국가</div>
+						<div class="wr-list-con">
+							
+								<span class="label _buyerGov">&nbsp;</span>
+							
+						</div>
+					</div>
+					<div class="wr-list">
+                		<div class="wr-list-label">지역</div>
+						<div class="wr-list-con">
+							
+								<span class="label _buyerLoc">&nbsp;</span>
+							
+						</div>
+					</div>
+					<div class="wr-list">
+                		<div class="wr-list-label">등록일시</div>
+						<div class="wr-list-con">
+							
+								<span class="label _regDt">&nbsp;</span>
+							
+						</div>
+					</div>
+					<div class="wr-list">
+                		<div class="wr-list-label">최근접속일시</div>
+						<div class="wr-list-con">
+							
+								<span class="label _recentLoginDt">&nbsp;</span>
+							
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-	</form>
-	</div>
+	</section>
 
-</section>
+	<script>
+		var view_type = localStorage.getItem('list_type');
+		if(view_type !== 'buyer') {
+			alert('잘못된 접근입니다.');
+			location.href = '/admin/';
+		}
 
-<script>
-function chkValidation(){
-	var login_id2 = $('#login_id2').val();
-	var login_pw2 = $('#login_pw2').val();
-	
-	if(!login_id2 || login_id2 == ''){
-		alert('아이디를 입력해주세요.');
-		return false;
-	}
-	
-	if(!login_pw2 || login_pw2 == ''){
-		alert('비밀번호를 입력해주세요.');
-		return false;
-	}
-	return true;
-}
-function enterLgn() {
-	if (window.event.keyCode == 13) {
-		gotoNext();
-	}
-}
-function gotoNext(){
-	if(!chkValidation()){
-		return false;
-    }
-	var login_id2 = $('#login_id2').val();
-	var login_pw2 = $('#login_pw2').val();
-    
-	todakadm.methods.admin.login({
-        id: login_id2
-        , password: login_pw2
-	}, function(request, response){
-		console.log('output : ' + response);
-		if(!response.admin_user_id){
-			alert('계정을 확인해주세요.');
-			return false;
-        }
-        localStorage.setItem('user_name', response.admin_user_name);
-        localStorage.setItem('user_no', response.admin_user_seqno);
-        localStorage.setItem('partner_name', response.partner_name);
-        localStorage.setItem('partner_logo', response.logo_url);
-        localStorage.setItem('admin_type', response.admin_type);
-		
-	    location.href = './main';
-	}, function(e){
-		console.log(e);
-		alert('서버 통신 에러');
-	});
-}
-</script>
+		var isVisible = false;
+		var useDay = false;
+		var useTime = false;
+		var pageNo = 1;
+
+		function toggleDay(){
+			$('._dateTime').toggle();
+			useDay = !useDay;
+		}
+		function toggleTime(){
+			$('._toggleTimeSection').toggle();
+			useTime = !useTime;
+		}
+		function toggleSearch(){
+			$('._toggleSection').toggle();
+			isVisible = !isVisible;
+			$('.toggleBtn').text(isVisible ? '접기' : '열기');
+		}
+		function chkValidation(){
+			return true;
+		}
+		function clickSearch() {
+			pageNo = 1;
+			getList();
+		}
+		function pressSearch() {
+			pageNo = 1;
+			if (window.event.keyCode == 13) {
+				getList();
+			}
+		}
+		function getPartnerType(type){
+			switch(type) {
+				case "BG": return "국가 발주처";
+				case "BL": return "지역 발주처";
+				case "AM": return "슈퍼관리자";
+				case "BR": return "가맹점";
+				default: return "-";
+			}
+		}
+		function getStatus(code){
+			switch(code){
+				case "A":
+					return "승인완료";
+				case "I":
+					return "신청접수";
+				case "N":
+					return "반려";
+				default:
+					return "-";
+			}
+		}
+		var bno = '{{ request()->bno }}';
+
+		$(document).ready(function(){
+			getBuyerInfo();
+		});
+
+		function getBuyerInfo(){
+			greenpassadm.methods.buyer.one({ buyerNo: bno }, function(request, response){
+				console.log('output : ' + response);
+				if(!response.result){
+					alert(response.ment);
+					return false;
+				}
+				$('._detailTitle').text(response.data.companyInfo.partner_id + ' 님의 상세 정보');
+				$('._buyerId').text(response.data.companyInfo.partner_id);
+				$('._buyerName').text(response.data.department.director_name);
+				$('._buyerType').text(getPartnerType(response.data.companyInfo.partner_type));
+				$('._buyerGov').text(response.data.department.depth1);
+				$('._buyerLoc').text(response.data.department.depth2 + response.data.department.depth3);
+				$('._regDt').text(response.data.department.create_dt);
+				$('._recentLoginDt').text(response.data.department.create_dt);
+			});
+		}
+		</script>
+@include('admin.footer')

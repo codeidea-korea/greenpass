@@ -85,8 +85,11 @@ var bfCall = (function(){
                 list: function (params, successThenFn, errorThenFn){ ajaxCall('admin/branches', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
                 one: function (params, successThenFn, errorThenFn){ ajaxCall('admin/branch', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
                 
-                reject: function (params, successThenFn, errorThenFn){ ajaxCall('admin/branch/reject', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
-                approve: function (params, successThenFn, errorThenFn){ ajaxCall('admin/branch/approve', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
+                location: function (params, successThenFn, errorThenFn){ ajaxCall('admin/partners/map', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
+                action:{
+                    reject: function (params, successThenFn, errorThenFn){ ajaxCall('admin/branch/reject', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
+                    approve: function (params, successThenFn, errorThenFn){ ajaxCall('admin/branch/approve', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
+                }
             }, buyer:{
                 add: function (params, successThenFn, errorThenFn){ ajaxCall('admin/buyer/add', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
                 edit: function (params, successThenFn, errorThenFn){ ajaxCall('admin/buyer/edit', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
@@ -100,9 +103,40 @@ var bfCall = (function(){
                 mainBuyer: function (params, successThenFn, errorThenFn){ ajaxCall('admin/main/staff', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
 
                 auth: function (params, successThenFn, errorThenFn){ ajaxCall('admin/graph/auth', 'POST', 'application/json', params, successThenFn, errorThenFn, true); },
+            }, user:{
+                info: function (params, successThenFn, errorThenFn){ ajaxCall('user/info', 'GET', 'application/x-www-form-urlencoded', params, successThenFn, errorThenFn, true); },
             }
             ,toCurrency: function(x){
                 return '&#x20a9;'+x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            ,toNumber: function(x){
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            , getMyLanguage(){
+                var languageType = localStorage.getItem('lan');
+                var lanArr = [{code:'ko', class: 'korean', label: 'Korean'}
+                                , {code:'vt', class: 'vietnamese', label: 'Vietnamese'}
+                                , {code:'la', class: 'lao', label: 'Lao'}];
+    
+                if(!languageType || languageType == 'ko') {
+                    languageType = 'ko';
+                }
+                var isValidLanguage = false;
+                for(var inx=0; inx<lanArr.length; inx++){
+                    if(lanArr[inx].code == languageType) {
+                        isValidLanguage = true;
+                        break;
+                    } 
+                }
+                if(!isValidLanguage) {
+                    alert(greenpassadm.globalLanBF.api.not_allow_language[greenpassadm.methods.getMyLanguage()]);
+                    return false;
+                }
+    
+                return languageType;
+            }
+            , toString(str){
+                return str ? str : '';
             }
         };
         this.validation = {
@@ -119,6 +153,11 @@ var bfCall = (function(){
         		return localStorage.getItem(attr);
         	}
         };
+        this.globalLanBF;
+        fetch('/adm/js/greenpass-lan-global.json?v=2022011521').then(response=>{
+			return response.json();
+        }).catch(console.error).then(data=>{ this.globalLanBF = data; loadPageLanguage(); });
+
         return this;
     }
     window.greenpassadm = initGreenpass() || [];

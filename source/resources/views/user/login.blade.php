@@ -6,13 +6,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-if(isset($_GET["set"])){ //first run here
-    setcookie("cookie_test","cookies",time()+3600);
-    header('Location: login?callback='.@$_GET["callback"]);
-    die();
-}
-
-$allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
+$allowedThirdPartCokies = true;
 
 @endphp
 
@@ -36,10 +30,11 @@ $allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
 				<input type="tel" id="inp-birth" name="user_birth" value="" class="span" placeholder="생년월일">
 			</p>
 			<p class="mt10">
+			<!--
 				<span class="label _korea" id="lb-phone">휴대폰 번호</span>
 				<input type="tel" id="inp-phone" name="phoneNo" value="" class="span _korea" placeholder="휴대폰 번호">
-
-				<span class="label _foreg" id="lb-mail">E-mail</span>
+-->
+				<span class="label _foreg" id="lb-mail">이메일</span>
 				<input type="email" id="inp-mail" name="mail" value="" class="span _foreg" placeholder="E-mail">
 
 				<a href="#" class="send_cerifity" id="auth-send-clk" onclick="sendAuth()">인증번호 전송</a>
@@ -62,7 +57,7 @@ $allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
 			
 			<a href="#" id="loginZalo" onclick="waitFor()" class="btn_login icon_zalo">Zalo로 로그인</a>
 			-->
-			<a href="#" id="appleid-signin" onclick="snsLgn('apple')" class="btn_login icon_apple">Apple로 로그인</a>
+			<a href="#" id="appleid-signin" onclick="onAppleLogin()" class="btn_login icon_apple">Apple로 로그인</a>
 			<a href="#" id="loginGoogle" onclick="snsLgn('google')" class="btn_login icon_google">Google로 로그인</a>
 		</div>
 
@@ -75,18 +70,18 @@ $allowedThirdPartCokies = isset($_COOKIE["cookie_test"]);
 <script>
 //입력폼 전부 채운후, 다음버튼 활성화 되도록 스크립트 요청..
 //$('.btnSet .btnNext').addClass('active');
-
+/*
 $('._korea').hide();
 $('._foreg').hide();
-
+*/
 function loadPageLanguage(){
-
+/*
 	if(greenpass.methods.getMyLanguage() == 'ko') {
 		$('._korea').show();
 	} else {
 		$('._foreg').show();
 	}
-
+*/
 	$('#login-tit').text(greenpass.globalLanBF.login.simple[greenpass.methods.getMyLanguage()]);
 
 	$('#lb-birth').text(greenpass.globalLanBF.login.birthday[greenpass.methods.getMyLanguage()] + '(YYYYMMDD)');
@@ -94,6 +89,9 @@ function loadPageLanguage(){
 	
 	$('#lb-phone').text(greenpass.globalLanBF.login.phone_number[greenpass.methods.getMyLanguage()]);
 	$('#inp-phone').attr('placeholder', greenpass.globalLanBF.login.phone_number[greenpass.methods.getMyLanguage()]);
+	
+	$('#lb-mail').text(greenpass.globalLanBF.login.email[greenpass.methods.getMyLanguage()]);
+	$('#inp-mail').attr('placeholder', greenpass.globalLanBF.login.email[greenpass.methods.getMyLanguage()]);
 	
 	$('#lb-auth-input').text(greenpass.globalLanBF.login.auth_number_input[greenpass.methods.getMyLanguage()]);
 	$('#inp-auth-input').attr('placeholder', greenpass.globalLanBF.login.auth_number_input[greenpass.methods.getMyLanguage()]);
@@ -183,7 +181,7 @@ function initSNS() {
 
 		$('#loginKakao').off();
 		$('#naver_id_login').off();
-		$('#appleid-signin').off();
+		
 
 		$('#loginGoogle').off();
 //		https://accounts.google.com/o/oauth2/v2/auth?scope=email&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&redirect_uri=https://greenpass.codeidea.io/login/oauth/google&response_type=code&client_id=212708314746-p8sopoc8o3u8utf0sam77nscdf0krqch.apps.googleusercontent.com
@@ -267,15 +265,17 @@ function initSNS() {
 		}
 		/*
 		*/
-        // 애플 로그인 -> 계정 승인은 되었으나 식별자에 대한 승인 아직 안됨 
-        
-        AppleID.auth.init({
-            clientId : 'www.greenpass.codeidea.io',
-            scope : 'email',
-            redirectURI: 'https://'+location.hostname+'/login/oauth/apple',
-            state : 'k'
-        });
-        	$('#appleid-signin').html(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'APPLE'));
+		if(! window.ReactNativeWebView) {
+			// 애플 로그인
+			$('#appleid-signin').off();
+			AppleID.auth.init({
+				clientId : 'www.greenpass.codeidea.io',
+				scope : 'email',
+				redirectURI: 'https://'+location.hostname+'/login/oauth/apple',
+				state : 'k'
+			});
+		}
+        $('#appleid-signin').html(greenpass.globalLanBF.login.loginBy[greenpass.methods.getMyLanguage()].replace('ㅁㅁㅁ', 'APPLE'));
     }
 }
 		
@@ -287,6 +287,14 @@ function onFacebookLogin(){
 	} else {
 		var uri = encodeURI('https://greenpass.codeidea.io/login/oauth/facebook');
 		window.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=268433665334545&redirect_uri="+uri+"&response_type=token");
+	}
+}
+
+function onAppleLogin(){
+	if(window.ReactNativeWebView) {
+		window.ReactNativeWebView.postMessage(
+			JSON.stringify({ type: "SNS_SIGN_IN", dept: 'A' })
+		);
 	}
 }
 
@@ -518,19 +526,25 @@ function confirmAuthCodeMail()
 
 
 function sendAuth(){
+	/*
 	if(greenpass.methods.getMyLanguage() == 'ko') {
 		sendSmsAuth();
 	} else {
 		sendSmsAuthMail();
 	}
+	*/
+	sendSmsAuthMail();
 }
 
 function confirmAuthCode(){
+	/*
 	if(greenpass.methods.getMyLanguage() == 'ko') {
 		confirmAuthCodeSMS();
 	} else {
 		confirmAuthCodeMail();
 	}
+	*/
+	confirmAuthCodeMail();
 }
 </script>
 

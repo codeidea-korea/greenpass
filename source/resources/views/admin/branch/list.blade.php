@@ -8,12 +8,11 @@
 		<div class="wrtieContents">
 			<div class="wr-wrap line label200">
 				<div class="wr-list">
-					<div class="wr-list-label">상호명 검색</div>
 					<div class="wr-list-con">
 						<input type="text" name="branchName" value="" class="span200" onkeyup="pressSearch();" placeholder="상호명 검색"><a href="#" onclick="clickSearch()" class="btn black ml5">검색</a>
 					</div>
 					<div class="wr-list-con">
-						<a href="/admin/branch-modify?type=I" class="btn black ml5">가맹점 등록</a>
+						<a href="#" onclick="openAddBranchPup()" class="btn black ml5">가맹점 등록</a>
 					</div>
 				</div>
 			</div>
@@ -70,6 +69,13 @@
 	</section>
 
 	<script>
+		var firstInPage = true;
+		var pageNo = 1;
+		var pageSize = 10;
+		$(document).ready(function(){
+			getList();
+			firstInPage = false;
+		});
 		function chkValidation(){
 			var branchName = $('input[name=branchName]').val();
 			
@@ -102,10 +108,10 @@
 					alert(response.ment);
 					return false;
 				}
-				$('#totalCnt').text( greenpassadm.methods.toCurrency(response.data.totCnt) );
+				$('#totalCnt').html( greenpassadm.methods.toNumber(response.data.totCnt) );
 
 				// _tableBody
-				if(response.totCnt == 0){
+				if(response.data.totCnt == 0){
 					$('._tableBody').html('<tr>'
 										+'    <td colspan="4" class="td_empty"><div class="empty_list" data-text="내용이 없습니다."></div></td>'
 										+'</tr>');
@@ -124,13 +130,13 @@
 					bodyData = bodyData 
 								+'<tr>'
 								+'	<td>'+getStatus(response.data.branches[inx].status)+'</td>'
-								+'	<td>'+response.data.branches[inx].company_name+'</td>'
+								+'	<td onclick="gotoDetail('+response.data.branches[inx].partner_seqno+')">'+response.data.branches[inx].company_name+'</td>'
 								+'	<td>'+response.data.branches[inx].company_address1+'</td>'
 								+'	<td>'+response.data.branches[inx].create_dt+'</td>'
 								+'</tr>';
 					
 				}
-				if(response.totCnt > 0)
+				if(response.data.totCnt > 0)
 				{
 					var totSize = response.data.totCnt;
 					var totPagePt = Math.ceil(totSize / pageSize);
@@ -174,5 +180,15 @@
 			pageNo = no;
 			getList();
 		}
+		function gotoDetail(seq){
+			var branchName = $('input[name=branchName]').val();
+
+			localStorage.setItem('list_type', 'branch_');
+			localStorage.setItem('branchName', branchName);
+			
+			location.href = '/admin/branch?bno=' + seq;
+		}
+var nextMove = '';
 		</script>
+@include('admin.branch.newpop')
 @include('admin.footer')

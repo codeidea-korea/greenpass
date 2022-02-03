@@ -47,6 +47,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     Route::post('user/favorite', [UserController::class, 'favorit_toggle']);
     
     Route::get('gps/list', [GreenPassController::class, 'gpslist']);
+    Route::get('admin/partners/map', [GreenPassController::class, 'getPartnerMaplist']);
+
     Route::post('login/sns', [UserController::class, 'sns_login']);
 
     
@@ -55,6 +57,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     Route::post('admin/conf/language', [AdminController::class, 'configureLanguage']);
     Route::post('admin/main/branch', [AdminController::class, 'mainByBranch']);
     Route::post('admin/main/staff', [AdminController::class, 'mainByStaff']);
+
+    Route::post('admin/graph/auth', [AdminController::class, 'getAuthGraph']);
     
     Route::get('admin/check/duplicate-id', [BranchController::class, 'isDuplicatedId']);
     Route::post('admin/check/password', [BranchController::class, 'confirmPasswordByAdmin']);
@@ -72,5 +76,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     Route::post('admin/buyer/edit', [BuyerController::class, 'modifyBranch']);
     Route::get('admin/buyers', [BuyerController::class, 'getBuyers']);
     Route::get('admin/buyer', [BuyerController::class, 'getBuyer']);
+
+    
 //});
 

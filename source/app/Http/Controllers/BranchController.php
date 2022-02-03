@@ -7,13 +7,12 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 
 use Illuminate\Http\UploadedFile;
-use App\Http\Requests\StoreFileRequest;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 use Illuminate\Support\Facades\Mail;
-use App\Mail\PasswordMail;
+use App\Mail\BranchAcceptMail;
 
 class BranchController extends Controller
 {
@@ -46,9 +45,9 @@ class BranchController extends Controller
         return $result;
     }
     //    branch 사업증 업로드 (jpg)
-    public function uploadCompanyNumber(StoreFileRequest $request)
+    public function uploadCompanyNumber(Request $request)
     {
-        $path = $request->file('upload')->store('company_numbers');
+        $path = $request->upload->store('company_numbers');
 
         $result['ment'] = '업로드 성공';
         $result['code'] = 'SC-001';
@@ -146,7 +145,7 @@ class BranchController extends Controller
                     ? ' 추가 정보를 입력하시면 가입이 마무리됩니다. <br><a href="https://greenpass.codeidea.io/admin/branch-new?key='. $id.'">추가 정보 입력</a></br>'
                     : '')
         ];
-        Mail::to($adminUser->partner_id)->send(new PasswordMail($details));
+        Mail::to($adminUser->partner_id)->send(new BranchAcceptMail($details));
 
         $result['ment'] = '신청되었습니다.';
         $result['code'] = 'SC-002';
@@ -192,7 +191,6 @@ class BranchController extends Controller
     public function modifyBranch(Request $request)
     {
         $branchNo = $request->post('branchNo');
-        $id = $request->post('id');
         $companyName = $request->post('companyName');
         $businessNo = $request->post('businessNo');
         $businessFilePath = $request->post('businessFilePath');
@@ -201,8 +199,8 @@ class BranchController extends Controller
         $companyAddress1 = $request->post('companyAddress1', '');
         $companyAddress2 = $request->post('companyAddress2', '');
         $companyAddress3 = $request->post('companyAddress3', '');
-        $gpsX = $request->post('gpsX'); // googleMap 연동 정보
-        $gpsY = $request->post('gpsY'); // googleMap 연동 정보
+        $gpsX = $request->post('gpsX', ''); // googleMap 연동 정보
+        $gpsY = $request->post('gpsY', ''); // googleMap 연동 정보
         $partnerPhoneNo = $request->post('partnerPhoneNo');
         $code = $request->post('code', 'KR');
 
@@ -220,7 +218,7 @@ class BranchController extends Controller
         */
 
         $adminUser = DB::table("partner")->where([
-            ['partner_id', '=', $id]
+            ['partner_seqno', '=', $branchNo]
         ])->first();
 
         if (empty($adminUser)) {
@@ -229,12 +227,13 @@ class BranchController extends Controller
         }
         if (! empty($pw)) {
             $pw = base64_encode(hash('sha256', $pw, true));
+        } else {
+            $pw = $adminUser->partner_password;
         }
 
         DB::table('partner')->where('partner_seqno', '=', $adminUser->partner_seqno)->update(
             [
-                'partner_id' => $id
-                , 'partner_type' => 'BR'
+                'partner_type' => 'BR'
                 , 'language_code' => $code
                 , 'partner_password' => $pw
                 , 'company_address1' => $companyAddress1
@@ -244,18 +243,11 @@ class BranchController extends Controller
                 , 'gps_y' => $gpsY
             ]
         );
-        $adminUser = DB::table("partner")->where([
-            ['partner_id', '=', $id]
-        ])->first();
 
-        if (empty($adminUser)) {
-            $result['ment'] = '디비 오류';
-            return $result;
-        }
         DB::table('partner_branch')->where('partner_seqno', '=', $adminUser->partner_seqno)->update(
             [
                 'partner_seqno' => $adminUser->partner_seqno
-                , 'status' => 'I'
+                , 'status' => 'A'
                 , 'business_registration_no' => $businessNo
                 , 'business_registration_file' => $businessFilePath
                 , 'company_name' => $companyName
@@ -274,6 +266,8 @@ class BranchController extends Controller
     //    branch 상호명 검색(다건)
     public function getAuthByBranchs(Request $request)
     {
+        $searchType = $request->get('type', 'A');
+
         $startDt = $request->get('startDt');
         $endDt = $request->get('endDt');
         $branchName = $request->get('branchName');
@@ -286,30 +280,30 @@ class BranchController extends Controller
         $result['code'] = 'ERR-005';
         $result['result'] = false;
 
-        if ((empty($startDt) && empty($endDt)) && empty($branchName)) {
-            return $result;
-        }
         $where = [];
         if(! empty($startDt)){
-            array_push($where, ['user_auth_hst.create_dt', '>', $startDt]);
+            array_push($where, ['user_auth_hst.create_dt', '>', str_replace('.', '-', $startDt)]);
         }
         if(! empty($endDt)){
-            array_push($where, ['user_auth_hst.create_dt', '<', $endDt]);
+            array_push($where, ['user_auth_hst.create_dt', '<', str_replace('.', '-', $endDt)]);
         }
         if(! empty($branchName)){
             array_push($where, ['user_auth_hst.location_name', 'like', $branchName]);
         }
-        if(! empty($visitorNo)){
+        if($searchType == 'V'){
             array_push($where, ['user_phone', 'like', '%'.$visitorNo.'%']);
 
             $auths = DB::table("user_auth_hst")
                 ->join('user_info', 'user_info.user_seqno', '=', 'user_auth_hst.user_seqno')
                 ->leftJoin('partner', 'partner.partner_auth_seqno', '=', 'user_auth_hst.partner_auth_seqno')
                 ->select('user_auth_hst.location_name'
+                    , 'partner.partner_seqno'
                     , 'user_auth_hst.partner_auth_seqno'
                     , 'partner.company_address1'
                     , 'user_info.user_phone'
-                    , 'user_info.auth_type'
+                    , 'user_info.sns_mail'
+                    , 'user_info.user_seqno'
+                    , 'user_auth_hst.auth_type'
                     , 'user_info.create_dt')
                 ->where($where)
                 ->offset(($pageSize * ($pageNo-1)))->limit($pageSize)->orderByDesc('partner_auth_seqno')->get();
@@ -318,31 +312,48 @@ class BranchController extends Controller
                 ->join('user_info', 'user_info.user_seqno', '=', 'user_auth_hst.user_seqno')
                 ->leftJoin('partner', 'partner.partner_auth_seqno', '=', 'user_auth_hst.partner_auth_seqno')
                 ->select('user_auth_hst.location_name'
+                    , 'partner.partner_seqno'
                     , 'user_auth_hst.partner_auth_seqno'
                     , 'partner.company_address1'
                     , 'user_info.user_phone'
-                    , 'user_info.auth_type'
-                    , 'user_info.create_dt')->count();
+                    , 'user_info.sns_mail'
+                    , 'user_info.user_seqno'
+                    , 'user_auth_hst.auth_type'
+                    , 'user_info.create_dt')
+                ->where($where)->count();
             $result['data'] = ['auth' => $auths, 'totCnt' => $totCnt];
         } else {
-            $auths = DB::table("user_auth_hst")
-                ->leftJoin('partner', 'partner.partner_auth_seqno', '=', 'user_auth_hst.partner_auth_seqno')
-                ->select('user_auth_hst.location_name'
-                    , 'partner.company_address1'
-                    , 'user_auth_hst.partner_auth_seqno'
-                    , DB::raw('count(*) as authCnt')
-                    , DB::raw('count(*) as visitCnt'))
-                ->where($where)
-                ->groupBy('user_auth_hst.partner_auth_seqno', 'user_auth_hst.location_name', 'partner.company_address1')
+            $where2 = [];
+            if(! empty($branchName)){
+                array_push($where2, ['partner_branch.company_name', 'like', $branchName]);
+            }
+            $auths = DB::table("partner_branch")
+                ->join('partner', 'partner_branch.partner_seqno', '=', 'partner.partner_seqno')
+                ->where($where2)
                 ->offset(($pageSize * ($pageNo-1)))->limit($pageSize)->orderByDesc('partner_auth_seqno')->get();
+            
+            for($inx = 0; $inx < count($auths); $inx++){
+                $where3 = [];
+                if(! empty($startDt)){
+                    array_push($where3, ['create_dt', '>=', str_replace('.', '-', $startDt)]);
+                }
+                if(! empty($endDt)){
+                    array_push($where3, ['create_dt', '<=', str_replace('.', '-', $endDt)]);
+                }
+                array_push($where3, ['partner_auth_seqno', '=', $auths[$inx]->partner_auth_seqno]);
 
-            $totCnt = DB::table("user_auth_hst")
-                ->select('location_name'
-                    , 'partner_auth_seqno'
-                    , DB::raw('count(*) as authCnt')
-                    , DB::raw('count(*) as visitCnt'))
-                ->where($where)
-                ->groupBy('partner_auth_seqno', 'location_name')->count();
+                $authCnt = DB::table("user_auth_hst")
+                    ->where($where3)->count();
+                $auths[$inx]->authCnt = $authCnt;
+
+                $visitCnt = DB::table("user_auth_hst")
+                    ->where($where3)->groupBy('user_seqno')->count();
+                $auths[$inx]->visitCnt = $visitCnt;
+            }
+            $totCnt = DB::table("partner_branch")
+                ->join('partner', 'partner_branch.partner_seqno', '=', 'partner.partner_seqno')
+                ->where($where2)->count();
+
             $result['data'] = ['auth' => $auths, 'totCnt' => $totCnt];
         }
         
@@ -374,13 +385,13 @@ class BranchController extends Controller
         */
         $where = [];
         if(! empty($startDt)){
-            array_push($where, ['create_dt', '>', $startDt]);
+            array_push($where, ['user_auth_hst.create_dt', '>', str_replace('.', '-', $startDt)]);
         }
         if(! empty($endDt)){
-            array_push($where, ['create_dt', '<', $endDt]);
+            array_push($where, ['user_auth_hst.create_dt', '<', str_replace('.', '-', $endDt)]);
         }
         if($branchNo > 0){
-            array_push($where, ['partner_auth_seqno', '=', $branchNo]);
+            array_push($where, ['user_auth_hst.partner_auth_seqno', '=', $branchNo]);
         }
         if($visitorNo > 0){
             $userInfo = DB::table("user_info")->where([
@@ -390,7 +401,7 @@ class BranchController extends Controller
             if (empty($userInfo)) {
                 return $result;
             }
-            array_push($where, ['user_seqno', '=', $userInfo->user_seqno]);
+            array_push($where, ['user_auth_hst.user_seqno', '=', $userInfo->user_seqno]);
         }
 
         $companyInfo = null;
@@ -441,17 +452,18 @@ class BranchController extends Controller
         }
 
         $auths = DB::table("user_auth_hst")
+            ->leftJoin('partner', 'partner.partner_auth_seqno', '=', 'user_auth_hst.partner_auth_seqno')
             ->select('user_seqno'
-                , 'partner_auth_seqno'
+                , 'partner_seqno'
                 , DB::raw('count(*) as authCnt')
                 , DB::raw('count(*) as visitCnt'))
             ->where($where)
-            ->groupBy('partner_auth_seqno', 'location_name')
+            ->groupBy('partner_seqno', 'user_seqno')
             ->first();
 
         $authDetail = DB::table("user_auth_hst")
             ->leftJoin('user_info', 'user_info.user_seqno', '=', 'user_auth_hst.user_seqno')
-            ->select('user_info.user_phone', 'user_info.sns_mail', 'user_auth_hst.auth_type', 'user_auth_hst.create_dt')
+            ->select('user_info.user_phone', 'user_info.sns_mail', 'user_auth_hst.location_name', 'user_auth_hst.auth_type', 'user_auth_hst.create_dt')
             ->where($where)->orderByDesc('create_dt')
             ->offset(($pageSize * ($pageNo-1)))->limit($pageSize)->get();
 
@@ -461,7 +473,7 @@ class BranchController extends Controller
             ->where($where)->count();
         
         $result['data'] = ['auth' => $auths, 'authDetail' => $authDetail, 'totCnt' => $totCnt, 'companyInfo' => $companyInfo
-            , 'companyDetail' => $result['detailInfo'], 'visitorInfo' => $visitorInfo];
+            , 'visitorInfo' => $visitorInfo];
         $result['ment'] = '성공';
         $result['code'] = 'SC-001';
         $result['result'] = true;
@@ -533,7 +545,6 @@ class BranchController extends Controller
             ->where([
                 ['partner_seqno', '=', $branchNo]
             ])->first();
-        $partnerInfo->partner_password = '';
         
         $result['data'] = ['branchInfo' => $branchInfo, 'partnerInfo' => $partnerInfo];
         $result['ment'] = '성공';
@@ -588,7 +599,7 @@ class BranchController extends Controller
             'title' => '[GREENPASS] 가맹점 승인 신청 결과 안내입니다.',
             'body' => '죄송하지만, 신청하신 내용은 반려되었습니다.<p>' . $cause . '</p>'
         ];
-        Mail::to($adminUser->partner_id)->send(new PasswordMail($details));
+        Mail::to($partnerInfo->partner_id)->send(new BranchAcceptMail($details));
         
         $result['data'] = ['branchInfo' => $branchInfo, 'partnerInfo' => $partnerInfo];
         $result['ment'] = '성공';
@@ -628,7 +639,7 @@ class BranchController extends Controller
         if (empty($branchInfo)) {
             return $result;
         }
-        if ($branchInfo->status != 'A') {
+        if ($branchInfo->status == 'A') {
             $result['ment'] = '이미 승인되어 있습니다.';
             return $result;
         }
@@ -664,7 +675,7 @@ class BranchController extends Controller
             'title' => '[GREENPASS] 가맹점 승인 신청 결과 안내입니다.',
             'body' => '신청하신 내용이 승인되었습니다.<p>' . $cause . '</p>'
         ];
-        Mail::to($adminUser->partner_id)->send(new PasswordMail($details));
+        Mail::to($branchInfo->partner_id)->send(new BranchAcceptMail($details));
         
         $result['data'] = ['branchInfo' => $branchInfo, 'partnerInfo' => $partnerInfo];
         $result['ment'] = '성공';

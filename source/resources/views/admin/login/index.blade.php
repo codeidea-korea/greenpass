@@ -1,6 +1,12 @@
 @include('admin.login.header')
 
 <section id="section-login">
+	<style>
+	
+select.default{height:32px;padding-left:5px;padding-right:10px;border:1px solid rgba(0,0,0,0.2);border-radius:3px; font-size: initial;}
+select.default[class*='selectColor-']{color:#fff;}
+
+	</style>
 	<div class="visual"><img src="{{ asset('adm/img/login-img.png') }}">
 	</div>
 
@@ -17,8 +23,8 @@
 			<a href="/admin/join/terms" class="pw-find">가맹점 사용 등록 신청하기</a>
 		</div>
 		<div class="tcenter">
-			<a href="/admin/terms/privacy" class="">개인정보처리방침</a>
-			<a href="/admin/terms/usage" class="">서비스 이용약관</a>
+			<a target="_blank" href="https://greenpasskorea.com/terms/privacy" class="pw-find">개인정보처리방침</a>
+			<a target="_blank" href="https://greenpasskorea.com/terms/usage" class="pw-find">서비스 이용약관</a>
 		</div>
 		<div class="tcenter">
 			<select class="default" onchange="changeLanguage(this)">
@@ -80,6 +86,9 @@ function gotoNext(){
 	});
 }
 function changeLanguage(target){
+	alert('준비중입니다.');
+	return false;
+	
 	var chooseVal = $(target).val();
 	
 	// 로그인 전에 확인되어야 하므로 로그인 이전에는 디비 저장 X

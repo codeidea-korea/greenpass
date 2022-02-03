@@ -9,8 +9,8 @@
 			<div class="wr-wrap line label200 _toggleSection">
 				<div class="wr-list">
 					<div class="wr-list-con">
-						<label class="checkbox-wrap"><input type="checkbox" name="useDate" value="" checked onclick="toggleDay()">기간설정</label>
-						<label class="checkbox-wrap"><input type="checkbox" name="useTime" value="" checked onclick="toggleTime()">시간단위입력</label>
+						<label class="checkbox-wrap"><input type="checkbox" name="useDate" value="" onclick="toggleDay()">기간설정</label>
+						<label class="checkbox-wrap"><input type="checkbox" name="useTime" value="" onclick="toggleTime()">시간단위입력</label>
 					</div>
 				</div>
 				<div class="wr-list _dateTime">
@@ -20,14 +20,14 @@
 					<div class="wr-list-con _toggleTimeSection">
 						<label class="inp-wrap right-label">
 							<label class="labelDate">
-							<input type="number" name="startTime1" value="0" min="0" max="23" class="span50" placeholder="">
+							<input type="number" name="startTime1" value="" min="0" max="23" class="span50" placeholder="">
 							</label><span class="label">시</span>
 						</label>
 					</div>
 					<div class="wr-list-con _toggleTimeSection">
 						<label class="inp-wrap right-label">
 							<label class="labelDate">
-							<input type="number" name="startTime2" value="0" min="0" max="59" class="span50" placeholder="">
+							<input type="number" name="startTime2" value="" min="0" max="23" class="span50" placeholder="">
 							</label><span class="label">분</span>
 						</label>
 					</div>
@@ -38,37 +38,28 @@
 					<div class="wr-list-con _toggleTimeSection">
 						<label class="inp-wrap right-label">
 							<label class="labelDate">
-							<input type="number" name="endTime1" value="23" min="0" max="23" class="span50" placeholder="">
+							<input type="number" name="endTime1" value="" min="0" max="23" class="span50" placeholder="">
 							</label><span class="label">시</span>
 						</label>
 					</div>
 					<div class="wr-list-con _toggleTimeSection">
 						<label class="inp-wrap right-label">
 							<label class="labelDate">
-							<input type="number" name="endTime2" value="59" min="0" max="59" class="span50" placeholder="">
+							<input type="number" name="endTime2" value="" min="0" max="23" class="span50" placeholder="">
 							</label><span class="label">분</span>
 						</label>
 					</div>
 				</div>
-				
-				<div class="wr-list">
-					<div class="wr-list-label">휴대폰번호</div>
-					<div class="wr-list-con">
-						<input type="text" name="visitorNo" value="" class="span200" onkeyup="pressSearch();" placeholder="휴대폰번호를 입력하세요."><a href="#" onclick="clickSearch()" class="btn black ml5">검색</a>
-					</div>
-				</div>
 			</div>
 			<div class="btnSet">
-				<a href="#" class="btn submit toggleBtn" onclick="toggleSearch()">접기</a>
+				<a href="#" class="btn submit toggleBtn" onclick="clickSearch()">검색</a>
 			</div>
 		</div>
 
 		<div class="tbl-basic cell td-h4 mt10">
 			<div class="tbl-header">
 				<div class="caption">검색 결과 <b id="totalCnt">0</b>건이 검색되었습니다.</div>
-				<div class="rightSet">
-					<a href="#" onclick="excelDown();" class="btn green small icon-excel">엑셀 다운로드</a>
-				</div>
+				<div class="rightSet"></div>
 			</div>
 			<table>
 				<colgroup>
@@ -116,22 +107,18 @@
 				<a href="#" class="pg_btn last"></a>
 			</nav>
 		</div>
-		<form name="popForm">
-			<input type="hidden" name="startDt">
-			<input type="hidden" name="endDt">
-			<input type="hidden" name="visitorNos">
-		</form>
 	</section>
 
 	<script>
-		var isVisible = true;
-		var useDay = true;
-		var useTime = true;
+		var isVisible = false;
+		var useDay = false;
+		var useTime = false;
 		var pageNo = 1;
 		var pageSize = 10;
 		var firstInPage = true;
 		$(document).ready(function(){
 			getList();
+			firstInPage = false;
 		});
 
 		function toggleDay(){
@@ -147,28 +134,6 @@
 			isVisible = !isVisible;
 			$('.toggleBtn').text(isVisible ? '접기' : '열기');
 		}
-
-		function excelDown(){
-			var startDate = $('input[name=startDay]').val();
-			var endDate = $('input[name=endDay]').val();
-			var visitorNo = $('input[name=visitorNo]').val();
-			if(useTime) {
-				startDate = startDay + ' ' + ((startTime1 < 10 ? '0' : '') + startTime1) + ((startTime2 < 10 ? '0' : '') + startTime2);
-				endDate = endDay + ' ' + ((endTime1 < 10 ? '0' : '') + endTime1) + ((endTime2 < 10 ? '0' : '') + endTime2);
-			}
-			$('input[name=startDt]').val(startDate);
-			$('input[name=endDate]').val(endDate);
-			$('input[name=visitorNos]').val(visitorNo);
-
-			var myForm = document.popForm;
-			var url = "/admin/auths/excel/visitors";
-			window.open("" ,"popForm", 
-				"toolbar=no, width=540, height=467, directories=no, status=no,    scrollorbars=no, resizable=no"); 
-			myForm.action = url; 
-			myForm.method = "get";
-			myForm.target = "_blank";
-			myForm.submit();
-		}
 		function chkValidation(){
 			var startTime1 = $('input[name=startTime1]').val();
 			var startTime2 = $('input[name=startTime2]').val();
@@ -176,7 +141,6 @@
 			var endTime2 = $('input[name=endTime2]').val();
 			var startDay = $('input[name=startDay]').val();
 			var endDay = $('input[name=endDay]').val();
-			var visitorNo = $('input[name=visitorNo]').val();
 			
 			if(useDay){
 				if(!startDay || startDay == ''
@@ -196,7 +160,6 @@
 					}
 				}
 			} else if(firstInPage) {
-				$('input[name=visitorNo]').val('0');
 			} else {
 			} 
 			
@@ -204,33 +167,11 @@
 		}
 		function clickSearch() {
 			pageNo = 1;
-			/*
-			var visitorNo = $('input[name=visitorNo]').val();
-			if(!visitorNo || visitorNo == ''){
-				alert('검색 정보를 입력해주세요.');
-				return false;
-			}
-			if(visitorNo.length < 10){
-				alert('검색 정보를 입력해주세요.');
-				return false;
-			}
-			*/
 			getList();
 		}
 		function pressSearch() {
 			pageNo = 1;
 			if (window.event.keyCode == 13) {
-			/*
-				var visitorNo = $('input[name=visitorNo]').val();
-				if(!visitorNo || visitorNo == ''){
-					alert('검색 정보를 입력해주세요.');
-					return false;
-				}
-				if(visitorNo.length < 10){
-					alert('검색 정보를 입력해주세요.');
-					return false;
-				}
-				*/
 				getList();
 			}
 		}
@@ -244,20 +185,16 @@
 			var endTime2 = $('input[name=endTime2]').val();
 			var startDay = $('input[name=startDay]').val();
 			var endDay = $('input[name=endDay]').val();
-			var visitorNo = $('input[name=visitorNo]').val();
 			var type = 'V';
 			
-			var data = { pageNo: pageNo, pageSize: 10, type:type };
+			var data = { pageNo: pageNo, pageSize: 10, type:type, branchNo:localStorage.getItem('user_no') };
 			if(useDay) {
 				if(useTime) {
-					startDay = startDay + ' ' + ((startTime1 < 10 ? '0' : '') + startTime1) +':'+ ((startTime2 < 10 ? '0' : '') + startTime2);
-					endDay = endDay + ' ' + ((endTime1 < 10 ? '0' : '') + endTime1) +':'+ ((endTime2 < 10 ? '0' : '') + endTime2);
+					startDay = startDay + ' ' + ((startTime1 < 10 ? '0' : '') + startTime1) + ((startTime2 < 10 ? '0' : '') + startTime2);
+					endDay = endDay + ' ' + ((endTime1 < 10 ? '0' : '') + endTime1) + ((endTime2 < 10 ? '0' : '') + endTime2);
 				}
 				data.startDt = startDay;
 				data.endDt = endDay;
-			}
-			if(visitorNo && visitorNo != ''){
-				data.visitorNo = visitorNo;
 			}
 
 			greenpassadm.methods.branch.approves(data, function(request, response){
@@ -349,7 +286,6 @@
 			var endTime2 = $('input[name=endTime2]').val();
 			var startDay = $('input[name=startDay]').val();
 			var endDay = $('input[name=endDay]').val();
-			var visitorNo = $('input[name=visitorNo]').val();
 
 			localStorage.setItem('list_type', 'auth_visito');
 			localStorage.setItem('startTime1', startTime1);
@@ -358,9 +294,8 @@
 			localStorage.setItem('endTime2', endTime2);
 			localStorage.setItem('startDay', startDay);
 			localStorage.setItem('endDay', endDay);
-			localStorage.setItem('visitorNo', visitorNo);
 			
-			location.href = '/admin/auths/visitors/detail?bno=' + seq;
+			location.href = '/admin/branch/visitor?bno=' + seq;
 		}
 		</script>
 @include('admin.footer')

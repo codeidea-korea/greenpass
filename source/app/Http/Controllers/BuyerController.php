@@ -7,13 +7,12 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 
 use Illuminate\Http\UploadedFile;
-use App\Http\Requests\StoreFileRequest;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 use Illuminate\Support\Facades\Mail;
-use App\Mail\PasswordMail;
+use App\Mail\BranchAcceptMail;
 
 class BuyerController extends Controller
 {    
@@ -32,6 +31,7 @@ class BuyerController extends Controller
         $depth2 = $request->post('depth2');
         $depth3 = $request->post('depth3'); 
         $type = $request->post('type'); // partner_type
+        $code = $request->post('code'); // partner_type
 
         $result = [];
         $result['ment'] = '입력정보가 잘못되었습니다.';
@@ -96,7 +96,7 @@ class BuyerController extends Controller
             'body' => $name.'님, 발주처 가입을 위한 기반 정보가 입력되었습니다. 추가 정보를 입력하시면 가입이 완료됩니다. <br><a href="https://greenpass.codeidea.io/admin/additional-info?key='.
                 $id.'">추가 정보 입력</a></br>'
         ];
-        Mail::to($adminUser->partner_id)->send(new PasswordMail($details));
+        Mail::to($adminUser->partner_id)->send(new BranchAcceptMail($details));
 
         $result['ment'] = '신청되었습니다.';
         $result['code'] = 'SC-002';
@@ -174,7 +174,7 @@ class BuyerController extends Controller
             'title' => '[GREENPASS] 발주처 가입이 완료되었습니다.',
             'body' => $name.'님, 발주처 가입이 완료되었습니다.'
         ];
-        Mail::to($adminUser->partner_id)->send(new PasswordMail($details));
+        Mail::to($adminUser->partner_id)->send(new BranchAcceptMail($details));
 
         $result['ment'] = '가입완료 되었습니다.';
         $result['code'] = 'SC-002';
@@ -211,8 +211,6 @@ class BuyerController extends Controller
     public function getBuyer(Request $request)
     {
         $buyerNo = $request->get('buyerNo', 0);
-        $pageNo = $request->get('pageNo', 1);
-        $pageSize = $request->get('pageSize', 10);
 
         $result = [];
         $result['ment'] = '검색 정보를 입력해주세요.';
@@ -224,7 +222,7 @@ class BuyerController extends Controller
         }
 
         $companyInfo = DB::table("partner")->where([
-                ['partner_auth_seqno', '=', $branchNo]
+                ['partner_seqno', '=', $buyerNo]
             ])->first();
 
         if (empty($companyInfo)) {

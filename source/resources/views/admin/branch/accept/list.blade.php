@@ -9,7 +9,7 @@
 			<div class="wr-wrap line label200">
 				<div class="wr-list">
 					<div class="wr-list-con">
-						<label class="checkbox-wrap"><input type="checkbox" name="useInsert" value="" onclick="clickSearch()"><span></span>신청접수 상태 게시물만 보기</label>
+						<label class="checkbox-wrap"><input type="checkbox" name="useInsert" value="" onclick="clickSearch()">신청접수 상태 게시물만 보기</label>
 					</div>
 				</div>
 				<div class="wr-list">
@@ -69,6 +69,14 @@
 	</section>
 
 	<script>
+		var firstInPage = true;
+		var pageNo = 1;
+		var pageSize = 10;
+		$(document).ready(function(){
+			getList();
+			firstInPage = false;
+		});
+
 		function chkValidation(){
 			var branchName = $('input[name=branchName]').val();
 			
@@ -102,10 +110,10 @@
 					alert(response.ment);
 					return false;
 				}
-				$('#totalCnt').text( greenpassadm.methods.toCurrency(response.data.totCnt) );
+				$('#totalCnt').text( greenpassadm.methods.toNumber(response.data.totCnt) );
 
 				// _tableBody useInsert
-				if(response.totCnt == 0){
+				if(response.data.totCnt == 0){
 					$('._tableBody').html('<tr>'
 										+'    <td colspan="4" class="td_empty"><div class="empty_list" data-text="내용이 없습니다."></div></td>'
 										+'</tr>');
@@ -124,12 +132,12 @@
 					bodyData = bodyData 
 								+'<tr>'
 								+'	<td>'+getStatus(response.data.branches[inx].status)+'</td>'
-								+'	<td>'+response.data.branches[inx].company_name+'</td>'
+								+'	<td onclick="gotoDetail('+response.data.branches[inx].partner_seqno+')">'+response.data.branches[inx].company_name+'</td>'
 								+'	<td>'+response.data.branches[inx].create_dt+'</td>'
 								+'</tr>';
 					
 				}
-				if(response.totCnt > 0)
+				if(response.data.totCnt > 0)
 				{
 					var totSize = response.data.totCnt;
 					var totPagePt = Math.ceil(totSize / pageSize);
@@ -172,6 +180,14 @@
 		function loadList(no){
 			pageNo = no;
 			getList();
+		}
+		function gotoDetail(seq){
+			var branchName = $('input[name=branchName]').val();
+
+			localStorage.setItem('list_type', 'branch_accept');
+			localStorage.setItem('branchName', branchName);
+			
+			location.href = '/admin/branchs/accept?bno=' + seq;
 		}
 		</script>
 @include('admin.footer')

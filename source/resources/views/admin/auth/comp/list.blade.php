@@ -9,8 +9,8 @@
 			<div class="wr-wrap line label200 _toggleSection">
 				<div class="wr-list">
 					<div class="wr-list-con">
-						<label class="checkbox-wrap"><input type="checkbox" name="useDate" value="" onclick="toggleDay()"><span></span>기간설정</label>
-						<label class="checkbox-wrap"><input type="checkbox" name="useTime" value="" onclick="toggleTime()"><span></span>시간단위입력</label>
+						<label class="checkbox-wrap"><input type="checkbox" name="useDate" value="" checked onclick="toggleDay()">기간설정</label>
+						<label class="checkbox-wrap"><input type="checkbox" name="useTime" value="" checked onclick="toggleTime()">시간단위입력</label>
 					</div>
 				</div>
 				<div class="wr-list _dateTime">
@@ -18,16 +18,36 @@
 						<label class="inp-wrap left-label"><span class="label">날짜</span><label class="labelDate"><input type="text" name="startDay" value="" class="span130 datepicker"><span></span></label></label>
 					</div>
 					<div class="wr-list-con _toggleTimeSection">
-						<input type="number" name="startTime1" value="" min="0" max="23" class="span200" placeholder=""> 시
-						<input type="number" name="startTime2" value="" min="0" max="59" class="span200" placeholder=""> 분
+						<label class="inp-wrap right-label">
+							<label class="labelDate">
+							<input type="number" name="startTime1" value="0" min="0" max="23" class="span50" placeholder="">
+							</label><span class="label">시</span>
+						</label>
+					</div>
+					<div class="wr-list-con _toggleTimeSection">
+						<label class="inp-wrap right-label">
+							<label class="labelDate">
+							<input type="number" name="startTime2" value="59" min="0" max="59" class="span50" placeholder="">
+							</label><span class="label">분</span>
+						</label>
 					</div>
 					- 
 					<div class="wr-list-con">					
 						<label class="inp-wrap left-label"><span class="label">날짜</span><label class="labelDate"><input type="text" name="endDay" value="" class="span130 datepicker"><span></span></label></label>
 					</div>
 					<div class="wr-list-con _toggleTimeSection">
-						<input type="number" name="endTime1" value="" min="0" max="23" class="span200" placeholder=""> 시
-						<input type="number" name="endTime2" value="" min="0" max="59" class="span200" placeholder=""> 분
+						<label class="inp-wrap right-label">
+							<label class="labelDate">
+							<input type="number" name="endTime1" value="23" min="0" max="23" class="span50" placeholder="">
+							</label><span class="label">시</span>
+						</label>
+					</div>
+					<div class="wr-list-con _toggleTimeSection">
+						<label class="inp-wrap right-label">
+							<label class="labelDate">
+							<input type="number" name="endTime2" value="59" min="0" max="59" class="span50" placeholder="">
+							</label><span class="label">분</span>
+						</label>
 					</div>
 				</div>
 				
@@ -98,6 +118,12 @@
 		var useDay = true;
 		var useTime = true;
 		var pageNo = 1;
+		var pageSize = 10;
+		var firstInPage = true;
+		$(document).ready(function(){
+			getList();
+			firstInPage = false;
+		});
 
 		function toggleDay(){
 			$('._dateTime').toggle();
@@ -138,7 +164,7 @@
 						return false;
 					}
 				}
-			} else {
+			} else if(!firstInPage) {
 				// 날짜를 미입력하면서 상호명이 null 일수는 없음
 				if(!branchName || branchName == ''){
 					alert('검색 정보를 입력해주세요.');
@@ -173,8 +199,8 @@
 			var data = { pageNo: pageNo, pageSize: 10 };
 			if(useDay) {
 				if(useTime) {
-					startDay = startDay + ' ' + ((startTime1 < 10 ? '0' : '') + startTime1) + ((startTime2 < 10 ? '0' : '') + startTime2);
-					endDay = endDay + ' ' + ((endTime1 < 10 ? '0' : '') + endTime1) + ((endTime2 < 10 ? '0' : '') + endTime2);
+					startDay = startDay + ' ' + ((startTime1 < 10 ? '0' : '') + startTime1) +':'+ ((startTime2 < 10 ? '0' : '') + startTime2);
+					endDay = endDay + ' ' + ((endTime1 < 10 ? '0' : '') + endTime1) +':'+ ((endTime2 < 10 ? '0' : '') + endTime2);
 				}
 				data.startDt = startDay;
 				data.endDt = endDay;
@@ -189,10 +215,10 @@
 					alert(response.ment);
 					return false;
 				}
-				$('#totalCnt').text( greenpassadm.methods.toCurrency(response.data.totCnt) );
+				$('#totalCnt').html( greenpassadm.methods.toNumber(response.data.totCnt) );
 
 				// _tableBody
-				if(response.totCnt == 0){
+				if(response.data.totCnt == 0){
 					$('._tableBody').html('<tr>'
 										+'    <td colspan="4" class="td_empty"><div class="empty_list" data-text="내용이 없습니다."></div></td>'
 										+'</tr>');
@@ -210,14 +236,14 @@
 				for(var inx=0; inx<response.data.auth.length; inx++){
 					bodyData = bodyData 
 								+'<tr>'
-								+'	<td>'+response.data.auth[inx].location_name+'</td>'
+								+'	<td onclick="gotoDetail('+response.data.auth[inx].partner_seqno+')">'+response.data.auth[inx].company_name+'</td>'
 								+'	<td>'+response.data.auth[inx].company_address1+'</td>'
 								+'	<td>'+response.data.auth[inx].authCnt+'</td>'
 								+'	<td>'+response.data.auth[inx].visitCnt+'</td>'
 								+'</tr>';
 					
 				}
-				if(response.totCnt > 0)
+				if(response.data.totCnt > 0)
 				{
 					var totSize = response.data.totCnt;
 					var totPagePt = Math.ceil(totSize / pageSize);
@@ -248,6 +274,38 @@
 		function loadList(no){
 			pageNo = no;
 			getList();
+		}
+		function gotoDetail(seq){
+			var startTime1 = $('input[name=startTime1]').val();
+			var startTime2 = $('input[name=startTime2]').val();
+			var endTime1 = $('input[name=endTime1]').val();
+			var endTime2 = $('input[name=endTime2]').val();
+			var startDay = $('input[name=startDay]').val();
+			var endDay = $('input[name=endDay]').val();
+			var branchName = $('input[name=branchName]').val();
+
+			localStorage.setItem('list_type', 'auth_comp');
+			if(useTime) {
+				localStorage.setItem('startTime1', startTime1);
+				localStorage.setItem('startTime2', startTime2);
+				localStorage.setItem('endTime1', endTime1);
+				localStorage.setItem('endTime2', endTime2);
+			} else {
+				localStorage.removeItem('startTime1');
+				localStorage.removeItem('startTime2');
+				localStorage.removeItem('endTime1');
+				localStorage.removeItem('endTime2');
+			}
+			if(useDay) {
+				localStorage.setItem('startDay', startDay);
+				localStorage.setItem('endDay', endDay);
+			} else {
+				localStorage.removeItem('startDay');
+				localStorage.removeItem('endDay');
+			}
+			localStorage.setItem('branchName', branchName);
+			
+			location.href = '/admin/auths/branch-name/detail?bno=' + seq;
 		}
 		</script>
 @include('admin.footer')

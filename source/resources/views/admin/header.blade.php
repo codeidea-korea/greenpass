@@ -25,7 +25,7 @@
 <script type="text/javascript" src="{{ asset('adm/js/form/datepicker/datepicker.ko-KR.js') }}"></script>
 <script type="text/javascript" src="{{ asset('adm/js/form/myform.js') }}"></script>
 <script type="text/javascript" src="{{ asset('adm/js/myScript.js') }}"></script>
-<script type="text/javascript" src="{{ asset('adm/js/greenpass-apis.js') }}"></script>
+<script type="text/javascript" src="{{ asset('adm/js/greenpass-apis.js?v=202202031025') }}"></script>
 </head>
 <body>
 
@@ -42,7 +42,7 @@
 						<li class=""><a href="/admin/auths/visitors">방문자 검색</a></li>
 					</ul>
 				</li>
-				<li class="admmenu2"><a href="/admin/auths/branch-name" class="mont">인증 데이터 검색</a></li>
+				<li class="admmenu2"><a href="/admin/branch/visitors" class="mont">인증 데이터 검색</a></li>
 				<li class="admmenu"><a href="{{ route('admin.auth_graph.index') }}" class="mont">그린패스 인증통계</a></li>
 				
 				<li class="opener admmenu">
@@ -56,7 +56,7 @@
 				<li class="admmenu"><a href="/admin/buyer-add" class="mont">발주처 관리자 등록</a></li>
 				<li class="admmenu"><a href="{{ route('admin.buyer.list') }}" class="mont">발주처 관리자 리스트</a></li>
 
-				<li class="admmenu2"><a href="/admin/branch-modify" class="mont">스토어 정보 관리</a></li>
+				<li class="admmenu2"><a href="/admin/branch/modify" class="mont">스토어 정보 관리</a></li>
 			</ul>
 		</nav>
 	</div>
@@ -68,5 +68,10 @@ if(adminType == 'BR') {
 	$('.admmenu').remove();
 } else {
 	$('.admmenu2').remove();
+}
+if(!adminType) {
+	alert('로그인 해주세요.');
+	localStorage.clear();
+	location.href = '/admin/login';
 }
 </script>

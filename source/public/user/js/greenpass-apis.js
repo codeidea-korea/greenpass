@@ -237,7 +237,7 @@ var bfCall = (function(){
         	}
         };
         this.globalLanBF;
-        fetch('/user/js/greenpass-lan-global.json?v=2021122010').then(response=>{
+        fetch('/user/js/greenpass-lan-global.json?v=2022011521').then(response=>{
 			return response.json();
         }).catch(console.error).then(data=>{ this.globalLanBF = data; loadPageLanguage(); });
         
@@ -385,12 +385,29 @@ function receiveMsgFromParent( e ) {
             alert(ment);
             break;
         case 'SNS_SIGN_IN':
-            alert(response.dept);
             if(response.dept === "F" || response.dept === "f") {
-                alert(e.data);
                 
                 greenpass.methods.user.snsLogin({
                     type: 'F'
+                    , id: response.data.userID
+                }, function(request, response){
+                    console.log('output : ' + response);
+                    if(!response.data){
+                        alert(greenpass.globalLanBF.login.inErrorDb[greenpass.methods.getMyLanguage()]);
+                        return false;
+                    }
+                    localStorage.setItem('user-key', btoa(response.user_key));
+                    window.location.href = '/user/index';
+                }, function(e){
+                    console.log(e);
+                    alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
+                    location.href='/user/login?set=test1';
+                });
+            }
+            if(response.dept === "A" || response.dept === "a") {
+                
+                greenpass.methods.user.snsLogin({
+                    type: 'A'
                     , id: response.data.userID
                 }, function(request, response){
                     console.log('output : ' + response);

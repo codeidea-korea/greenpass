@@ -30,10 +30,8 @@ $allowedThirdPartCokies = true;
 				<input type="tel" id="inp-birth" name="user_birth" value="" class="span" placeholder="생년월일">
 			</p>
 			<p class="mt10">
-			<!--
 				<span class="label _korea" id="lb-phone">휴대폰 번호</span>
 				<input type="tel" id="inp-phone" name="phoneNo" value="" class="span _korea" placeholder="휴대폰 번호">
--->
 				<span class="label _foreg" id="lb-mail">이메일</span>
 				<input type="email" id="inp-mail" name="mail" value="" class="span _foreg" placeholder="E-mail">
 
@@ -70,18 +68,18 @@ $allowedThirdPartCokies = true;
 <script>
 //입력폼 전부 채운후, 다음버튼 활성화 되도록 스크립트 요청..
 //$('.btnSet .btnNext').addClass('active');
-/*
+
 $('._korea').hide();
 $('._foreg').hide();
-*/
+
 function loadPageLanguage(){
-/*
+
 	if(greenpass.methods.getMyLanguage() == 'ko') {
 		$('._korea').show();
 	} else {
 		$('._foreg').show();
 	}
-*/
+
 	$('#login-tit').text(greenpass.globalLanBF.login.simple[greenpass.methods.getMyLanguage()]);
 
 	$('#lb-birth').text(greenpass.globalLanBF.login.birthday[greenpass.methods.getMyLanguage()] + '(YYYYMMDD)');
@@ -526,25 +524,25 @@ function confirmAuthCodeMail()
 
 
 function sendAuth(){
-	/*
+	
 	if(greenpass.methods.getMyLanguage() == 'ko') {
 		sendSmsAuth();
 	} else {
 		sendSmsAuthMail();
 	}
-	*/
-	sendSmsAuthMail();
+	
+//	sendSmsAuthMail();
 }
 
 function confirmAuthCode(){
-	/*
+	
 	if(greenpass.methods.getMyLanguage() == 'ko') {
 		confirmAuthCodeSMS();
 	} else {
 		confirmAuthCodeMail();
 	}
-	*/
-	confirmAuthCodeMail();
+	
+//	confirmAuthCodeMail();
 }
 </script>
 

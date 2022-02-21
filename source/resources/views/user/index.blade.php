@@ -291,7 +291,7 @@ var processingLocationData = function (location){
 				bodyData = bodyData 
 							+'<li>'
 //							+'	<img onclick="addGpsAuth('+inx+')" src="'+response.data[inx].location_img+'">'
-							+'	<div onclick="addGpsAuth('+inx+')" class="thumb" style="background-image:url(\''+response.data[inx].location_img+'\')"></div>'
+							+'	<div onclick="addGpsAuth('+inx+')" class="thumb" style="background-image:url(\''+response.data[inx].location_img+'\'), url(\'/user/img/logo/19.png\')"></div>'
 							+'	<div class="textContent">'
 							+'		'+response.data[inx].location_name
 							+'	</div>'

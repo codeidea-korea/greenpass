@@ -660,7 +660,7 @@ class BranchController extends Controller
                 , 'location_y' => $partnerInfo->gps_y 
                 , 'location_name' => $branchInfo->company_name
                 , 'location_sub_name' => $branchInfo->company_name
-                , 'location_img' => '/user/img/icon-certify-mini.png'
+                , 'location_img' => $branchInfo->business_registration_file // '/user/img/icon-certify-mini.png'
             ]
         );
 

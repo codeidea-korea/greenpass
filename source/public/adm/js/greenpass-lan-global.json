@@ -1,0 +1,310 @@
+{
+    "login": {
+        "simple": {
+            "ko": "간편 로그인"
+            , "vt": "Đăng nhập đơn giản"
+            , "la": "ການເຂົ້າ​ສູ່​ລະ​ບົບແບບ​ງ່າຍ​ດາຍ​"
+        }
+        , "birthday": {
+            "ko": "생년월일"
+            , "vt": "Ngày tháng năm sinh"
+            , "la": "ວັນເດືອນປິເກັດ"
+        }
+        , "phone_number": {
+            "ko": "전화번호"
+            , "vt": "Số điện thoại"
+            , "la": "ເບີໂທລະສັບ"
+        }
+        , "email": {
+            "ko": "이메일"
+            , "vt": "thư trực tuyến"
+            , "la": "ອີເມລ"
+        }
+        , "auth_number_send": {
+            "ko": "인증번호 전송"
+            , "vt": "Gửi mã số xác nhận"
+            , "la": "ການສົ່ງລະຫັດຢືນຢັນ"
+        }
+        , "auth_number_input": {
+            "ko": "인증번호 입력"
+            , "vt": "Nhập mã số xác nhận"
+            , "la": "ໃສ່ໝາຍເລກການຢືນຢັນຂອງເຈົ້າ"
+        }
+        , "login": {
+            "ko": "로그인"
+            , "vt": "Đăng nhập"
+            , "la": "ເຂົ້າ​ສູ່​ລະ​ບົບ"
+        }
+        , "loginBy": {
+            "ko": "ㅁㅁㅁ 로그인"
+            , "vt": "Đăng nhập bằng ㅁㅁㅁ"
+            , "la": "ㅁㅁㅁ ເຂົ້າ​ສູ່​ລະ​ບົບ"
+        }
+        , "wait": {
+            "ko": "준비중입니다."
+            , "vt": "Đang chuẩn bị"
+            , "la": "ກຳລັງກະກຽມ"
+        }
+        , "cokiesRequire": {
+            "ko": "구글 및 카카오 로그인을 위해 쿠키 허용을 해주시고 앱을 다시 실행하여 주세요. (애플사의 최신 사파리 브라우저에서는 보안을 위해 쿠키 사용을 제한하고 있습니다)"
+            , "vt": "Để đăng nhập Google và Kakao vui lòng cho phép mở cookie và chạy lại ứng dụng. (Trình duyệt Safari mới nhất của Apple hạn chế việc sử dụng cookie để bảo mật.)"
+            , "la": "ກະລຸນາອະນຸຍາດໃຫ້ cookies ສໍາລັບ Google ແລະ Kakao ເຂົ້າສູ່ລະບົບ ແລະ ດໍາເນີນການ app ອີກ    ເທື່ອຫນຶ່ງ. (ໜ້າເວບ Safari ຫລ້າສຸດຂອງ Apple ຈໍາກັດການໃຊ້ cookies ເພື່ອຄວາມປອດໄພ.)"
+        }
+        , "inErrorDb": {
+            "ko": "디비 등록 오류"
+            , "vt": "Lỗi đăng ký DB"
+            , "la": "ການລົງທະບຽນ DB ຜິດພາດ"
+        }
+        , "validationInput": {
+            "ko": "ㅁㅁㅁ를 확인해주세요"
+            , "vt": "Vui lòng xác nhận ㅁㅁㅁ"
+            , "la": ""
+        }
+        , "validationPhoneInput": {
+            "ko": "핸드폰 번호를 확인해주세요."
+            , "vt": "Vui lòng xác nhận Số điện thoại"
+            , "la": "ກະລຸນາກວດເບິ່ງເບີໂທລະສັບຂອງເຈົ້າ."
+        }
+        , "validationBirthdayInput": {
+            "ko": "생년월일을 확인해주세요."
+            , "vt": "Vui lòng xác nhận Ngày tháng năm sinh"
+            , "la": "ກະລຸນາກວດເບິ່ງວັນເດືອນປີເກີດຂອງທ່ານ."
+        }
+        , "mobile_number": {
+            "ko": "핸드폰 번호"
+            , "vt": "Số điện thoại"
+            , "la": "ເບີໂທລະສັບ"
+        }
+        , "alert_auth_over": { 
+            "ko": "인증 시간이 만료되었습니다. 다시 인증을 요청해주세요."
+            , "vt": "Thời gian xác thực đã hết. Vui lòng xác thực lại."
+            , "la": "ເວລາການພິສູດຢືນຢັນໝົດເວລາແລ້ວ. ກະລຸນາຮ້ອງຂໍການພິສູດຢືນຢັນອີກຄັ້ງ."
+        }
+        , "alert_auth_send": {
+            "ko": "인증번호가 발송되었습니다."
+            , "vt": "Mã xác thực đã được gửi."
+            , "la": "ໝາຍເລກອະນຸຍາດໄດ້ຖືກສົ່ງໄປແລ້ວ"
+        }
+        , "alert_auth_first": {
+            "ko": "본인인증을 먼저 진행해 주세요."
+            , "vt": "Vui lòng xác minh danh tính của bạn trước."
+            , "la": "ກະລຸນນາກວດສອບດ້ວຍໂຕເອງກ່ອນ"
+        }
+        , "alert_expired_token": {
+            "ko": "사용할 수 없는 토큰입니다."
+            , "vt": "Token không thể sử dụng."
+            , "la": "ໂທເຄນທີ່ບໍ່ສາມາດໃຊ້ໄດ້"
+        }
+    }
+    , "index" : {
+        "authNFC": {
+            "ko": "NFC 인증"
+            , "vt": "Xác nhậnNFC"
+            , "la": "ການຢືນຢັນ NFC"
+        }
+        , "authGPS": {
+            "ko": "GPS 인증"
+            , "vt": "Xác nhận GPS"
+            , "la": "ການຢືນຢັນ GPS"
+        }
+        , "auth_list": {
+            "ko": "인증내역"
+            , "vt": "Nội dung xác nhận"
+            , "la": "ລາຍລະອຽດການຢັ້ງຢືນ"
+        }
+        , "see_all": {
+            "ko": "모두 보기"
+            , "vt": "Xem tất cả"
+            , "la": "ເບິ່ງທັງໝົດ"
+        }
+        , "alert_login_expired": {
+            "ko": "로그인이 만료되었습니다."
+            , "vt": "Quá thời gian đăng nhập"
+            , "la": "ການເຂົ້າສູ່ລະບົບທ່ານເບິດເວລາແລ້ວ"
+        }
+        , "alert_empty_content": { 
+            "ko": "등록된 내용이 없습니다."
+            , "vt": "Không có nội dung được đăng ký"
+            , "la": "ບໍ່ມີເນື້ອໃນການລົງທະບຽນ"
+        }
+        , "alert_auth_complete": { 
+            "ko": "인증완료"
+            , "vt": "Hoàn thành xác nhận"
+            , "la": "ການຢືນຢັນສຳເລັດ"
+        }
+        , "alert_auth_error_tag": { 
+            "ko": "인증 업체 태그 정보가 잘못되었습니다."
+            , "vt": "Thông tin tag công ty xác thực không chính xác."
+            , "la": "ຂໍ້ມູນທີ່ແທັກບໍ່ຖືກຕ້ອງ"
+        }
+        , "alert_auth_error_gps_connect": {
+            "ko": "GPS 연결을 할 수 없습니다. 권한을 허가하여 주세요."
+            , "vt": "Không thể thiết lập kết nối GPS. Vui lòng cấp quyền."
+            , "la": "ບໍ່ມີການເຊື່ອມຕໍ່ GPS ຕ້ອງໄດ້ຮັບການອານຸຍາດ"
+        }
+        , "alert_auth_error_gps_load": {
+            "ko": "현재 GPS 주소를 불러올 수 없습니다. 잠시 후 다시 시도해주세요."
+            , "vt": "Không thể truy xuất địa chỉ GPS hiện tại. Vui lòng thử lại trong sau"
+            , "la": "ບໍ່ສາມາດຶງຂໍ້ມູນຈາກ GPS ໄດ້ກະລຸນນາລອງໃໝ່ອີກ 2-3 ນາທີ"
+        }
+        , "alert_not_found_around": {
+            "ko": "근처에 등록된 지점이 없습니다."
+            , "vt": "Không có chi nhánh đã đăng ký gần đó."
+            , "la": "ບໍ່ມີການລົງທະບຽນສາຂາເຂດນັ້ນເທື່ອ"
+        }
+        , "alert_not_found_branch": {
+            "ko": "존재하지 않는 지점입니다."
+            , "vt": "Chi nhánh không tồn tại."
+            , "la": "ບໍ່ແມ່ນສາຂາໃນເຄືອ"
+        }
+        , "favorit": {
+            "ko": "즐겨찾기"
+            , "vt": "Yêu thích"
+            , "la": "ລາຍການທີ່ມັກ"
+        }
+        , "alert_add_favorit": {
+            "ko": "즐겨찾기에 추가 되었습니다."
+            , "vt": "Đã thêm tìm kiếm nhanh."
+            , "la": "ຖືກບັນທືກເຂົ້າໃນລາຍການທີ່ນິຍົມ"
+        }
+        , "alert_remove_favorit": {
+            "ko": "즐겨찾기에 삭제 되었습니다."
+            , "vt": "Đã được xóa trên tìm kiếm nhanh."
+            , "la": "ຖືກຍົກເລີກອອກຈາກລາຍການທີ່ນິຍົມ"
+        }
+        , "alert_auth_remove_confirm": {
+            "ko": "인증 내역을 삭제합니다. 정말 인증을 취소하시겠습니까?"
+            , "vt": "Xóa lịch sử xác thực. Bạn có chắc chắn muốn thu hồi xác thực không?"
+            , "la": "ເນື້ອໃນລາຍລະອຽດຖືກຍົກເລີກ. ຈະຍົກເລີກແທ່ບໍ່?"
+        }
+        , "alert_auth_remove": {
+            "ko": "인증이 취소 되었습니다."
+            , "vt": "Đã hủy xác thực."
+            , "la": "ການຢືນຢັນຖືກຍົກເລີກແລ້ວ"
+        }
+        , "alert_auth_empty": {
+            "ko": "인증 내용이 없습니다."
+            , "vt": "Không có nội dung xác thực"
+            , "la": "ເນື້ອໃນການຢືນຢັນບໍ່ມີແລ້ວ"
+        }
+        , "time": {
+            "ko": "ㅁㅁ시 ㅇㅇ분"
+            , "vt": "ㅁㅁ giờ ㅇㅇ phút"
+            , "la": "ㅁㅁ ໂມງ ㅇㅇ ນາທີ"
+        }
+        , "GPS_list": {
+            "ko": "GPS 목록"
+            , "vt": "Danh mục GPS"
+            , "la": "ສາລະບານ GPS"
+        }
+        , "GPS_around_choose": {
+            "ko": "주변목록중에서 선택하세요"
+            , "vt": "Vui lòng chọn từ danh sách xung quanh"
+            , "la": "ກາລຸນນາເລືອກລາຍການທີ່ເຂດໃກ້ຄຽງ"
+        }
+        , "auth_preview": {
+            "ko": "인증 화면"
+            , "vt": "Màn hình xác thực"
+            , "la": "ພາບທີ່ຖືກຢືນຢັນ"
+        }
+        , "auth_confirm": {
+            "ko": "인증되었습니다."
+            , "vt": "Đã xác thực"
+            , "la": "ໄດ້ຮັບການຢືນຢັນແລ້ວ"
+        }
+        , "auth_cancel": {
+            "ko": "인증취소"
+            , "vt": "Hủy xác thực"
+            , "la": "ການຢືນຢັນ ຖືກຍົກເລີກ"
+        }
+        , "auth_retry": {
+            "ko": "재인증"
+            , "vt": "Xác thực lại"
+            , "la": "ການຢືນຢັນລ້າສຸດ"
+        }
+    }
+    , "api": {
+        "permission_error": {
+            "ko": "퍼미션 작업 에러"
+            , "vt": "Quyền thực hiện lỗi"
+            , "la": "ການອານຸມັດການເຮັດວຽກເອີເລີ"
+        }
+        , "not_allow_language": {
+            "ko": "해당 언어는 지원하지 않습니다."
+            , "vt": "Ngôn ngữ không được hỗ trợ."
+            , "la": "ບໍ່ຮອງຮັບພາສາ."
+        }
+        , "need_app": {
+            "ko": "해당 기능은 앱에서 확인해주세요."
+            , "vt": "Vui lòng kiểm tra chức năng này trong ứng dụng."
+            , "la": "ກະລຸນາກວດເບິ່ງຟັງຊັນນີ້ໃນແອັບ."
+        }
+        , "location_not_found_error": {
+            "ko": "현재 위치 좌표가 확인되지 않습니다. 잠시 후 다시 시도해주세요."
+            , "vt": "Tọa độ vị trí hiện tại không được kiểm tra. Vui lòng thử lại sau."
+            , "la": "ພິກັດສະຖານທີ່ປະຈຸບັນບໍ່ໄດ້ຖືກຢືນຢັນ.ກະລຸນາລອງອິກຄັ້ງອິກ2-3 ນາທີ"
+        }
+        , "server_error": {
+            "ko": "서버 통신 에러"
+            , "vt": "Lỗi giao tiếp máy chủ"
+            , "la": "ລະບົບເຊີບເວີ ເອີເລີ"
+        }
+        , "need_input_error": {
+            "ko": "정보를 입력해주세요."
+            , "vt": "Vui lòng nhập thông tin"
+            , "la": "ກະລຸນາກອກຂໍ້ມູນ"
+        }
+        , "need_auth_type_error": {
+            "ko": "인증방식을 선택해주세요. (GPS, NFC, Beacon 등)"
+            , "vt": "Vui lòng chọn phương thức xác nhận (GPS, NFC, Beacon, v.v )"
+            , "la": "ກະລຸນາເລືອກຮູບແບບການຢືນຢັນ"
+        }
+        , "expired_login_error": {
+            "ko": "로그인이 만료되었습니다. 다시 로그인 하여주세요."
+            , "vt": "Quá thời gian đăng nhập. Xin vui lòng đăng nhập lại."
+            , "la": "ການເຂົ້າສູ່ລະບົບໝົດເວລາ ກະລຸນາເຂົ້າສູ່ລະບົບອິກຄັ້ງ"
+        }
+        , "not_found_branch_error": {
+            "ko": "존재하지 않는 매장입니다."
+            , "vt": "Cửa hàng không tồn tại."
+            , "la": "ຮ້ານທີ່ຍັງບໍ່ມີໃນລະບົບ"
+        }
+        , "not_allowed_branch_error": {
+            "ko": "아직 승인되지 않은 매장입니다."
+            , "vt": "Cửa hàng chưa được duyệt."
+            , "la": "ເປັນຮ້ານທີ່ຍັງບໍ່ທັນຖືກຍອມຮັບໃນລະບົບ"
+        }
+        , "not_choose_branch_error": {
+            "ko": "지점을 선택해주세요."
+            , "vt": "Vui lòng chọn đại lý."
+            , "la": "ກະລຸນາເລືອກສາຂາ"
+        }
+    }
+    , "app": {
+        "not_allow_nfc": {
+            "ko": "NFC를 지원하지 않는 단말기입니다."
+            , "vt": "Thiết bị đầu cuối này không hỗ trợ NFC."
+            , "la": "ເປັນເຄື່ອງທີ່ບໍ່ສາມາດເຊື່ອມຕໍ່ກັບ NFC ໄດ້"
+        }
+        , "turn_off_nfc": {
+            "ko": "NFC가 비활성화 되어 있습니다. NFC 설정으로 이동하시겠습니까?"
+            , "vt": "NFC bị tắt. Bạn có muốn đi chuyển tới cài đặt NFC không?"
+            , "la": "NFC ຖືກປິດ.ທ່ານຕ້ອງການເຂົ້າໄປຕັ້ງຄ່າໃນ  NFC"
+        }
+        , "yes": {
+            "ko": "네"
+            , "vt": "Có"
+            , "la": "ແມ່ນ"
+        }
+        , "no": {
+            "ko": "아니요"
+            , "vt": "Không"
+            , "la": "ບໍ່ແມ່ນ"
+        }
+        , "not_allow_gps": {
+            "ko": "위치정보 사용을 거부하셨습니다. GPS 인증이 제한됩니다."
+            , "vt": "Bạn đã từ chối sử dụng thông tin vị trí. Xác thực GPS bị hạn chế."
+            , "la": "ທ່ານ ໄດ້ປະຕິເສດທີ່ຈະນຳໃຊ້ຂໍ້ມູນພິກັດສະຖານທີ່່ຂອງທ່ານ ການກວດສອບ GPS ແມ່ນຈໍາກັດ"
+        }
+    }
+}

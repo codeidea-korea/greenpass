@@ -75,4 +75,9 @@ class UserController extends Controller
     {
         return view('user.usage');
     }
+    
+    public function mypage(Request $request)
+    {
+        return view('user.mypage');
+    }
 }

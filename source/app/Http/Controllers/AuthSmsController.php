@@ -205,6 +205,7 @@ class AuthSmsController extends Controller
         $phoneNo = $request->get('phoneNo', '');
         $auth_code = $request->get('auth_code', '');
         $id = $request->get('id', '');
+        $lan = $request->post('lan', '');
         $result = [];
         
         if (empty($phoneNo)) {
@@ -230,10 +231,14 @@ class AuthSmsController extends Controller
         $result['ment'] = '성공';
 
         if(empty($userInfo)){
+            if(empty($lan) || $lan == '') {
+                $lan = 'ko';
+            }
             $key = DB::table('user_info')->insertGetId(
                 [
                     'user_birthday' => $id
                     , 'user_phone' => $phoneNo
+                    , 'lan' => $lan
                 ]
             );
             $userInfo = DB::table('user_info')->where([
@@ -243,8 +248,19 @@ class AuthSmsController extends Controller
             $result['user_key'] = $userInfo->user_seqno;
         } else {
             $result['user_key'] = $userInfo->user_seqno;
+            if(! empty($lan) && $lan != '') {
+                DB::table('user_info')->where([
+                    ['user_seqno', '=', $userInfo->user_seqno]
+                ])->update(
+                    [
+                        'lan' => $lan
+                    ]
+                );
+            }
         }
         $result['data'] = $auth;
+        $userInfo->lan = $lan;
+        $result['userInfo'] = $userInfo;
 
         return response()->json($result);
     }

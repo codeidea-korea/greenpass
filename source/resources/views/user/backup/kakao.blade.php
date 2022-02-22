@@ -90,6 +90,7 @@ echo 'var authId = "'.$result->kakao_account->email.'";';
 greenpass.methods.user.snsLogin({
 	type: 'K'
 	, id: authId
+                    , lan: localStorage.getItem('lan')
 }, function(request, response){
 	console.log('output : ' + response);
 	if(!response.data){

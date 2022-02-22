@@ -1,6 +1,12 @@
 
 @include('user.lib.common')
 
+@php
+header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
+header('Pragma: no-cache'); // HTTP 1.0.
+header('Expires: 0'); // Proxies.
+@endphp
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -13,17 +19,17 @@
 
 	<link rel="apple-touch-icon" href="{{ asset('user/img/favorite/favorite_mobile.png') }}" />
 	<link href="{{ asset('user/js/magnific-popup/magnific-popup.css') }}" rel="stylesheet">
-	<link rel="stylesheet" href="{{ asset('user/css/root.css') }}">
-	<link rel="stylesheet" href="{{ asset('user/js/form/myform.css') }}">
-	<link rel="stylesheet" href="{{ asset('user/css/mobileDefault.css') }}">
-	<link rel="stylesheet" href="{{ asset('user/css/mobile.css') }}?v=2021121920">
+	<link rel="stylesheet" href="{{ asset('user/css/root.css') }}?v=2022022221">
+	<link rel="stylesheet" href="{{ asset('user/js/form/myform.css') }}?v=2022022221">
+	<link rel="stylesheet" href="{{ asset('user/css/mobileDefault.css') }}?v=2022022221">
+	<link rel="stylesheet" href="{{ asset('user/css/mobile.css') }}?v=2022022221">
 
 	<script type="text/javascript" src="{{ asset('user/js/jquery-1.12.4.min.js') }}"></script>
 	<script src="{{ asset('user/js/magnific-popup/jquery.magnific-popup.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('user/js/easing.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('user/js/form/myform.js') }}"></script>	
 	<script type="text/javascript" src="{{ asset('user/js/myScript.js') }}"></script>
-	<script type="text/javascript" src="{{ asset('user/js/greenpass-apis.js') }}?v=202201051202"></script>
+	<script type="text/javascript" src="{{ asset('user/js/greenpass-apis.js') }}?v=2022022223"></script>
 
 	<!-- google 로그인 추가 -->
 	<script src="https://apis.google.com/js/api:client.js" async defer></script>

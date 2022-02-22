@@ -31,6 +31,7 @@ Route::get('/login/cookie-check', [UserController::class, 'sns_cookie_check'])->
 
 Route::get('/terms/privacy', [UserController::class, 'privacy']) ->name('terms.privacy');
 Route::get('/terms/usage', [UserController::class, 'usage']) ->name('terms.usage');
+Route::get('/mypage', [UserController::class, 'mypage']) ->name('mypage');
 
 
 Route::get('/admin', [AdminController::class, 'index']);
@@ -65,6 +66,12 @@ Route::prefix('admin')->group(function () {
 
     Route::get('auths/graph', [AdminController::class, 'auth_auth_graph_index'])->name('admin.auth_graph.index');
     
-    Route::get('auths/branch-name/excel', [AdminController::class, 'auth_comp_exceldownload'])->name('admin.auth.comp.excel');
-    Route::get('auths/visitors/excel', [AdminController::class, 'auth_visitor_exceldownload'])->name('admin.auth.visitor.excel');
+    Route::get('branch/modify', [AdminController::class, 'branch_modify_2'])->name('admin.branch.store.modify');
+    Route::get('branch/visitors', [AdminController::class, 'branch_visitor_list'])->name('admin.branch.store.visitor.list');
+    Route::get('branch/visitor', [AdminController::class, 'branch_visitor_detail'])->name('admin.branch.store.visitor.detail');
+    
+    Route::get('auths/excel/branch-name', [AdminController::class, 'comp_excel_download'])->name('admin.auth.excel.comp');
+    Route::get('auths/excel/visitors', [AdminController::class, 'visitor_excel_download'])->name('admin.auth.excel.visitors');
+    Route::get('auths/excel/visitor', [AdminController::class, 'user_history_excel_download'])->name('admin.auth.excel.visitor');
+    Route::get('auths/excel/graph', [AdminController::class, 'graph_excel_download'])->name('admin.auth.excel.graph');
 });

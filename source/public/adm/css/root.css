@@ -1,0 +1,99 @@
+@import url('https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css');
+@import url('https://fonts.googleapis.com/css?family=Black+Han+Sans:400');
+@import url('//fonts.googleapis.com/earlyaccess/notosanskr.css');
+
+@font-face {
+	font-family: 'GongGothicLight';
+	/*src: url('https://github.com/projectnoonnu/noonfonts_20-10/blob/main/GongGothicLight.woff') format('woff'),*/
+	src: url('font/Gong Gothic Light.ttf') format('truetype');	
+	font-weight:normal;
+}
+@font-face {
+	font-family: 'GongGothicMedium';
+	/*src: url('https://github.com/projectnoonnu/noonfonts_20-10/blob/main/GongGothicMedium.woff') format('woff'),*/
+	src: url('font/Gong Gothic Medium.ttf') format('truetype');	
+	font-weight:normal;
+}
+@font-face {
+	font-family: 'GongGothicBold';
+	/*src: url('https://github.com/projectnoonnu/noonfonts_20-10/blob/main/GongGothicBold.woff') format('woff'),*/
+	src: url('font/Gong Gothic Bold.ttf') format('truetype');	
+	font-weight:normal;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+@font-face {
+	font-family: 'Montserrat', sans-serif;
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url(https://fonts.gstatic.com/s/montserrat/v15/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2) format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+[class*='noto']{font-family:'Noto Sans KR', sans-serif;}
+.noto100{font-weight:100}
+.noto200{font-weight:200}
+.noto300{font-weight:300}
+.noto400{font-weight:400}
+.noto500{font-weight:500}
+.noto600{font-weight:600}
+.noto700{font-weight:700}
+.noto800{font-weight:800}
+
+
+/*
+
+font-family:'Montserrat', sans-serif;font-weight:400;
+font-family:'Black Han Sans', sans-serif;font-weight:400;
+
+*/
+
+
+
+
+
+:root{
+	--left-width:220px;
+	--wraper-width:calc(100% - 220px);
+	/*--mainColor:#3a404e;*/
+	--mainColor:#1bc8a6;
+	--btnColor:#11b897;
+	--btnColor-active:#04a283;
+	
+	--yellow:#27a9e3;
+	--red:#f75d31;
+	--blue:#3d74f0;
+	--blue-dark:#2255a4;
+	--black:#252525;
+	--gray:#797C8F;
+	--green:#27a9e3;
+	--orange:#ff6f36;
+
+	--table:#7f90aa;
+	--table-line:#c0c6cf;
+	--table-line2:#d7dce3;
+
+	--tip-bg-color:rgba(0,0,0,0.65);
+	
+}
+
+
+/* fontColor */
+.color-yellow{color:#FFC41B;}
+.color-red{color:#f24141;}
+.color-blue{color:#288ef3;}
+.color-black{color:#252525;}
+.color-gray{color:#797C8F;}
+.color-green{color:#5dcc8e;}
+.color-pointColor{color:#ff3333;}
+.color-point{color:#ff4b82;}
+.color-orange{color:#ff6f36;}
+.bg-gray{background:#f1f1f1;}
+.bg-yellow{background:#fffcc4;}
+.bg-orange{background:#ffe5d2;}
+.bg-green{background:#f3ffd8;}
+.bg-red{background:#ffd8d8;}
+.bg-blue{background:#bbd6ff;}
+.mainColor{color:#1C549C;}

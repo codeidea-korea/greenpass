@@ -15,6 +15,41 @@
             , "vt": "Số điện thoại"
             , "lao": "ເບີໂທລະສັບ"
         }
+        , "email": {
+            "ko": "이메일"
+            , "vt": "thư trực tuyến"
+            , "lao": "ອີເມລ"
+        }
+        , "privacy": {
+            "ko": "개인정보처리방침"
+            , "vt": "Privacy policy"
+            , "lao": "Privacy policy"
+        }
+        , "usage": {
+            "ko": "이용약관"
+            , "vt": "Terms of Use"
+            , "lao": "Terms of Use"
+        }
+        , "logout": {
+            "ko": "로그아웃"
+            , "vt": "Log out"
+            , "lao": "Log out"
+        }
+        , "mypage": {
+            "ko": "마이페이지"
+            , "vt": "MY PAGE"
+            , "lao": "MY PAGE"
+        }
+        , "id": {
+            "ko": "아이디"
+            , "vt": "ID"
+            , "lao": "ID"
+        }
+        , "lan": {
+            "ko": "언어선택"
+            , "vt": "sự lựa chọn ngôn ngữ"
+            , "lao": "ການເລືອກພາສາ"
+        }
         , "auth_number_send": {
             "ko": "인증번호 전송"
             , "vt": "Gửi mã số xác nhận"

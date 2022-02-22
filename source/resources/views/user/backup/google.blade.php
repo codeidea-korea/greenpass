@@ -33,6 +33,7 @@ setTimeout(() => {
             greenpass.methods.user.snsLogin({
                 type: 'G'
                 , id: authId
+                    , lan: localStorage.getItem('lan')
             }, function(request, response){
                 console.log('output : ' + response);
                 if(!response.data){

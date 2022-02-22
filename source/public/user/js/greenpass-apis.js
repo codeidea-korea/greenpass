@@ -237,9 +237,9 @@ var bfCall = (function(){
         	}
         };
         this.globalLanBF;
-        fetch('/user/js/greenpass-lan-global.json?v=2022011521').then(response=>{
+        fetch('/user/js/greenpass-lan-global.json?v=2022022223').then(response=>{
 			return response.json();
-        }).catch(console.error).then(data=>{ this.globalLanBF = data; loadPageLanguage(); });
+        }).catch(console.error).then(data=>{ this.globalLanBF = data; setTimeout(loadPageLanguage, 200); });
         
         return this;
     }
@@ -390,6 +390,7 @@ function receiveMsgFromParent( e ) {
                 greenpass.methods.user.snsLogin({
                     type: 'F'
                     , id: response.data.userID
+                    , lan: localStorage.getItem('lan')
                 }, function(request, response){
                     console.log('output : ' + response);
                     if(!response.data){
@@ -409,6 +410,7 @@ function receiveMsgFromParent( e ) {
                 greenpass.methods.user.snsLogin({
                     type: 'A'
                     , id: response.data.userID
+                    , lan: localStorage.getItem('lan')
                 }, function(request, response){
                     console.log('output : ' + response);
                     if(!response.data){

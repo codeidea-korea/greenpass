@@ -31,6 +31,7 @@ Route::get('/login/cookie-check', [UserController::class, 'sns_cookie_check'])->
 
 Route::get('/terms/privacy', [UserController::class, 'privacy']) ->name('terms.privacy');
 Route::get('/terms/usage', [UserController::class, 'usage']) ->name('terms.usage');
+Route::get('/mypage', [UserController::class, 'mypage']) ->name('mypage');
 
 
 Route::get('/admin', [AdminController::class, 'index']);

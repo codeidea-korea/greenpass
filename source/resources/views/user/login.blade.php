@@ -245,6 +245,7 @@ function initSNS() {
                 greenpass.methods.user.snsLogin({
                     type: 'G'
                     , id: authId
+                    , lan: localStorage.getItem('lan')
                 }, function(request, response){
                     console.log('output : ' + response);
                     if(!response.data){
@@ -304,6 +305,7 @@ document.addEventListener('AppleIDSignInOnSuccess', (userInfo) => {
     greenpass.methods.user.snsLogin({
         type: 'A'
         , id: authId
+                    , lan: localStorage.getItem('lan')
     }, function(request, response){
         console.log('output : ' + response);
         if(!response.data){
@@ -410,6 +412,7 @@ function confirmAuthCodeSMS()
 		phoneNo: phoneNo
 		, auth_code: authCode
 		, id: user_birth
+		, lan: localStorage.getItem('lan')
 	}, function(request, response){
 		console.log('output : ' + response);
 		if(!response.data.receive_phone){
@@ -507,6 +510,7 @@ function confirmAuthCodeMail()
 		mail: pMail
 		, auth_code: authCode
 		, user_birth: user_birth
+		, lan: localStorage.getItem('lan')
 	}, function(request, response){
 		console.log('output : ' + response);
 		if(!response.data.receive_mail){

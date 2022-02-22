@@ -206,6 +206,7 @@ function initSNS() {
                 greenpass.methods.user.snsLogin({
                     type: 'G'
                     , id: authId
+                    , lan: localStorage.getItem('lan')
                 }, function(request, response){
                     console.log('output : ' + response);
                     if(!response.data){
@@ -244,6 +245,7 @@ document.addEventListener('AppleIDSignInOnSuccess', (userInfo) => {
     greenpass.methods.user.snsLogin({
         type: 'A'
         , id: authId
+                    , lan: localStorage.getItem('lan')
     }, function(request, response){
         console.log('output : ' + response);
         if(!response.data){

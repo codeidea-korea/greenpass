@@ -19,6 +19,7 @@ function naverSignInCallback() {
 	greenpass.methods.user.snsLogin({
 		type: 'N'
 		, id: authId
+                    , lan: localStorage.getItem('lan')
 	}, function(request, response){
 		console.log('output : ' + response);
 		if(!response.data){

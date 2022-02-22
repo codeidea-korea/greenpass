@@ -12,6 +12,7 @@ function statusChangeCallback(response) {
 			greenpass.methods.user.snsLogin({
 				type: 'F'
 				, id: r.id
+                    , lan: localStorage.getItem('lan')
 			}, function(request, response){
 				console.log('output : ' + response);
 				if(!response.data){

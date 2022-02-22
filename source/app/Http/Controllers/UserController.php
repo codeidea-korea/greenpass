@@ -221,6 +221,7 @@ class UserController extends Controller
     {
         $type = $request->post('type');
         $id = $request->post('id');
+        $lan = $request->post('lan', '');
 
         $result = [];
         $result['ment'] = '실패';
@@ -263,25 +264,28 @@ class UserController extends Controller
         $userInfo = DB::table("user_info")->where([$where])->first();
         if(empty($userInfo)){
             $insert = [];
+            if(empty($lan) || $lan == '') {
+                $lan = 'ko';
+            }
 
             switch ($type) {
                 case 'G':
-                    $insert = ['sns_google' => $id];
+                    $insert = ['sns_google' => $id, 'lan' => $lan];
                 break;
                 case 'A':
-                    $insert = ['sns_apple' => $id];
+                    $insert = ['sns_apple' => $id, 'lan' => $lan];
                 break;
                 case 'N':
-                    $insert = ['sns_naver' => $id];
+                    $insert = ['sns_naver' => $id, 'lan' => $lan];
                 break;
                 case 'K':
-                    $insert = ['sns_kakao' => $id];
+                    $insert = ['sns_kakao' => $id, 'lan' => $lan];
                 break;
                 case 'F':
-                    $insert = ['sns_facebook' => $id];
+                    $insert = ['sns_facebook' => $id, 'lan' => $lan];
                 break;
                 case 'Z':
-                    $insert = ['sns_zalo' => $id];
+                    $insert = ['sns_zalo' => $id, 'lan' => $lan];
                 break;
                 default:
                     $result['ment'] = '정보가 없습니다. 다시 로그인하여 주세요.';
@@ -297,10 +301,24 @@ class UserController extends Controller
             $result['user_key'] = $userInfo->user_seqno;
         } else {
             $result['user_key'] = $userInfo->user_seqno;
+            
+            if(! empty($lan) && $lan != '') {
+                DB::table('user_info')->where([
+                    ['user_seqno', '=', $userInfo->user_seqno]
+                ])->update(
+                    [
+                        'lan' => $lan
+                    ]
+                );
+            } else {
+                $lan = $userInfo->lan;
+            }
         }
         $result['result'] = true;
         $result['ment'] = '성공';
         $result['data'] = $userInfo;
+        $userInfo->lan = $lan;
+        $result['userInfo'] = $userInfo;
 
         return $result;
     }

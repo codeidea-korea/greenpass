@@ -16,6 +16,10 @@ class GreenPassController extends Controller
         $latitude = $request->get('latitude');
         $longitude = $request->get('longitude');
         $user_key = $request->get('user_key');
+
+        $pageNo = $request->get('pageNo', 1);
+        $pageSize = $request->get('pageSize', 10);
+
         $result = [];
         $result['result'] = false;
 
@@ -32,7 +36,9 @@ class GreenPassController extends Controller
                                 as distance
                                , partner_auth_seqno, admin_seqno, gps_used, beacon_used, nfc_used, location_x, location_y, location_name, location_sub_name, location_img'))
 //            ->offset(0)->limit(20)
-            ->orderBy('distance', 'asc')->orderBy('partner_auth_seqno', 'desc')->orderBy('location_name', 'asc')->get();
+            ->orderBy('distance', 'asc')->orderBy('partner_auth_seqno', 'desc')->orderBy('location_name', 'asc')
+            ->offset($pageSize * ($pageNo - 1))->limit($pageSize)
+            ->get();
         
         $result['data'] = $gpslist;
         

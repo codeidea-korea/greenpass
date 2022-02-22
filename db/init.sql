@@ -24,6 +24,7 @@ create table user_info
 ALTER TABLE user_info ADD COLUMN sns_facebook varchar(200) NULL;
 ALTER TABLE user_info ADD COLUMN sns_zalo varchar(200) NULL;
 ALTER TABLE user_info ADD COLUMN sns_mail varchar(200) NULL;
+ALTER TABLE user_info ADD COLUMN lan varchar(3) NULL;
 
 
 create index user_info__index_1

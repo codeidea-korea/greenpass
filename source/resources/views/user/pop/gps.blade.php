@@ -73,6 +73,9 @@
 			</li>
 		</ul>
     </section>
+	<div class="btnSet">
+		<a href="#" onclick="loadNextGPSPopup()" class="btn more _moreGPSBtn">더보기</a>
+	</div>
 	<div class="ani-nfc">
 		<span></span>
 		<span></span>

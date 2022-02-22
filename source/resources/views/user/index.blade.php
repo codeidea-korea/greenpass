@@ -3,13 +3,16 @@
 <section id="main">
 <!-- 2021.11.14. 안드로이드 승인을 위해 잠시 주석 -->
 
+<!--
 	<div class="top-banner" style="display:none;">
 		<a href="/user/register_certify2"><img src="{{ asset('user/img/top-banner01.png') }}"></a>
 	</div>
+	-->
 
 	<div class="main-top">
 		<a href="#" id="nfcClk" class="popup-inline"><span class="icon-btn-nfc"></span>NFC 인증</a>
 		<a href="#" id="gpsClk" onclick="openGPS()" class="popup-inline"><span class="icon-btn-gps"></span>GPS 인증</a>
+		<a href="/mypage" class="btn-setting">설정</a>
 	</div>
 	
 	<div class="container">
@@ -74,7 +77,7 @@
 		</ul>
 		
 		<div class="btnSet mt30">
-			<a href="#" id="show-all-clk" onclick="loadAuths()" class="btn green span">모두보기</a>
+			<a href="#" id="show-all-clk" onclick="loadAuths()" class="btn green span">더보기</a>
 		</div>
 	</div>
 </section>
@@ -82,6 +85,8 @@
 <script>
 var user_key = localStorage.getItem('user-key');
 if(!user_key) window.location.href = '/user/login?set=test1';
+
+$('#show-all-clk').hide();
 
 $(document).ready(function(){
 	$('#nfcClk').off().on('click', openNFC);
@@ -100,6 +105,12 @@ $(document).ready(function(){
 		console.log(e);
 		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()]);
 	});
+});
+
+$(window).bind("pageshow", function(event) { 
+	if ( event.persisted || (window.performance) ){ 
+		setTimeout(loadPageLanguage, 100);
+	} 
 });
 
 function loadPageLanguage(){
@@ -139,6 +150,9 @@ function loadAuths(type){
 									+'	</div>'
 									+'</li>');
 			return;
+		}
+		if(response.totCnt < 10){
+			$('#show-all-clk').hide();
 		}
 
 		var bodyData = '';
@@ -253,21 +267,28 @@ function openGPS(){
 	greenpass.methods.hybridapp.getGpsData(processingLocationData);
 }
 
-var processingLocationData = function (location){
-//		alert(location);
-	var latitude = !location || !location.coords || location.coords.latitude;
-	var longitude = !location || !location.coords || location.coords.longitude;
-	if(latitude === true || longitude === true) {
-		alert(greenpass.globalLanBF.index.alert_auth_error_gps_load[greenpass.methods.getMyLanguage()]);
+var gpsPageNo = 1;
+var gpsWait = false;
+
+function loadNextGPSPopup(){
+	if(gpsWait) {
+		alert('서버 통신중입니다. 잠시 기다려주세요.');
 		return;
 	}
-	localStorage.setItem('latitude', latitude);
-	localStorage.setItem('longitude', longitude);
+	gpsWait = true;
+	gpsPageNo = gpsPageNo + 1;
+	loadGPSPopup();
+}
+function loadGPSPopup(){
+	var latitude = localStorage.getItem('latitude');
+	var longitude = localStorage.getItem('longitude');
 
 	// TODO: 현재 위치로 부터 가장 가까운 순으로 20m 이내 리스트 불러오기
 	greenpass.methods.partners.list({
 		latitude: latitude,
 		longitude: longitude,
+		pageNo: gpsPageNo,
+		pageSize: 20,
 		user_key: atob(localStorage.getItem('user-key'))
 	}, function(request, response){
 		console.log('output : ' + response);
@@ -284,6 +305,7 @@ var processingLocationData = function (location){
 									+'		'+greenpass.globalLanBF.index.alert_not_found_around[greenpass.methods.getMyLanguage()]+'<br>'
 									+'	</div>'
 									+'</li>');
+			$('._moreGPSBtn').hide();
 		} else {
 			var bodyData = '';
 			partners = response.data;
@@ -299,7 +321,16 @@ var processingLocationData = function (location){
 										+ '" onclick="toggleFavorite('+inx+')">'+greenpass.globalLanBF.index.favorit[greenpass.methods.getMyLanguage()] +'</span>'
 							+'</li>';
 			}
-			$('#certify-list').html(bodyData);
+			
+			if(gpsPageNo == 1) {
+				$('#certify-list').html(bodyData);
+			} else {
+				$('#certify-list').html($('#certify-list').html() + bodyData);
+			}
+		}
+		// 최대치에 왔으면 더보기 버튼 히든처리
+		if(gpsPageNo * 20 >= response.totCnt) {
+			$('._moreGPSBtn').hide();
 		}
 
 		$.magnificPopup.open({
@@ -308,10 +339,26 @@ var processingLocationData = function (location){
 			},
 			type: 'inline'
 		});
+		gpsWait = false;
 	}, function(e){
 		console.log(e);
+		gpsWait = false;
 		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 리스트 > 사용자 식별자 오류');
 	});
+}
+var processingLocationData = function (location){
+//		alert(location);
+	var latitude = !location || !location.coords || location.coords.latitude;
+	var longitude = !location || !location.coords || location.coords.longitude;
+	if(latitude === true || longitude === true) {
+		alert(greenpass.globalLanBF.index.alert_auth_error_gps_load[greenpass.methods.getMyLanguage()]);
+		return;
+	}
+	localStorage.setItem('latitude', latitude);
+	localStorage.setItem('longitude', longitude);
+
+	gpsPageNo = 1;
+	loadGPSPopup();
 }
 
 function openNFC(e){		

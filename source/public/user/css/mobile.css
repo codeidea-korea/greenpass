@@ -52,6 +52,7 @@ img{max-width:100%;}
 p{word-break:keep-all;}
 p.small{font-size:0.95em;}
 .thumb{border-radius:3px;max-width:100%;}
+.relative{position:relative}
 
 .btnSet{display:flex;align-items:center;justify-content:center;}
 .btnSet.column{flex-direction:column;}
@@ -266,6 +267,9 @@ button.mfp-close:hover, .button.mfp-close:focus{opacity:1;}
 .layerPopup .btnSet{margin-top:15px;}
 .layerPopup .btnSet .btn{border-radius:12px;height:52px;}
 .layerPopup .btnSet .btn.more{background:#089988;}
+
+.layerPopup .btnSet.bottom{margin-top:0;}
+.layerPopup .btnSet.bottom .btn{height:65px;border-top-left-radius:0;border-top-right-radius:0;}
 
 
 

@@ -428,9 +428,9 @@ function authCancel(){
 		alert('인증이 취소 되었습니다.');
 		loadAuths();
 		
-		$.magnificPopup.close({
+		$.magnificPopup.open({
 			items: {
-				src: '#pop-certify'
+				src: '#pop-ad'
 			},
 			type: 'inline'
 		});
@@ -465,5 +465,6 @@ function reauth() {
 @include('user.pop.npc')
 @include('user.pop.gps')
 @include('user.pop.certify')
+@include('user.pop.pop_ad')
 
 @include('user.footer')

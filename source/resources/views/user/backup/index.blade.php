@@ -427,13 +427,6 @@ function authCancel(){
 		}
 		alert('인증이 취소 되었습니다.');
 		loadAuths();
-		
-		$.magnificPopup.open({
-			items: {
-				src: '#pop-ad'
-			},
-			type: 'inline'
-		});
 	}, function(e){
 		console.log(e);
 		alert('서버 통신 에러');
@@ -445,12 +438,7 @@ function reauth() {
 		alert('인증 내용이 없습니다.');
 		return;
 	}
-	$.magnificPopup.close({
-		items: {
-			src: '#pop-certify'
-		},
-		type: 'inline'
-	});
+	$.magnificPopup.close();
 	switch(prev_auth_type){
 		case 'G':
 			openGPS();
@@ -465,6 +453,5 @@ function reauth() {
 @include('user.pop.npc')
 @include('user.pop.gps')
 @include('user.pop.certify')
-@include('user.pop.pop_ad')
 
 @include('user.footer')

@@ -60,8 +60,8 @@ class BranchController extends Controller
     //    branch 등록
     public function addBranch(Request $request)
     {
-        $id = $request->post('id');
-        $pw = $request->post('pw');
+        $id = $request->post('id', '아이디 미등록 지점');
+        $pw = $request->post('pw', '');
         $businessNo = $request->post('businessNo');
         $businessFilePath = $request->post('businessFilePath');
         $companyName = $request->post('companyName');
@@ -88,34 +88,53 @@ class BranchController extends Controller
         }
         */
 
-        $adminUser = DB::table("partner")->where([
-            ['partner_id', '=', $id]
-        ])->first();
+        if(empty($id) || $id == '아이디 미등록 지점') {
+            $pw = '1q2w3e4r!';
+            $partnerSeq = DB::table('partner')->insertGetId(
+                [
+                    'partner_id' => $id
+                    , 'partner_type' => 'BR'
+                    , 'language_code' => $code
+                    , 'partner_password' => $pw
+                    , 'company_address1' => $companyAddress1
+                    , 'company_address2' => $companyAddress2
+                    , 'company_address3' => $companyAddress3
+                    , 'gps_x' => $gpsX
+                    , 'gps_y' => $gpsY
+                ]
+            );
+            $adminUser = DB::table("partner")->where([
+                ['partner_seqno', '=', $partnerSeq]
+            ])->first();
+        } else {
+            $adminUser = DB::table("partner")->where([
+                ['partner_id', '=', $id]
+            ])->first();
 
-        if (! empty($adminUser)) {
-            $result['ment'] = '이미 가입신청된 아이디입니다.';
-            return $result;
+            if (! empty($adminUser)) {
+                $result['ment'] = '이미 가입신청된 아이디입니다.';
+                return $result;
+            }
+            if (! empty($pw)) {
+                $pw = base64_encode(hash('sha256', $pw, true));
+            }
+            DB::table('partner')->insertGetId(
+                [
+                    'partner_id' => $id
+                    , 'partner_type' => 'BR'
+                    , 'language_code' => $code
+                    , 'partner_password' => $pw
+                    , 'company_address1' => $companyAddress1
+                    , 'company_address2' => $companyAddress2
+                    , 'company_address3' => $companyAddress3
+                    , 'gps_x' => $gpsX
+                    , 'gps_y' => $gpsY
+                ]
+            );
+            $adminUser = DB::table("partner")->where([
+                ['partner_id', '=', $id]
+            ])->first();
         }
-        if (! empty($pw)) {
-            $pw = base64_encode(hash('sha256', $pw, true));
-        }
-
-        DB::table('partner')->insertGetId(
-            [
-                'partner_id' => $id
-                , 'partner_type' => 'BR'
-                , 'language_code' => $code
-                , 'partner_password' => $pw
-                , 'company_address1' => $companyAddress1
-                , 'company_address2' => $companyAddress2
-                , 'company_address3' => $companyAddress3
-                , 'gps_x' => $gpsX
-                , 'gps_y' => $gpsY
-            ]
-        );
-        $adminUser = DB::table("partner")->where([
-            ['partner_id', '=', $id]
-        ])->first();
 
         if (empty($adminUser)) {
             $result['ment'] = '디비 오류';
@@ -134,18 +153,22 @@ class BranchController extends Controller
                 , 'partner_phone' => $partnerPhoneNo
             ]
         );
-        // 메일 전송
-        if (! empty($pw)) {
-            $pw = base64_encode(hash('sha256', $pw, true));
+
+        if(empty($id) || $id == '아이디 미등록 지점') {
+        } else {
+            // 메일 전송
+            if (! empty($pw)) {
+                $pw = base64_encode(hash('sha256', $pw, true));
+            }
+            $details = [
+                'title' => '[GREENPASS] 가맹점 가입 신청이 되었습니다.',
+                'body' => $companyName.'님, 가맹점 가입 신청이 되었습니다.'
+                    . (empty($pw) 
+                        ? ' 추가 정보를 입력하시면 가입이 마무리됩니다. <br><a href="https://greenpass.codeidea.io/admin/branch-new?key='. $id.'">추가 정보 입력</a></br>'
+                        : '')
+            ];
+            Mail::to($adminUser->partner_id)->send(new BranchAcceptMail($details));
         }
-        $details = [
-            'title' => '[GREENPASS] 가맹점 가입 신청이 되었습니다.',
-            'body' => $companyName.'님, 가맹점 가입 신청이 되었습니다.'
-                . (empty($pw) 
-                    ? ' 추가 정보를 입력하시면 가입이 마무리됩니다. <br><a href="https://greenpass.codeidea.io/admin/branch-new?key='. $id.'">추가 정보 입력</a></br>'
-                    : '')
-        ];
-        Mail::to($adminUser->partner_id)->send(new BranchAcceptMail($details));
 
         $result['ment'] = '신청되었습니다.';
         $result['code'] = 'SC-002';
@@ -256,6 +279,14 @@ class BranchController extends Controller
                 , 'partner_phone' => $partnerPhoneNo
             ]
         );
+
+        if($adminUser->partner_auth_seqno > 0) {
+            DB::table('partner_auth')->where('partner_auth_seqno', '=', $adminUser->partner_auth_seqno)->update(
+                [
+                    'language_code' => $code
+                ]
+            );
+        }
 
         $result['ment'] = '신청되었습니다.';
         $result['code'] = 'SC-002';
@@ -594,12 +625,15 @@ class BranchController extends Controller
                 , 'status_content' => $cause
             ]
         );
-        // 메일 전송
-        $details = [
-            'title' => '[GREENPASS] 가맹점 승인 신청 결과 안내입니다.',
-            'body' => '죄송하지만, 신청하신 내용은 반려되었습니다.<p>' . $cause . '</p>'
-        ];
-        Mail::to($partnerInfo->partner_id)->send(new BranchAcceptMail($details));
+        if(empty($partnerInfo->partner_id) || $partnerInfo->partner_id == '아이디 미등록 지점') {
+        } else {
+            // 메일 전송
+            $details = [
+                'title' => '[GREENPASS] 가맹점 승인 신청 결과 안내입니다.',
+                'body' => '죄송하지만, 신청하신 내용은 반려되었습니다.<p>' . $cause . '</p>'
+            ];
+            Mail::to($partnerInfo->partner_id)->send(new BranchAcceptMail($details));
+        }
         
         $result['data'] = ['branchInfo' => $branchInfo, 'partnerInfo' => $partnerInfo];
         $result['ment'] = '성공';
@@ -656,6 +690,7 @@ class BranchController extends Controller
                 , 'gps_used' => 1
                 , 'beacon_used' => 1
                 , 'nfc_used' => 1
+                , 'language_code' => $partnerInfo->language_code
                 , 'location_x' => $partnerInfo->gps_x
                 , 'location_y' => $partnerInfo->gps_y 
                 , 'location_name' => $branchInfo->company_name
@@ -670,12 +705,15 @@ class BranchController extends Controller
             ]
         );
 
-        // 메일 전송
-        $details = [
-            'title' => '[GREENPASS] 가맹점 승인 신청 결과 안내입니다.',
-            'body' => '신청하신 내용이 승인되었습니다.<p>' . $cause . '</p>'
-        ];
-        Mail::to($branchInfo->partner_id)->send(new BranchAcceptMail($details));
+        if(empty($partnerInfo->partner_id) || $partnerInfo->partner_id == '아이디 미등록 지점') {
+        } else {
+            // 메일 전송
+            $details = [
+                'title' => '[GREENPASS] 가맹점 승인 신청 결과 안내입니다.',
+                'body' => '신청하신 내용이 승인되었습니다.<p>' . $cause . '</p>'
+            ];
+            Mail::to($branchInfo->partner_id)->send(new BranchAcceptMail($details));
+        }
         
         $result['data'] = ['branchInfo' => $branchInfo, 'partnerInfo' => $partnerInfo];
         $result['ment'] = '성공';

@@ -55,6 +55,9 @@
 			<a href="/terms/privacy" class="_privacy">개인정보처리방침</a>
 			<a href="#" onclick="logout()" class="logout">로그아웃</a>
 		</div>
+		<div class="bottom">
+			<a href="#" onclick="onPopUp()" class="">레이어팝업확인</a>
+		</div>
 	</div>
 
 </section>
@@ -168,6 +171,16 @@ $(document).ready(function (){
 	});
 });
 
+function onPopUp(){
+	
+	$.magnificPopup.open({
+			items: {
+				src: '#pop-ad'
+			},
+			type: 'inline'
+		});
+}
 </script>
 
+@include('user.pop.pop_ad')
 @include('user.footer')

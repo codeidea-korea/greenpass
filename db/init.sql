@@ -57,6 +57,7 @@ create table partner_auth
     partner_auth_seqno bigint auto_increment
         primary key,
     admin_seqno    bigint      not null, -- 승인한 어드민 계정 식별자 <-- 미승인시 0
+    language_code   varchar(2)      not null default 'KR', -- KR: 한국, VN: 베트남, LA: 라오스
     gps_used   varchar(1)      not null, -- Y: 1, N: 0
     beacon_used   varchar(1)      not null, -- Y: 1, N: 0
     nfc_used   varchar(1)      not null, -- Y: 1, N: 0
@@ -166,7 +167,7 @@ create table `partner`
     language_code   varchar(2)      not null default 'KR', -- KR: 한국, VN: 베트남, LA: 라오스
     partner_auth_seqno    bigint      null default 0, -- 승인/부가정보 입력 뒤에 발부됨
 
-    partner_id   varchar(200)      not null,
+    partner_id   varchar(200)      null,
     partner_password   varchar(512)      null,
     
 -- GPS 좌표

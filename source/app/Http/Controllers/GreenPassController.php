@@ -16,6 +16,7 @@ class GreenPassController extends Controller
         $latitude = $request->get('latitude');
         $longitude = $request->get('longitude');
         $user_key = $request->get('user_key');
+        $language_code = $request->get('language_code', '');
 
         $pageNo = $request->get('pageNo', 1);
         $pageSize = $request->get('pageSize', 10);
@@ -27,6 +28,10 @@ class GreenPassController extends Controller
             $result['ment'] = '현재 위치 좌표가 확인되지 않습니다. 잠시 후 다시 시도해주세요.';
             return $result;
         }
+        $where = [];
+        if(! empty($language_code) && $language_code != ''){
+            array_push($where, ['partner_auth.language_code', '=', $language_code]);
+        }
 
 //        $gpslist = DB::table("partner_auth")->offset(0)->limit(20)->orderBy('order', 'asc')->orderBy('partner_auth_seqno', 'desc')->orderBy('location_name', 'asc')->get();
         $gpslist = DB::table("partner_auth")
@@ -36,6 +41,7 @@ class GreenPassController extends Controller
                                 as distance
                                , partner_auth_seqno, admin_seqno, gps_used, beacon_used, nfc_used, location_x, location_y, location_name, location_sub_name, location_img'))
 //            ->offset(0)->limit(20)
+            ->where($where)
             ->orderBy('distance', 'asc')->orderBy('partner_auth_seqno', 'desc')->orderBy('location_name', 'asc')
             ->offset($pageSize * ($pageNo - 1))->limit($pageSize)
             ->get();

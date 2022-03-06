@@ -22,4 +22,5 @@ function gotoSignup() {
 function closePopUp() {
 	$.magnificPopup.close();
 }
+		
 </script>

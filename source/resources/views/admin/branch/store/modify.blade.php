@@ -21,6 +21,18 @@
 		</div>
 		<div class="wrtieContents _passwordAfter">
 			<div class="wr-wrap line label200">
+
+                <div class="wr-list">
+                    <div class="wr-list-label flex-start">국가</div>
+                    <div class="wr-list-con">
+                        <select class="default" name="depth1" id="depth1">
+                            <option data-subtext="국가를 선택하세요." value="">국가를 선택하세요.</option>
+                            <option data-subtext="대한민국" value="ko">대한민국</option>
+                            <option data-subtext="라오스" value="lao">라오스</option>
+                            <option data-subtext="베트남" value="vt">베트남</option>
+                        </select>
+                    </div>
+                </div>
 				
 				<div class="wr-list">
                     <div class="wr-list-label flex-start">회사(법인)명</div>
@@ -193,7 +205,8 @@ function modifyBranch(){
     var companyAddress1 = $('input[name=companyAddress1]').val();
     var companyAddress2 = $('input[name=companyAddress2]').val();
     var companyAddress3 = $('input[name=companyAddress3]').val();
-	var lgnCode = greenpassadm.methods.getMyLanguage();
+//	var lgnCode = greenpassadm.methods.getMyLanguage();
+	var lgnCode = $('select[name=depth1]').val(); // 2022.03.06. 국가 선택 // greenpassadm.methods.getMyLanguage();
 
     greenpassadm.methods.branch.edit({
         branchNo: userId
@@ -271,7 +284,9 @@ function getBranchInfo(){
 		$('input[name=partnerPhoneNo]').val(response.data.branchInfo.partner_phone);
 		$('input[name=companyAddress1]').val(response.data.partnerInfo.company_address1);
 		$('input[name=companyAddress2]').val(response.data.partnerInfo.company_address2);
-		$('input[name=companyAddress3]').val(response.data.partnerInfo.company_address3);
+        $('input[name=companyAddress3]').val(response.data.partnerInfo.company_address3);
+        
+        $('select[name=depth1]').val(response.data.partnerInfo.language_code);
 	});
 }
 function checkPassword(){

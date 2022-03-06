@@ -289,7 +289,8 @@ function loadGPSPopup(){
 		longitude: longitude,
 		pageNo: gpsPageNo,
 		pageSize: 20,
-		user_key: atob(localStorage.getItem('user-key'))
+		user_key: atob(localStorage.getItem('user-key')),
+		language_code: greenpass.methods.getMyLanguage()
 	}, function(request, response){
 		console.log('output : ' + response);
 

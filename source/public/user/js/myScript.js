@@ -103,6 +103,7 @@ $(document).ready(function(){
 
 
 	/* 레이어 팝업 */
+	/*
 	$('.popup-inline.inside').magnificPopup({
 		type: 'inline',
 		fixedContentPos: false,
@@ -146,8 +147,10 @@ $(document).ready(function(){
 
 	$(document).on('click', '.popClose', function (e) {
 		e.preventDefault();
-		$.magnificPopup.close();
+//		$.magnificPopup.close();
+		closePopup();
 	});
+	*/
 	$('.myClick').click();
 
 	

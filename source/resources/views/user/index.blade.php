@@ -233,13 +233,15 @@ function fnNFCnotificationOn(){
 
 		prev_auth_type = 'N';
 		loadAuths();
-		
+		/*
 		$.magnificPopup.open({
 			items: {
 				src: '#pop-certify'
 			},
 			type: 'inline'
 		});
+		*/
+		openPopup('pop-certify');
 
 	}, function(e){
 		console.log(e);
@@ -333,13 +335,15 @@ function loadGPSPopup(){
 		if(gpsPageNo * 20 >= response.totCnt) {
 			$('._moreGPSBtn').hide();
 		}
-
+/*
 		$.magnificPopup.open({
 			items: {
 				src: '#pop-gps'
 			},
 			type: 'inline'
 		});
+		*/
+		openPopup('pop-gps');
 		gpsWait = false;
 	}, function(e){
 		console.log(e);
@@ -371,12 +375,15 @@ function openNFC(e){
 		greenpass.methods.hybridapp.scanNFC('pop-npc'); 
 		return false;
 	}
+	/*
 	$.magnificPopup.open({
 		items: {
 			src: '#pop-npc'
 		},
 		type: 'inline'
 	});
+	*/
+	openPopup('pop-npc');
 }
 
 var prev_no;
@@ -470,13 +477,15 @@ function addGpsAuth(no){
 		}
 		prev_auth_type = 'G';
 		loadAuths();
-		
+		/*
 		$.magnificPopup.open({
 			items: {
 				src: '#pop-certify'
 			},
 			type: 'inline'
 		});
+		*/
+		openPopup('pop-certify');
 	}, function(e){
 		console.log(e);
 		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 > 사용자 정보, 인증업체 정보 이상');
@@ -502,13 +511,15 @@ function authCancel(){
 		}
 		alert(greenpass.globalLanBF.index.alert_auth_remove[greenpass.methods.getMyLanguage()]);
 		loadAuths();
-		
+		/*
 		$.magnificPopup.close({
 			items: {
 				src: '#pop-certify'
 			},
 			type: 'inline'
 		});
+		*/
+		closePopup();
 	}, function(e){
 		console.log(e);
 		alert(greenpass.globalLanBF.api.server_error[greenpass.methods.getMyLanguage()] + '- GPS 인증 취소 > 사용자 식별자 오류');
@@ -520,12 +531,15 @@ function reauth() {
 		alert(greenpass.globalLanBF.index.alert_auth_empty[greenpass.methods.getMyLanguage()]);
 		return;
 	}
+	/*
 	$.magnificPopup.close({
 		items: {
 			src: '#pop-certify'
 		},
 		type: 'inline'
 	});
+	*/
+	closePopup();
 	switch(prev_auth_type){
 		case 'G':
 			openGPS();
@@ -534,6 +548,14 @@ function reauth() {
 			openNFC();
 			break;
 	}
+}
+function openPopup(pupId) {
+	$('.layer-popup').hide();
+	$('body, html').css('overflow', 'hidden'); //팝업열릴때 body, html에 스크롤을 방지한다. 팝업을 닫을때 해당 스타일삭제..
+	$('.layer-popup#'+pupId).show();
+}
+function closePopup(){
+	$('.layer-popup').hide();
 }
 </script>
 

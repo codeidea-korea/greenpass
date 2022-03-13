@@ -172,13 +172,17 @@ $(document).ready(function (){
 });
 
 function onPopUp(){
-	
+	/*
 	$.magnificPopup.open({
 			items: {
 				src: '#pop-ad'
 			},
 			type: 'inline'
 		});
+		*/
+	$('.layer-popup').hide();
+	$('body, html').css('overflow', 'hidden'); //팝업열릴때 body, html에 스크롤을 방지한다. 팝업을 닫을때 해당 스타일삭제..
+	$('.layer-popup#pop-ad').show();
 }
 </script>
 

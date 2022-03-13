@@ -210,13 +210,15 @@ var bfCall = (function(){
                         }
                     }
                 }, scanNFC: async (magnificPopId) => {
-                    
+                    /*
                     $.magnificPopup.close({
                         items: {
                             src: '#'+magnificPopId
                         },
                         type: 'inline'
                     });
+                    */
+                    closePopup();
                     
                     alert(greenpass.globalLanBF.api.need_app[greenpass.methods.getMyLanguage()]);
                 }
@@ -261,13 +263,15 @@ function receiveMsgFromParent( e ) {
             // NFC 통신 결과
             if(! response.is_success) {
                 console.log('NFC 오류 발생 : ' + response.data);
-                
+                /*
                 $.magnificPopup.close({
                     items: {
                         src: '#pop-npc'
                     },
                     type: 'inline'
                 });
+                */
+                closePopup();
                 return false;
             }
             var thisDate = new Date();
@@ -313,13 +317,15 @@ function receiveMsgFromParent( e ) {
 
                 prev_auth_type = 'N';
                 loadAuths();
-                
+                /*
                 $.magnificPopup.open({
                     items: {
                         src: '#pop-certify'
                     },
                     type: 'inline'
                 });
+                */
+                openPopup('pop-certify');
     
             }, function(e){
                 console.log(e);
@@ -330,13 +336,15 @@ function receiveMsgFromParent( e ) {
             // GPS 통신 결과
             if(! response.is_success) {
                 console.log('GPS 오류 발생 : ' + response.data);
-                
+                /*
                 $.magnificPopup.close({
                     items: {
                         src: '#pop-gps'
                     },
                     type: 'inline'
                 });
+                */
+                closePopup();
                 return false;
             }
 

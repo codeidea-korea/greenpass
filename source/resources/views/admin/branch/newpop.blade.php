@@ -154,20 +154,26 @@ function chkNumber(val){
     return true;
 }
 function openAddBranchPup(){
+    /*
     $.magnificPopup.open({
         items: {
             src: '#pop-branch'
         },
         type: 'inline'
     });
+    */
+    openPopup('pop-branch');
 }
 function closeAddBranchPup(){
+    /*
     $.magnificPopup.close({
         items: {
             src: '#pop-branch'
         },
         type: 'inline'
     });
+    */
+    closePopup();
 }
 var uploadFilePath = '';
 function chkValidationPup(){

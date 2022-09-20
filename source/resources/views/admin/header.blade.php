@@ -25,7 +25,7 @@
 <script type="text/javascript" src="{{ asset('adm/js/form/datepicker/datepicker.ko-KR.js') }}"></script>
 <script type="text/javascript" src="{{ asset('adm/js/form/myform.js') }}"></script>
 <script type="text/javascript" src="{{ asset('adm/js/myScript.js') }}"></script>
-<script type="text/javascript" src="{{ asset('adm/js/greenpass-apis.js?v=202202031025') }}"></script>
+<script type="text/javascript" src="{{ asset('adm/js/greenpass-apis.js?v=202209210202') }}"></script>
 </head>
 <body>
 

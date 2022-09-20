@@ -59,8 +59,10 @@
 				</div>
 				<img src="img/logo/logo08_209_209.png" class="certify-logo _certify-logo">
 				<p class="fs18 _certify-partner-name">
-					</p><h3 class="mt15">스타벅스</h3>
+					</p>
+					<!--<h3 class="mt15">스타벅스</h3>
 					(안양비산DT점)
+					-->
 				<p></p>
 			</div>
 			<div class="btnSet mt30">

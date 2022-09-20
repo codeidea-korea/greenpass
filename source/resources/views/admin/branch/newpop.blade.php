@@ -8,7 +8,7 @@
 }
 </style>
 
-<div id="pop-branch" class="layerPopup zoom-anim-dialog mfp-hide">
+<div id="pop-branch" class="layerPopup layer-popup zoom-anim-dialog mfp-hide">
 
     <section class="popcon-wrapper container" id="wrtie">
 
@@ -123,13 +123,29 @@
     </section>
 </div>
 
-
+<script type="text/javascript" src="{{ asset('adm/js/address-bf-package.min.js?v=202209210202') }}"></script>
 <script>
+var gpsX;
+var gpsY;
+function callBackAddress(a, bdocuments){
+    if(bdocuments.documents.length < 0){
+        alert('주소를 정확히 입력해주세요.');
+    // flag false
+        return false;
+    }
+    gpsY = bdocuments.documents[0].x;
+    gpsX = bdocuments.documents[0].y;
+}
+window.bfAddressPack.setAppKey('258c1a5f5c8e8abc5deb4cbf907db52a');
+
 function openKakaoAddress(){
 	new daum.Postcode({
 	    oncomplete: function(data) {
 	        $('input[name=companyAddress3]').val(data.zonecode);
 	        $('input[name=companyAddress1]').val(data.address);
+
+            window.bfAddressPack.convertAddress2LanLng(data.address, callBackAddress)
+
 	        $('#map-pup').hide();
 	    }, onresize : function(size) {
 	    	$('#addressMap').height($(window).height());
@@ -138,6 +154,10 @@ function openKakaoAddress(){
 	    height : '100%'
 	}).embed($('#addressMap')[0]);
 	$('#map-pup').show();
+}
+function loadPageLanguage(){
+    var lgnCode = greenpassadm.methods.getMyLanguage();
+    $('#lang').val(lgnCode);
 }
 </script>
 
@@ -267,8 +287,8 @@ function addBranch(){
         , companyAddress1: companyAddress1
         , companyAddress2: companyAddress2
         , companyAddress3: companyAddress3
-//        , gpsX: gpsX
-//        , gpsY: gpsY
+        , gpsX: gpsX
+        , gpsY: gpsY
         , partnerPhoneNo: partnerPhoneNo
 		, code: lgnCode
     }, function(request, response){

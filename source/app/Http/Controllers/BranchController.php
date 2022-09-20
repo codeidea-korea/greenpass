@@ -712,7 +712,7 @@ class BranchController extends Controller
                 'title' => '[GREENPASS] 가맹점 승인 신청 결과 안내입니다.',
                 'body' => '신청하신 내용이 승인되었습니다.<p>' . $cause . '</p>'
             ];
-            Mail::to($branchInfo->partner_id)->send(new BranchAcceptMail($details));
+            Mail::to($partnerInfo->partner_id)->send(new BranchAcceptMail($details));
         }
         
         $result['data'] = ['branchInfo' => $branchInfo, 'partnerInfo' => $partnerInfo];

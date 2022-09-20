@@ -163,3 +163,15 @@ var bfCall = (function(){
     window.greenpassadm = initGreenpass() || [];
 }());
 
+
+function openPopup(pupId) {
+    $.magnificPopup.open({
+        items: {
+            src: '#' + pupId
+        },
+        type: 'inline'
+    });
+}
+function closePopup(){
+	$.magnificPopup.close();
+}

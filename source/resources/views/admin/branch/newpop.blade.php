@@ -208,7 +208,7 @@ function chkValidationPup(){
     var companyAddress2 = $('input[name=companyAddress2]').val();
     var companyAddress3 = $('input[name=companyAddress3]').val();
 
-    if(!confirm('아이디 없이 지점 등록을 하시겠습니까? /n - 지점별 고객의 인증 처리는 가능합니다.\n - 지점별 관리자 접근이 불가능합니다.')) {
+    if(userId == '' && !confirm('아이디 없이 지점 등록을 하시겠습니까? /n - 지점별 고객의 인증 처리는 가능합니다.\n - 지점별 관리자 접근이 불가능합니다.')) {
         if(userId == '') {
             alert('아이디로 사용할 이메일을 입력해주세요.');
             return false;

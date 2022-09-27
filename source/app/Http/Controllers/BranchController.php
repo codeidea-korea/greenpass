@@ -51,7 +51,7 @@ class BranchController extends Controller
 
         $result['ment'] = '업로드 성공';
         $result['code'] = 'SC-001';
-        $result['path'] = $path;
+        $result['path'] = '/' . $path;
         $result['result'] = true;
 
         return $result;

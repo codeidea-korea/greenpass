@@ -146,6 +146,12 @@ var bfCall = (function(){
             ,toCurrency: function(x){
                 return '&#x20a9;'+x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
+        , toSafeImage(imgUrl){
+            if(imgUrl.substring(imgUrl.lastIndexOf('.') + 1).toLowerCase() == 'pdf'){
+                return '/user/img/logo/19.png';
+            }
+            return imgUrl;
+        }
             , getMyLanguage(){
                 var languageType = localStorage.getItem('lan');
                 var lanArr = [{code:'ko', class: 'korean', label: 'Korean'}

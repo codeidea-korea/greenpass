@@ -137,6 +137,11 @@ var bfCall = (function(){
             }
             , toString(str){
                 return str ? str : '';
+            }, toSafeImage(imgUrl){
+                if(imgUrl.substring(imgUrl.lastIndexOf('.') + 1).toLowerCase() == 'pdf'){
+                    return '/user/img/logo/19.png';
+                }
+                return imgUrl;
             }
         };
         this.validation = {

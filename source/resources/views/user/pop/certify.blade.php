@@ -57,7 +57,7 @@
 					<h3 class="fs20">인증되었습니다</h3>
 					<p class="right tright _certify-date"><span class="fs18">2021.07.18</span><br>13시30분</p>
 				</div>
-				<img src="img/logo/logo08_209_209.png" class="certify-logo _certify-logo">
+				<img src="img/logo/logo08_209_209.png" class="certify-logo _certify-logo" onerror="this.src='/user/img/logo/19.png';">
 				<p class="fs18 _certify-partner-name">
 					</p>
 					<!--<h3 class="mt15">스타벅스</h3>

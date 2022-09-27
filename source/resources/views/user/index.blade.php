@@ -159,7 +159,7 @@ function loadAuths(type){
 		for(var inx=0; inx<response.data.length; inx++){
 			bodyData = bodyData 
 						+'<li>'
-						+'	<img src="'+response.data[inx].location_img+'">'
+						+'	<img src="'+greenpass.methods.toSafeImage(response.data[inx].location_img)+'" onerror="this.src=\'/user/img/logo/19.png\';">'
 						+'	<div class="textContent">'
 						+'		'+response.data[inx].location_name+'<br>'
 						+'		<span class="date">'+response.data[inx].create_dt+'</span>'
@@ -227,7 +227,7 @@ function fnNFCnotificationOn(){
 			alert(response2.ment);
 			return false;
 		}
-		$('._certify-logo').attr('src', response2.result.location_img+'?v='+new Date().getTime());
+		$('._certify-logo').attr('src', greenpass.methods.toSafeImage(response2.result.location_img)+'?v='+new Date().getTime());
 		$('._certify-partner-name').html('<h3 class="mt15">'+response2.result.location_name+'</h3>'
 										+ (response2.result.location_sub_name ? '('+response2.result.location_sub_name+')' : ''));
 
@@ -316,7 +316,7 @@ function loadGPSPopup(){
 				bodyData = bodyData 
 							+'<li>'
 //							+'	<img onclick="addGpsAuth('+inx+')" src="'+response.data[inx].location_img+'">'
-							+'	<div onclick="addGpsAuth('+inx+')" class="thumb" style="background-image:url(\''+response.data[inx].location_img+'\'), url(\'/user/img/logo/19.png\')"></div>'
+							+'	<div onclick="addGpsAuth('+inx+')" class="thumb" style="background-image:url(\''+greenpass.methods.toSafeImage(response.data[inx].location_img)+'\'), url(\'/user/img/logo/19.png\')"></div>'
 							+'	<div class="textContent">'
 							+'		'+response.data[inx].location_name
 							+'	</div>'
@@ -447,7 +447,7 @@ function addGpsAuth(no){
 		+thisDate.getFullYear()+'.'+(thisDate.getMonth()+1 < 10 ? '0' : '') + (thisDate.getMonth()+1)+'.'
 		+(thisDate.getDate()< 10 ? '0' : '') + thisDate.getDate() +'</span><br>'
 		+template);
-	$('._certify-logo').attr('src', partners[no].location_img+'?v='+new Date().getTime());
+	$('._certify-logo').attr('src', greenpass.methods.toSafeImage(partners[no].location_img)+'?v='+new Date().getTime());
 	$('._certify-partner-name').html('<h3 class="mt15">'+partners[no].location_name+'</h3>'
 										+ (partners[no].location_sub_name ? '('+partners[no].location_sub_name+')' : '' ));
 
